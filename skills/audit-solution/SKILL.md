@@ -1,6 +1,6 @@
 ---
 name: audit-solution
-description: Full-solution audit — sweep the entire codebase for weaknesses and inconsistencies (structure, coding-standards conformance, documentation coverage, consistency, obvious perf/correctness smells), report findings ranked by severity with evidence, then correct the approved ones and verify. Use when the user asks to audit / review the whole solution or codebase, check for weaknesses or inconsistencies, or do a health check. Composes with the coding-standards, web-standards, and documentation skills for the checks, and ends by running self-improve.
+description: Full-solution audit — sweep the entire codebase for weaknesses and inconsistencies (structure, coding-standards conformance, documentation coverage, consistency, obvious perf/correctness smells), report findings ranked by severity with evidence, then correct the approved ones and verify. Use when the user asks to audit / review the whole solution or codebase, check for weaknesses or inconsistencies, or do a health check. Composes with the coding-standards, web-standards, taste-skill, and documentation skills for the checks, and ends by running self-improve.
 ---
 
 # AUDIT SOLUTION
@@ -9,7 +9,7 @@ Whole-solution health check: find weaknesses, report with evidence, fix the appr
 ones per the project's rules, verify. Investigation is READ-ONLY until the user
 approves a remediation scope.
 
-Composes with: `coding-standards` (how code must be), `web-standards` (how web/UI must be), `documentation` (how docs must be), `feature` (REQUIRED — approved remediation is captured as a feature draft and carried out through the feature lifecycle before any code is touched), `self-improve` (at the end).
+Composes with: `coding-standards` (how code must be), `web-standards` (how web/UI must be), `taste-skill` (how frontend design must look — anti-slop, not templated), `documentation` (how docs must be), `feature` (REQUIRED — approved remediation is captured as a feature draft and carried out through the feature lifecycle before any code is touched), `self-improve` (at the end).
 
 # STEP 1 — SCOPE & MAP (local context first)
 Understand before judging, in order:
@@ -23,6 +23,7 @@ Check these dimensions. Large codebase → parallel read-only subagents; small �
 - **Structure & organization** — layout, separation of concerns, misplaced files, naming, dead code.
 - **Coding-standards conformance** — apply `coding-standards`: file-size, function/declaration style, layering (no business logic in controllers/UI), duplication, premature abstraction, pattern consistency.
 - **Web-standards conformance (UI)** — for web/frontend code, apply `web-standards`: mobile-first responsive layout, accessibility (WCAG — semantics/labels/focus/contrast), Core Web Vitals perf, purposeful motion, minimalist/bento layout. Flag violations with `file:line`. (Skip if the solution has no web UI.)
+- **Design quality (taste)** — for user-facing frontend, esp. landing/marketing/hero/portfolio surfaces, apply `taste-skill`: does it look templated/generic ("slop") — cookie-cutter hero, default component look, no coherent design direction, weak type/spacing/color system? Flag `file:line` (or component/page). This is design-direction quality, distinct from `web-standards` mechanics. (Skip if no such surfaces, or the UI is purely functional/internal-tooling with no design ambition.)
 - **Documentation conformance** — apply `documentation`: AGENTS.md coverage for real modules, every AGENTS.md has a CLAUDE.md sibling, bidirectional links intact, ADRs for major decisions, stale/contradictory docs, tech-debt recorded.
 - **Consistency** — is a chosen pattern applied uniformly (imports, config, error handling, i18n, styling)? Flag one-off deviations.
 - **Language (English-only)** — code comments/docstrings, feature files under `/features`, and docs (AGENTS.md, ADRs, tech-debt, READMEs) must be English. Flag non-English with `file:line`; fix = translate to English (user-facing UI text → i18n, not inline). Independent of whether the logic is fine.
@@ -76,6 +77,7 @@ Local first (files, AGENTS.md, /docs+ADRs, code). Still unclear → `WebSearch` 
 - Unclear → verify with `WebSearch`/`WebFetch`, don't assume.
 - Evidence-based findings only (`file:line`); rank by severity; don't pad.
 - Check all code against `coding-standards` and all web/UI against `web-standards` — every violation is a finding.
+- Check user-facing frontend (esp. landing/marketing/hero/portfolio surfaces) against `taste-skill` — templated/generic "slop" design is a finding. Skip purely functional/internal UI with no design ambition.
 - Check `documentation` present everywhere: every real module has an AGENTS.md (+ CLAUDE.md sibling containing `@AGENTS.md`), links bidirectional and unbroken, ADRs for major decisions — a missing/orphaned one is a finding.
 - Check English-only: non-English comments, feature files, or docs are findings; fix = translate to English.
 - Review ALL documentation for caveman-style — line comments, docstrings, AGENTS.md, CLAUDE.md, ADRs, tech-debt, READMEs, `/features` specs, everything. Any verbose/prose one (filler, hedging, flowing paragraphs) is a finding; fix = MANDATORY invoke the `caveman` skill to condense, keeping every fact/number/path/constraint — unless it is already caveman.

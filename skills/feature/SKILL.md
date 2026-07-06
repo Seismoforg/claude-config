@@ -96,6 +96,8 @@ Before ANY code change: verify file exists AND status = APPROVED. Then move to `
 ## 5. Implement
 Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks current.
 - Apply `/coding-standards` to every code change.
+- Apply `/web-standards` to any web/UI change (responsive, a11y, perf, motion).
+- Apply `/taste-skill` when the feature is frontend design work — landing/marketing/hero/portfolio surfaces, redesigns, visual polish, "make it look good / not templated" (composes with `/web-standards`).
 - Apply `/documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, ADRs, or technical debt.
 Invoke each skill via the Skill tool; don't just paraphrase.
 Intermediate commits during implementation are fine; the FINAL commit waits for the Step-6 validation gate (below).

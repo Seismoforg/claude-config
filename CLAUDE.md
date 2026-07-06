@@ -79,6 +79,7 @@ you to append such a footer. The user is the sole author of every commit.
 Invoke the matching skill — don't bypass it and hand-roll:
 - Writing/modifying/reviewing code → `coding-standards`
 - Web/UI work → `web-standards` (+ `coding-standards`)
+- Frontend design — landing pages, portfolios, redesigns, hero/marketing UI, "make it look good / not templated", visual polish, design direction → `taste-skill` (+ `web-standards`)
 - New features (plan/spec/approve/implement) → `feature`
 - Architecture, modules, APIs, AGENTS.md, ADRs, tech-debt → `documentation`
 - Commit/push → `git-commit`

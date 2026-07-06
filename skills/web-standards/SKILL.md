@@ -25,7 +25,7 @@ Bias: enforce non-negotiables (a11y, responsive, perf) every change; apply aesth
 
 # 2. ACCESSIBILITY (non-negotiable — WCAG 2.1 AA)
 - **Semantic HTML first**: real `<button>`, `<a>`, `<nav>`, `<main>`, headings in order. ARIA only when no native element fits.
-- **Contrast**: text ≥ 4.5:1 (≥ 3:1 large/bold ≥ 24px or 18.66px bold); UI components/focus ≥ 3:1. Verify, don't eyeball.
+- **Contrast**: text ≥ 4.5:1 (≥ 3:1 large/bold ≥ 24px or 18.66px bold); UI components/focus ≥ 3:1. Verify, don't eyeball. Check EVERY supported theme/mode (light AND dark), not just the default — an unrendered mode is untested and hides failures.
 - **Keyboard**: everything operable without a mouse; visible focus; logical tab order; no traps.
 - **Screen readers**: label every control + icon-only button (`aria-label`); `alt` on meaningful images (`alt=""` decorative); `<label>` on form fields.
 - **Respect settings**: honor `prefers-reduced-motion` and `prefers-color-scheme`.
