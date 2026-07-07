@@ -8,7 +8,7 @@ description: Use when architecture, modules, responsibilities, public APIs, AGEN
 Keeps architecture, module, API, decision docs correct and in sync. Satisfies the
 `feature` workflow's "documentation updated if required" step.
 
-**Language: all docs in English** — regardless of chat language. Covers AGENTS.md, CLAUDE.md, ADRs, technical-debt, READMEs, code comments/docstrings. Editing a doc in another language → translate the sections you touch.
+**Language: all docs in English** (base rule → `skills/_shared/blocks.md`) — covers AGENTS.md, CLAUDE.md, ADRs, technical-debt, READMEs, code comments/docstrings. Editing a doc in another language → translate the sections you touch.
 
 **Style: write docs terse (caveman style)** — imperative, no filler, lists over prose; keep every fact, name, path and constraint. Invoke the `caveman` skill when drafting/condensing. (READMEs may stay a touch more prose-y where a human onboarding needs it.)
 
@@ -45,38 +45,8 @@ Create one when ANY holds:
 
 Do NOT create one just because a refactor made new files. Extracting a component/helper WITHIN an existing module is not a new module — update the parent's AGENTS.md instead.
 
-## Structure (all sections required)
-```md
-# Purpose
-# Responsibilities
-# File Structure
-# Key Components
-# Dependencies
-# Related Modules
-```
-
-## Example
-```md
-# Purpose
-Theme configuration and the SSR-safe MUI provider chain.
-
-# Responsibilities
-- Define the global default MUI theme
-- Provide Emotion cache + ThemeProvider for the App Router
-
-# File Structure
-- theme.ts          — global createTheme() definition
-- ThemeRegistry.tsx — AppRouterCacheProvider → ThemeProvider → CssBaseline
-
-# Key Components
-- ThemeRegistry — mounted once in app/layout.tsx
-
-# Dependencies
-@mui/material, @emotion/react, @mui/material-nextjs
-
-# Related Modules
-- Parent: ../  (src)
-```
+## Structure + worked example
+See `agents-md-template.md`. Load it only when creating or restructuring an AGENTS.md file.
 
 # CLAUDE.md SIBLING (HARD RULE)
 Every folder with an `AGENTS.md` MUST have a `CLAUDE.md` beside it whose entire content is one line:
@@ -132,7 +102,7 @@ Add an entry whenever a change knowingly leaves a shortcut/workaround/deferred f
 - [ ] Prose is terse (caveman style) — no filler/hedging/wind-down; lists over paragraphs
 
 # WHEN UNCERTAIN
-Local first (existing docs, AGENTS.md, /docs+ADRs, code). Still unclear → `WebSearch` (+ `WebFetch` for official docs), never document a guess.
+See `skills/_shared/blocks.md` — never document a guess.
 
 # HARD RULES
 - Never document trivial fixes, refactors, or styling.
@@ -149,4 +119,4 @@ Local first (existing docs, AGENTS.md, /docs+ADRs, code). Still unclear → `Web
 - This checklist gates the `feature` workflow's documentation validation.
 
 # AFTER THE TASK
-Concrete friction traceable to this skill? → `/self-improve`. Else silent.
+See `skills/_shared/blocks.md`.

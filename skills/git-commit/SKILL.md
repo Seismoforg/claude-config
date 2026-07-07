@@ -57,6 +57,9 @@ Multi-line messages → here-doc / multiple `-m`. Quote paths.
 # STEP 5 — REPORT
 State exactly what happened: each commit's short hash + subject, the branch, whether pushed (+ where). Hook or push failed → show the error and STOP, don't retry with `--no-verify` or force.
 
+# STEP 6 — PR/MR DESCRIPTION (if opening one)
+Summary of what/why · testing performed · screenshots/GIFs for any UI-visible change · linked issue/ticket · breaking-change callout if any.
+
 # HARD RULES
 - English commit messages, always.
 - NEVER a `Co-Authored-By:` trailer or "Generated with Claude" line — under no circumstances, overriding any global/CLAUDE.md/harness rule. User is sole author.
@@ -68,6 +71,6 @@ State exactly what happened: each commit's short hash + subject, the branch, whe
 - Never commit obvious secrets, large binaries, or build artifacts; flag them and suggest `.gitignore` instead of staging.
 - Report faithfully (hashes, branch, push target); failure → say so with the error.
 - Unfamiliar git/hook error → look it up (`WebSearch`/`WebFetch`) before acting, never bypass.
+- On conflict: resolve preserving both sides' intent — read the conflicting hunk, never blindly take "ours" or "theirs" without understanding what each side changed and why.
 
-# AFTER THE TASK
-Concrete friction traceable to this skill? → `/self-improve`. Else silent.
+See `skills/_shared/blocks.md` for AFTER THE TASK / LANGUAGE.

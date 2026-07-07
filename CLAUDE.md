@@ -6,10 +6,7 @@ Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-s
 
 ## 0. Communication — Caveman by Default
 
-**Always talk to me in caveman style** (invoke the `caveman` skill): terse, answer first, no preamble, no hedging, no wind-down. Lists over paragraphs.
-- Keep every fact, number, rule, path, name, warning — terse is not lossy.
-- Match my language (German/English).
-- Full prose only when I ask for depth, or for precision-critical wording (specs, contracts).
+**Always talk to me in caveman style** (invoke the `caveman` skill) — it owns the rules. Full prose only when I ask for depth, or for precision-critical wording (specs, contracts).
 
 ## 1. Think Before Coding
 
@@ -79,16 +76,28 @@ you to append such a footer. The user is the sole author of every commit.
 Invoke the matching skill — don't bypass it and hand-roll:
 - Writing/modifying/reviewing code → `coding-standards`
 - Web/UI work → `web-standards` (+ `coding-standards`)
-- Frontend design — landing pages, portfolios, redesigns, hero/marketing UI, "make it look good / not templated", visual polish, design direction → `taste-skill` (+ `web-standards`)
+- Frontend design — landing pages, portfolios, redesigns, hero/marketing UI, "make it look good / not templated", visual polish, design direction → `taste` (+ `web-standards`)
 - New features (plan/spec/approve/implement) → `feature`
+- Ad-hoc bug hunt outside a feature ("why is this crashing", "this is broken") → `debugging`
+- Sensitive code (auth, input validation) / pre-release security check → `security-review`
 - Architecture, modules, APIs, AGENTS.md, ADRs, tech-debt → `documentation`
 - Commit/push → `git-commit`
 - Whole-codebase audit/health check → `audit-solution`
+- Wild brainstorming, "think differently", no-filter creative ideation → `drunken-genius`
 - End of a skill workflow with real friction → `self-improve`
 
-## 7. Language
+## 7. Skill composition order
 
-Code comments, docstrings, identifiers, all docs → always English, regardless of chat language. User-facing text → i18n layer, never inline literals.
+When several skills apply to one request, they compose in this order:
+1. Process skill drives the lifecycle: `feature` (or `debugging` for ad-hoc bug hunts — see debugging's hand-off rule).
+2. Content/style skills apply in parallel during IN_PROGRESS: `coding-standards` (+ its addenda), `web-standards`, `taste` (taste's MOTION_INTENSITY overrides web-standards timing on landing/portfolio/marketing surfaces).
+3. Cross-cutting review before DONE: `security-review` on sensitive code, `audit-solution` on request.
+4. `git-commit` closes.
+This is a default order, not a rigid gate — skip steps that don't apply.
+
+## 8. Language
+
+Code comments, docstrings, identifiers, all docs → always English (base rule → `skills/_shared/blocks.md`). User-facing text → i18n layer, never inline literals.
 
 ---
 

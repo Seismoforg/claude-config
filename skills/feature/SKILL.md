@@ -65,7 +65,7 @@ Body (all required):
 # Impact Analysis  (affected/new/deleted files; breaking changes; overlap with other in-flight features editing the same files)
 # Validation       (filled at the READY_FOR_DONE gate)
 ```
-**Language: feature files always in English** — title, all sections, Tasks — regardless of chat language. Opening a non-English file → rewrite the sections you touch into English.
+**Language: feature files always in English** (base rule → `skills/_shared/blocks.md`) — title, all sections, Tasks. Opening a non-English file → rewrite the sections you touch into English.
 **Style: write feature files terse (caveman style)** — imperative, no filler, lists over prose; keep every requirement, number, file and constraint. Invoke the `caveman` skill when drafting/condensing sections.
 
 # WORKFLOW
@@ -97,10 +97,11 @@ Before ANY code change: verify file exists AND status = APPROVED. Then move to `
 Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks current.
 - Apply `/coding-standards` to every code change.
 - Apply `/web-standards` to any web/UI change (responsive, a11y, perf, motion).
-- Apply `/taste-skill` when the feature is frontend design work — landing/marketing/hero/portfolio surfaces, redesigns, visual polish, "make it look good / not templated" (composes with `/web-standards`).
+- Apply `/taste` when the feature is frontend design work — landing/marketing/hero/portfolio surfaces, redesigns, visual polish, "make it look good / not templated" (composes with `/web-standards`).
 - Apply `/documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, ADRs, or technical debt.
 Invoke each skill via the Skill tool; don't just paraphrase.
-Intermediate commits during implementation are fine; the FINAL commit waits for the Step-6 validation gate (below).
+- Fanning an enumerated task/checklist out to parallel workers → explicitly assign every item, and re-verify full coverage against the list before dispatch AND after merge; unassigned items drop silently.
+Intermediate commits during implementation are fine; the FINAL commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
 
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
@@ -111,17 +112,19 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 - tests pass (if available)
 - every changed code path actually exercised. A path needing an unavailable dep (model, GPU, paid API) is NOT "outside your control" — drive it with a stub/mock before declaring done; an unrun changed branch is unverified, not "structurally verified"
 - full validation needs a genuinely external action (deploy, service restart, third-party run) → record what you DID verify vs what remains under `# Validation`, surface the pending step to the user — never report it as fully validated
-- validation passed → commit the landed work via `/git-commit` (owns the confirmation gate; surfaces default-branch commits and offers to branch first). Don't hand-roll commits.
+- do NOT commit here. The commit waits until after DONE (Step 7), and is user-opt-in.
+Verification fails (build/tests red) → fix the root cause, re-run. Same check fails again after a fix attempt → stop, report the failure and your diagnosis to the user, do NOT weaken the check, skip it, or keep guessing at patches. Ask before a third attempt at the same failing check.
 Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion** (not free text): "Implementation complete and validation passed. Move to DONE?" Offer at least **Move to DONE** / **Leave open for now**. Only DONE counts as the explicit confirmation for step 7.
 
 ## 7. Finalize → DONE
 Only on explicit user confirmation: move to `/features/done/`.
+Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUserQuestion** whether to commit the landed work now. Only on an explicit yes, commit via `/git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip; leave it uncommitted. Never commit before this point.
 
 ## 8. Retrospective — `/self-improve`
 After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `/self-improve` via the Skill tool to detect friction in this + the applied skills (feature, coding-standards, documentation) and offer to codify improvements. It stays silent unless real friction — so run it, don't pre-judge.
 
 # WHEN UNCERTAIN
-Local first (feature file, AGENTS.md, /docs+ADRs, code). Still unclear → `WebSearch` (+ `WebFetch` for official docs), never guess.
+See `skills/_shared/blocks.md`.
 
 # HARD RULES
 - Only `/features` files define state; chat doesn't.
@@ -131,6 +134,7 @@ Local first (feature file, AGENTS.md, /docs+ADRs, code). Still unclear → `WebS
 - No skipping states; folder and status always match (bar the documented approve&implement / audit-remediation fast-paths).
 - READY_FOR_DONE requires recorded, passing validation.
 - DONE requires explicit user confirmation — never automatic.
+- Commit ONLY after the user moves the feature to DONE, and only if the user opts in via AskUserQuestion — never at READY_FOR_DONE, never automatically.
 - A follow-up change contradicting an already-DONE feature's spec → open a new feature or record a brief amendment note in the DONE file; the terminal spec never drifts from the code.
 - High-risk features require explicit approval before implementation.
 - Every user-waiting transition (approval gate, DONE gate, any "STOP. Ask") MUST use AskUserQuestion — never a free-text prompt.

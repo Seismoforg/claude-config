@@ -51,3 +51,9 @@ Does NOT count (never manufacture):
 - No contradictions: a new rule must not clash with an existing one; a rule duplicated across skills stays identical in every copy — fix all or none.
 - Unsure a tool/capability/convention exists? Verify with `WebSearch`/`WebFetch` before codifying — never encode an assumption.
 - Improving THIS skill goes through the same gate.
+- Shared rules live in `skills/_shared/blocks.md` — edit them there once, never re-inline a full copy into a skill file again.
+
+# SKILL LIFECYCLE
+- New skill added → add one line to README.md's skill list AND CLAUDE.md section 6's trigger index. Both, same pass, not just one.
+- Skill removed or merged into another → `grep -rln "skill-name"` across the whole repo, remove every reference (README, CLAUDE.md, other skills' cross-references), don't leave a dangling pointer.
+- New addendum file (not a full skill) added under an existing skill → does NOT get its own README/CLAUDE.md entry — only add a pointer inside its parent skill's SKILL.md.

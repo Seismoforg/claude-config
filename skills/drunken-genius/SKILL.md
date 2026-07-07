@@ -38,4 +38,4 @@ Take the 1–2 best. Make concrete: how to actually start? Smallest experiment t
 - Security, data loss, destructive actions stay **always** off-limits, no matter how brilliant.
 
 # AFTER THE TASK
-Concrete friction traceable to this skill? → `/self-improve`. Else silent.
+See `skills/_shared/blocks.md`.

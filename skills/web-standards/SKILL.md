@@ -38,6 +38,7 @@ Target usable < ~2s; keep the three CWV green.
 - Lazy-load below-the-fold; ship only the CSS/JS a route needs.
 
 # 4. MOTION & INTERACTION (motion with intention)
+`taste` active on this surface (landing/portfolio/marketing) → its MOTION_INTENSITY dial overrides the timing figures below; this section's figures are the default when taste is not in scope.
 - Motion serves a purpose: feedback, continuity, or directing attention — never decoration.
 - Subtle + fast: ~150–300ms, ease-out entrances; animate `transform`/`opacity`, not layout props.
 - Real-time feedback on every interactive state (hover, focus, active, loading, disabled).
@@ -67,10 +68,11 @@ Never ship the happy path alone.
 - [ ] Motion purposeful, subtle, respects `prefers-reduced-motion`
 - [ ] Data views handle loading / empty / error, not just success
 - [ ] Matches the project's design system (tokens, spacing, components)
+- [ ] Referenced i18n/translation keys actually resolve — a missing key often fails silently (renders the raw key), passing typecheck + build
 - [ ] Verified in an actual rendered viewport (layout, stacking, overflow, interaction) — a build/typecheck doesn't catch visual regressions
 
 # WHEN UNCERTAIN
-Local first (components, tokens, conventions). Still unclear → `WebSearch` (+ `WebFetch` for MDN/W3C/official docs), never guess.
+See `skills/_shared/blocks.md` (for web, prefer MDN/W3C official docs).
 
 # HARD RULES
 - Mobile-first and fluid — never desktop-first with pixel-locked widths.
@@ -83,4 +85,4 @@ Local first (components, tokens, conventions). Still unclear → `WebSearch` (+ 
 - Every data view handles loading / empty / error, never the happy path alone.
 
 # AFTER THE TASK
-Concrete friction traceable to this skill? → `/self-improve`. Else silent.
+See `skills/_shared/blocks.md`.
