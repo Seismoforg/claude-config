@@ -74,7 +74,7 @@ Adding/upgrading a dependency → also read `skills/coding-standards/dependencie
 
 # HARD RULES
 - Match existing patterns over imposing defaults.
-- Never hardcode secrets, API keys, tokens, or credentials in source — use env vars / secret manager per the project's existing pattern. Flag it immediately if you notice one already in the codebase, don't silently fix unrelated instances.
+- Never hardcode secrets, API keys, tokens, or credentials in source — use env vars / secret manager per the project's existing pattern. Flag it immediately if you notice one already in the codebase, don't silently fix unrelated instances. When reading a config/state file that may hold secrets, read only the keys you need — never dump the whole file into output or logs.
 - No business logic in controllers or UI.
 - Minimal diffs; no broad restructuring / large refactor without approval.
 - Read scope follows task classification — don't over-scan small changes.
