@@ -14,7 +14,8 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills.
 ```powershell
 $repo = 'd:\Projects\claude-config'   # clone target
 New-Item -ItemType Junction -Path "$HOME\.claude\skills" -Target "$repo\skills"
-Set-Content "$HOME\.claude\CLAUDE.md" "@$($repo -replace '\\','/')/CLAUDE.md"
+# BOM-free — a byte-order mark before @ breaks the @import
+[IO.File]::WriteAllText("$HOME\.claude\CLAUDE.md", "@$($repo -replace '\\','/')/CLAUDE.md", (New-Object Text.UTF8Encoding $false))
 ```
 First session shows a one-time external-import approval dialog — approve it.
 

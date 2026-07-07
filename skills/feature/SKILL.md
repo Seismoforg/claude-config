@@ -65,8 +65,7 @@ Body (all required):
 # Impact Analysis  (affected/new/deleted files; breaking changes; overlap with other in-flight features editing the same files)
 # Validation       (filled at the READY_FOR_DONE gate)
 ```
-**Language: feature files always in English** (base rule → `skills/_shared/blocks.md`) — title, all sections, Tasks. Opening a non-English file → rewrite the sections you touch into English.
-**Style: write feature files terse (caveman style)** — imperative, no filler, lists over prose; keep every requirement, number, file and constraint. Invoke the `caveman` skill when drafting/condensing sections.
+**Language + style: feature files follow ENGLISH + TERSE ARTIFACTS** (`skills/_shared/blocks.md`) — English + caveman-terse across title, all sections, Tasks; every requirement/number/file/constraint kept.
 
 # WORKFLOW
 
@@ -96,6 +95,7 @@ Before ANY code change: verify file exists AND status = APPROVED. Then move to `
 ## 5. Implement
 Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks current.
 - Apply `/coding-standards` to every code change.
+- Apply `/security-review` when the feature touches auth, sessions, input handling, or external payloads.
 - Apply `/web-standards` to any web/UI change (responsive, a11y, perf, motion).
 - Apply `/taste` when the feature is frontend design work — landing/marketing/hero/portfolio surfaces, redesigns, visual polish, "make it look good / not templated" (composes with `/web-standards`).
 - Apply `/documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, ADRs, or technical debt.

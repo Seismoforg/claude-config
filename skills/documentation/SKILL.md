@@ -8,9 +8,7 @@ description: Use when architecture, modules, responsibilities, public APIs, AGEN
 Keeps architecture, module, API, decision docs correct and in sync. Satisfies the
 `feature` workflow's "documentation updated if required" step.
 
-**Language: all docs in English** (base rule → `skills/_shared/blocks.md`) — covers AGENTS.md, CLAUDE.md, ADRs, technical-debt, READMEs, code comments/docstrings. Editing a doc in another language → translate the sections you touch.
-
-**Style: write docs terse (caveman style)** — imperative, no filler, lists over prose; keep every fact, name, path and constraint. Invoke the `caveman` skill when drafting/condensing. (READMEs may stay a touch more prose-y where a human onboarding needs it.)
+**Language + style: all docs follow ENGLISH + TERSE ARTIFACTS** (`skills/_shared/blocks.md`) — covers AGENTS.md, CLAUDE.md, ADRs, technical-debt, READMEs, code comments/docstrings. (READMEs may stay a touch more prose-y for human onboarding.)
 
 # ON ACTIVATION — DECISION GATE
 1. Matches a **required** trigger (below)? No → say "no docs required" and stop. Don't document trivial changes.

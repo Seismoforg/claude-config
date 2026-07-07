@@ -42,6 +42,7 @@ API conventions (if building anything consumed externally): consistent error res
 # CHANGE STRATEGY
 Prefer: minimal diffs · localized edits · existing patterns · incremental improvements.
 Avoid: full-file rewrites · broad restructuring · unnecessary renaming · large refactors without approval.
+Introducing a whole-repo formatter/linter alongside other edits → run the format pass FIRST, or commit functional changes before formatting, so mechanical churn lands in its own commit, never intermingled with functional diffs.
 
 # REFACTOR RULES
 Before: identify affected files, assess risk, minimize scope, preserve behavior. Significant structural changes need approval.
