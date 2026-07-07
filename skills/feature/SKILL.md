@@ -12,6 +12,7 @@ Authoritative rule: **only files inside `/features` define feature state.** Chat
 # ON ACTIVATION — STATE CHECK FIRST
 Before anything else:
 0. Bare invocation (no feature named/described) → don't guess. Show current non-terminal features (draft, pending, approved, in-progress, ready-for-done) and ask via AskUserQuestion what to do (include a "Brainstorm a new feature" option → Workflow step 0). Proceed only once a feature/intent is chosen.
+0.5. Request reads as another skill's dedicated trigger (e.g. whole-system audit, ad-hoc bug hunt) → surface the mismatch, ask before hand-rolling it inside feature instead of using the purpose-built skill.
 1. Identify which feature the request refers to (name or timestamp).
 2. Exists → open it, read `status`, confirm folder matches status. Folder ≠ status → STOP and report the mismatch, don't guess.
 3. Doesn't exist → new feature, start at Workflow step 1.
@@ -21,7 +22,7 @@ Never plan/approve/implement/validate/change status without this check.
 
 # STRUCTURE
 Path: `/features/<state-folder>/<timestamp>-<slug>.md`
-Time: `YYYYMMDD-HHMM` — date part is ALWAYS today's date from context. Clock time unavailable → derive only the time part: newest file dated today → a minute just after it; else start today early (e.g. 0001). Never move the date off today; never fabricate a wall-clock time.
+Time: `YYYYMMDD-HHMM` — date part is ALWAYS today's date from context. Clock time unavailable → derive only the time part: newest file dated today across ALL folders (draft/pending/approved/in-progress/ready-for-done/done/discarded — not just non-terminal) → a minute just after it; else start today early (e.g. 0001). Never move the date off today; never fabricate a wall-clock time.
 Slug: lowercase-kebab, no spaces. Example: `/features/pending/20260124-1530-user-auth.md`
 
 One feature per file. Chronological by filename. No index file. One request bundling multiple independent features → split into separate files; ambiguous grouping → confirm the split with the user.
