@@ -24,7 +24,7 @@ Hygiene scan: flag obvious secrets (`.env`, key/token/credential files), large b
 # STEP 2 — ANALYZE & PROPOSE
 Prepare BOTH options:
 1. **Single commit** — one message, when changes are one cohesive unit.
-2. **Split into N commits** — group changed files by concern (feature vs fix vs docs vs config, or by module). Each group = its own `{files, message}`. Split only along real seams; never invent artificial splits.
+2. **Split into N commits** — group changed files by concern (feature vs fix vs docs vs config, or by module). Each group = its own `{files, message}`. Split only along real seams; never invent artificial splits. Concerns interleaved WITHIN one file (i18n bundle, shared doc/config) can't be file-split — surface it and offer a hunk-split (patch-stage only the wanted hunks) or a combined commit; never silently sweep one concern into another's commit.
 
 Message format (English, Conventional-Commits-friendly, not mandatory):
 - Imperative subject ≤ ~72 chars, no trailing period.
@@ -32,7 +32,10 @@ Message format (English, Conventional-Commits-friendly, not mandatory):
 - No `Co-Authored-By:` / "Generated with Claude" line — see HARD RULES.
 
 # STEP 3 — CONFIRM via AskUserQuestion (REQUIRED — see APPROVAL GATES, end of file)
-Two questions:
+On the **default branch** (main/master) → Q0 is REQUIRED, asked alongside Q1/Q2, never folded into Q2 as an afterthought:
+
+**Q0 — Branch (default branch only):**
+- "Commit directly on main/master" / "Create a new branch first".
 
 **Q1 — How to commit:**
 - "Single commit" (include the proposed subject).
@@ -42,9 +45,7 @@ Two questions:
 **Q2 — Commit only or also push:**
 - "Just commit" / "Commit and push".
 
-On the **default branch** (main/master) → add the choice to create a new branch first (per the no-commit-to-default rule). Respect the pick.
-
-Don't proceed until answered. "Other"/cancel → do nothing, report it.
+Don't proceed until all applicable questions are answered. "Other"/cancel → do nothing, report it.
 
 # STEP 4 — EXECUTE
 - **New branch first** (if chosen): `git switch -c <kebab-name>` from the change summary.

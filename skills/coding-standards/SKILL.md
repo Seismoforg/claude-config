@@ -59,7 +59,7 @@ Match the project's testing setup — don't invent one it lacks.
 
 # RESEARCH ORDER
 Local first: 1) relevant files 2) AGENTS.md (nearest up) 3) `/features` specs 4) `/docs`, ADRs 5) existing code.
-External only for third-party APIs, framework/SDK updates, version-specific behavior. Unclear after local? Use `WebSearch` (+ `WebFetch` for official docs), never guess. Prefer official docs. For any framework/SDK, check the installed version's docs — APIs may differ from training data.
+External only for third-party APIs, framework/SDK updates, version-specific behavior. Unclear after local? Use `WebSearch` (+ `WebFetch` for official docs), never guess. Prefer official docs. For any framework/SDK, check the installed version's docs — APIs may differ from training data. Consuming/pinning an external artifact at a ref → read its API AT that ref (fetch/checkout it), not a local copy that may be dirty or ahead of the pin; the shipped API can differ.
 Adding/upgrading a dependency → also read `skills/coding-standards/dependencies.md`.
 
 # COMPLETION CHECKLIST
