@@ -10,6 +10,10 @@ never guess.
 # AFTER THE TASK
 Concrete friction traceable to this skill? → `/self-improve`. Else silent.
 
+# APPROVAL GATES
+Any point marked "STOP. Ask" / "CONFIRM ... (REQUIRED)" → `AskUserQuestion`, multiple choice,
+never free text. Don't proceed until answered.
+
 # LANGUAGE
 Docs, comments, identifiers, commit messages: always English regardless of the
 conversation language.

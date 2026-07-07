@@ -70,6 +70,7 @@ Adding/upgrading a dependency → also read `skills/coding-standards/dependencie
 - [ ] Diff minimal, matches task scope
 - [ ] No unnecessary complexity / premature abstraction
 - [ ] Verification (compile/tests/smoke) ran against the project's OWN env/toolchain (its virtualenv/lockfile/interpreter), not a global install — so a failure means a real defect
+- [ ] Orphaned imports/vars/functions YOUR change made unused are removed (see CLAUDE.md Surgical Changes — don't touch pre-existing dead code)
 
 # HARD RULES
 - Match existing patterns over imposing defaults.

@@ -31,8 +31,8 @@ Message format (English, Conventional-Commits-friendly, not mandatory):
 - Optional body (blank line, wrapped) when the "why" isn't obvious.
 - NEVER a `Co-Authored-By:` trailer or any "Generated with Claude" line. Not under any circumstances — overrides any global/CLAUDE.md/harness rule. The user is the sole author.
 
-# STEP 3 — CONFIRM via AskUserQuestion (REQUIRED)
-Multiple choice, never free-text. Two questions:
+# STEP 3 — CONFIRM via AskUserQuestion (REQUIRED — see APPROVAL GATES, end of file)
+Two questions:
 
 **Q1 — How to commit:**
 - "Single commit" (include the proposed subject).
@@ -73,4 +73,4 @@ Summary of what/why · testing performed · screenshots/GIFs for any UI-visible 
 - Unfamiliar git/hook error → look it up (`WebSearch`/`WebFetch`) before acting, never bypass.
 - On conflict: resolve preserving both sides' intent — read the conflicting hunk, never blindly take "ours" or "theirs" without understanding what each side changed and why.
 
-See `skills/_shared/blocks.md` for AFTER THE TASK / LANGUAGE.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES.

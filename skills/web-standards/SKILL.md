@@ -1,6 +1,6 @@
 ---
 name: web-standards
-description: "Use whenever building or changing web UI — pages, components, layouts, styling, responsive/mobile work, animations, or anything user-facing on the web. Enforces modern web-design standards: mobile-first responsive layout, accessibility (WCAG), Core Web Vitals performance, purposeful motion, and minimalist/bento layouts."
+description: Use whenever building or changing web UI — pages, components, layouts, styling, responsive/mobile work, animations, or anything user-facing on the web. Enforces modern web-design standards: mobile-first responsive layout, accessibility (WCAG), Core Web Vitals performance, purposeful motion, and minimalist/bento layouts.
 ---
 
 # WEB STANDARDS

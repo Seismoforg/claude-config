@@ -79,7 +79,7 @@ When the feature is vague, exploratory, or the user asks for ideas/options/"what
 Write the spec into `/features/draft/`. Fill all sections as far as known.
 
 ## 2. Request approval → NEEDS_APPROVAL
-Move to `/features/pending/`. Summarize for the user. **STOP. Ask via AskUserQuestion** (not free text). Offer at least:
+Move to `/features/pending/`. Summarize for the user. **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file). Offer at least:
 - **Approve & implement** — explicit approval: → APPROVED (step 3) → implementation gate (step 4) → implement (step 5) without asking again.
 - **Approve, don't implement yet** — → APPROVED then stop.
 - **Change spec** — stay in NEEDS_APPROVAL, refine.
@@ -114,7 +114,7 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 - full validation needs a genuinely external action (deploy, service restart, third-party run) → record what you DID verify vs what remains under `# Validation`, surface the pending step to the user — never report it as fully validated
 - do NOT commit here. The commit waits until after DONE (Step 7), and is user-opt-in.
 Verification fails (build/tests red) → fix the root cause, re-run. Same check fails again after a fix attempt → stop, report the failure and your diagnosis to the user, do NOT weaken the check, skip it, or keep guessing at patches. Ask before a third attempt at the same failing check.
-Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion** (not free text): "Implementation complete and validation passed. Move to DONE?" Offer at least **Move to DONE** / **Leave open for now**. Only DONE counts as the explicit confirmation for step 7.
+Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion**: "Implementation complete and validation passed. Move to DONE?" Offer at least **Move to DONE** / **Leave open for now**. Only DONE counts as the explicit confirmation for step 7.
 
 ## 7. Finalize → DONE
 Only on explicit user confirmation: move to `/features/done/`.
@@ -123,7 +123,7 @@ Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUser
 ## 8. Retrospective — `/self-improve`
 After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `/self-improve` via the Skill tool to detect friction in this + the applied skills (feature, coding-standards, documentation) and offer to codify improvements. It stays silent unless real friction — so run it, don't pre-judge.
 
-# WHEN UNCERTAIN
+# WHEN UNCERTAIN / APPROVAL GATES
 See `skills/_shared/blocks.md`.
 
 # HARD RULES

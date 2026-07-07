@@ -68,7 +68,7 @@ Apply only approved findings, per the composed skills:
 # STEP 8 — SELF-IMPROVE
 Run `/self-improve`: audit surfaced a weakness in a skill itself (missing check, misfired rule) → propose a general improvement via multiple choice. No friction → skip silently.
 
-# WHEN UNCERTAIN
+# WHEN UNCERTAIN / APPROVAL GATES
 See `skills/_shared/blocks.md`.
 
 # HARD RULES
