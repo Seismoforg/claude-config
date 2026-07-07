@@ -71,9 +71,6 @@ Never ship the happy path alone.
 - [ ] Referenced i18n/translation keys actually resolve — a missing key often fails silently (renders the raw key), passing typecheck + build
 - [ ] Verified in an actual rendered viewport (layout, stacking, overflow, interaction) — a build/typecheck doesn't catch visual regressions
 
-# WHEN UNCERTAIN
-See `skills/_shared/blocks.md` (for web, prefer MDN/W3C official docs).
-
 # HARD RULES
 - Mobile-first and fluid — never desktop-first with pixel-locked widths.
 - Standard/support detail unclear → verify with `WebSearch`/`WebFetch`, don't assume.
@@ -84,5 +81,4 @@ See `skills/_shared/blocks.md` (for web, prefer MDN/W3C official docs).
 - Match the existing design system over these defaults.
 - Every data view handles loading / empty / error, never the happy path alone.
 
-# AFTER THE TASK
-See `skills/_shared/blocks.md`.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN (for web, prefer MDN/W3C official docs) / AFTER THE TASK / LANGUAGE.

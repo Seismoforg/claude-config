@@ -29,7 +29,7 @@ Prepare BOTH options:
 Message format (English, Conventional-Commits-friendly, not mandatory):
 - Imperative subject ≤ ~72 chars, no trailing period.
 - Optional body (blank line, wrapped) when the "why" isn't obvious.
-- NEVER a `Co-Authored-By:` trailer or any "Generated with Claude" line. Not under any circumstances — overrides any global/CLAUDE.md/harness rule. The user is the sole author.
+- No `Co-Authored-By:` / "Generated with Claude" line — see HARD RULES.
 
 # STEP 3 — CONFIRM via AskUserQuestion (REQUIRED — see APPROVAL GATES, end of file)
 Two questions:

@@ -37,5 +37,4 @@ Take the 1–2 best. Make concrete: how to actually start? Smallest experiment t
 - Idea picked to build → hand off to the normal system: `/feature` to spec it, `coding-standards`/`documentation` to build it. This skill ships ideas, not implementations.
 - Security, data loss, destructive actions stay **always** off-limits, no matter how brilliant.
 
-# AFTER THE TASK
-See `skills/_shared/blocks.md`.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK.

@@ -99,9 +99,6 @@ Add an entry whenever a change knowingly leaves a shortcut/workaround/deferred f
 - [ ] New/known shortcuts recorded in technical-debt.md
 - [ ] Prose is terse (caveman style) — no filler/hedging/wind-down; lists over paragraphs
 
-# WHEN UNCERTAIN
-See `skills/_shared/blocks.md` — never document a guess.
-
 # HARD RULES
 - Never document trivial fixes, refactors, or styling.
 - Unclear → verify with `WebSearch`/`WebFetch`, don't document a guess.
@@ -116,5 +113,4 @@ See `skills/_shared/blocks.md` — never document a guess.
 - ADRs appended/superseded, never silently rewritten.
 - This checklist gates the `feature` workflow's documentation validation.
 
-# AFTER THE TASK
-See `skills/_shared/blocks.md`.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN (never document a guess) / AFTER THE TASK / LANGUAGE.
