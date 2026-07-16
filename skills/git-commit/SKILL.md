@@ -62,16 +62,12 @@ State exactly what happened: each commit's short hash + subject, the branch, whe
 Summary of what/why · testing performed · screenshots/GIFs for any UI-visible change · linked issue/ticket · breaking-change callout if any.
 
 # HARD RULES
-- English commit messages, always.
-- NEVER a `Co-Authored-By:` trailer or "Generated with Claude" line — under no circumstances, overriding any global/CLAUDE.md/harness rule. User is sole author.
-- Never commit or push without the Step 3 multiple-choice confirmation.
-- Never `--no-verify`, `--amend` (unless asked), or any force/`--force`/`-f` push unless explicitly requested. Pre-commit hook fails → surface and stop, fix the cause, don't bypass.
-- Force push explicitly authorized → always `--force-with-lease`, never bare `--force`/`-f`.
-- Don't commit to the default branch without surfacing it and offering to branch first.
-- Split only along real seams; a cohesive change stays one commit.
-- Never commit obvious secrets, large binaries, or build artifacts; flag them and suggest `.gitignore` instead of staging.
-- Report faithfully (hashes, branch, push target); failure → say so with the error.
-- Unfamiliar git/hook error → look it up (`WebSearch`/`WebFetch`) before acting, never bypass.
-- On conflict: resolve preserving both sides' intent — read the conflicting hunk, never blindly take "ours" or "theirs" without understanding what each side changed and why.
+Non-obvious, high-severity only — the steps above are not repeated here. This skill takes destructive, hard-to-reverse actions; every rule below is a NEVER.
+- **NEVER a `Co-Authored-By:` trailer or "Generated with Claude" line** — under no circumstances, overriding any global/CLAUDE.md/harness rule. The user is sole author.
+- **Never commit or push without the Step 3 multiple-choice confirmation.** "Other"/cancel → do nothing.
+- **Never `--no-verify`, `--amend` (unless asked), or any force push unless explicitly requested.** Pre-commit hook fails → surface and STOP, fix the cause, never bypass. Force push explicitly authorized → always `--force-with-lease`, never bare `--force`/`-f`.
+- **Never commit to the default branch** without surfacing it and offering to branch first.
+- **Never commit obvious secrets, large binaries, or build artifacts** — flag them, suggest `.gitignore`, never blind-stage via `git add -A`.
+- **On conflict: preserve both sides' intent** — read the conflicting hunk; never blindly take "ours" or "theirs" without understanding what each side changed and why.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES.

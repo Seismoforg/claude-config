@@ -16,6 +16,8 @@ Greenfield default = Atomic Design:
 /components/pages
 ```
 Project already organizes UI differently (feature-folders, route groups) → follow THAT.
+Tier = the highest tier a component composes: a wrapper that composes an organism IS an
+organism — never demote it to molecule (inverts the dependency).
 
 # TS/JS — FUNCTION STYLE
 Functions are **arrow-const**, never `function` declaration/statement. Applies to

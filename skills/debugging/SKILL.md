@@ -5,7 +5,7 @@ description: Use for an ad-hoc bug hunt outside a feature lifecycle — "why is 
 
 # DEBUGGING
 
-Ad-hoc bug hunt not tied to a `/feature` draft. Composes with `coding-standards`
+Ad-hoc bug hunt not tied to a `feature` draft. Composes with `coding-standards`
 (how to write the fix) and `feature` (hand-off when the fix turns structural).
 
 - **Step 1 — Reproduce first.** No fix attempt before you can reliably trigger the bug
@@ -22,6 +22,8 @@ Ad-hoc bug hunt not tied to a `/feature` draft. Composes with `coding-standards`
   first where the project has tests. Don't restate it here.
 
 Hand-off: if the fix needs a structural change (per `coding-standards` REFACTOR RULES
-threshold), stop the ad-hoc hunt and capture it as a `/feature` draft instead.
+threshold), stop the ad-hoc hunt and capture it as a `feature` draft instead — UNLESS
+the user, told it's structural, explicitly chose to keep it an ad-hoc fix; then continue
+but stay surgical.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

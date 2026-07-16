@@ -47,8 +47,9 @@ Introducing a whole-repo formatter/linter alongside other edits → run the form
 # REFACTOR RULES
 Before: identify affected files, assess risk, minimize scope, preserve behavior. Significant structural changes need approval.
 **"Significant" means ANY of:** > 3 files touched · a public API/exported-signature changes · a module boundary moves · a folder/module is renamed or split. Below this bar → proceed without an extra approval gate (still subject to normal task classification).
-Significant (per the threshold above) → capture as a `/feature` draft before touching code, same as any new behavior. Non-significant → inline approval question is enough, no feature file needed.
-Moving/renaming/splitting files: use the VCS move (`git mv`) to keep history, rewrite every affected import/reference in one pass, then run the project's typecheck/build to confirm no stale references before done. A missed reference fails silently until built.
+Significant (per the threshold above) → capture as a `feature` draft before touching code, same as any new behavior. Non-significant → inline approval question is enough, no feature file needed.
+Moving/renaming/splitting files: TRACKED → VCS move (`git mv`) to keep history. UNTRACKED (never committed) → plain `mv`; `git mv` fails "not under version control" and there is no history to keep. Rewrite every affected import/reference in one pass, then run the project's typecheck/build to confirm no stale references before done. A missed reference fails silently until built.
+Deleting/merging a SECTION (doc, config, prose) needs the same rigour with none of the safety net — prose has no compiler. Before deleting, grep for BOTH (a) pointers to it and (b) the content itself. A stale pointer or a rule that quietly vanished fails silently forever; nothing builds to catch it.
 
 # TESTS
 Match the project's testing setup — don't invent one it lacks.
@@ -59,7 +60,8 @@ Match the project's testing setup — don't invent one it lacks.
 
 # RESEARCH ORDER
 Local first: 1) relevant files 2) AGENTS.md (nearest up) 3) `/features` specs 4) `/docs`, ADRs 5) existing code.
-External only for third-party APIs, framework/SDK updates, version-specific behavior. Unclear after local? Use `WebSearch` (+ `WebFetch` for official docs), never guess. Prefer official docs. For any framework/SDK, check the installed version's docs — APIs may differ from training data. Consuming/pinning an external artifact at a ref → read its API AT that ref (fetch/checkout it), not a local copy that may be dirty or ahead of the pin; the shipped API can differ.
+Before offering the user a keep-vs-change choice about existing behavior, read the code that implements it first — its current state may make the choice moot.
+External only for third-party APIs, framework/SDK updates, version-specific behavior (WHEN UNCERTAIN → blocks.md). Prefer official docs. For any framework/SDK, check the INSTALLED version's docs — APIs may differ from training data. Consuming/pinning an external artifact at a ref → read its API AT that ref (fetch/checkout it), not a local copy that may be dirty or ahead of the pin; the shipped API can differ.
 Adding/upgrading a dependency → also read `skills/coding-standards/dependencies.md`.
 
 # COMPLETION CHECKLIST
@@ -73,14 +75,11 @@ Adding/upgrading a dependency → also read `skills/coding-standards/dependencie
 - [ ] Orphaned imports/vars/functions YOUR change made unused are removed (see CLAUDE.md Surgical Changes — don't touch pre-existing dead code)
 
 # HARD RULES
-- Match existing patterns over imposing defaults.
-- Never hardcode secrets, API keys, tokens, or credentials in source — use env vars / secret manager per the project's existing pattern. Flag it immediately if you notice one already in the codebase, don't silently fix unrelated instances. When reading a config/state file that may hold secrets, read only the keys you need — never dump the whole file into output or logs.
-- No business logic in controllers or UI.
-- Minimal diffs; no broad restructuring / large refactor without approval.
-- Read scope follows task classification — don't over-scan small changes.
-- Threading a new param through a call chain: confirm every function declares it and every caller passes it (grep the name) — a value used in a helper but only added to the outer function is a runtime error.
-- Web/frontend UI work also invokes `web-standards`; frontend/TS-JS + Python/ML have addenda (`frontend.md`, `python-ml.md`).
-- Identifiers English; user-facing text → i18n, never inline. Code comments/docstrings → governed by `documentation`.
-- Project has tests → new behavior + bug fixes get tests (repro test first for bugs); match the existing setup, never weaken a test to pass.
+Non-obvious, high-severity only — the sections above are not repeated here.
+- **Match existing patterns over imposing defaults.** Governs everything above.
+- **Never hardcode secrets, API keys, tokens, or credentials** in source — env vars / secret manager per the project's existing pattern. Notice one already committed → flag it immediately, don't silently fix unrelated instances. Reading a config/state file that may hold secrets → read only the keys you need; never dump the whole file into output or logs.
+- **No business logic in controllers or UI** — it belongs in services/domain models.
+- **Threading a new param through a call chain:** confirm every function declares it AND every caller passes it (grep the name). A value used in a helper but only added to the outer function is a runtime error that typechecks.
+- **Never weaken or delete a test to make it green** — fix the cause.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

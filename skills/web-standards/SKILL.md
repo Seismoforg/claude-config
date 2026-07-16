@@ -1,6 +1,6 @@
 ---
 name: web-standards
-description: Use whenever building or changing web UI — pages, components, layouts, styling, responsive/mobile work, animations, or anything user-facing on the web. Enforces modern web-design standards: mobile-first responsive layout, accessibility (WCAG), Core Web Vitals performance, purposeful motion, and minimalist/bento layouts.
+description: "Use whenever building or changing web UI — pages, components, layouts, styling, responsive/mobile work, animations, or anything user-facing on the web. Enforces modern web-design standards: mobile-first responsive layout, accessibility (WCAG), Core Web Vitals performance, purposeful motion, and minimalist/bento layouts."
 ---
 
 # WEB STANDARDS
@@ -31,7 +31,7 @@ Bias: enforce non-negotiables (a11y, responsive, perf) every change; apply aesth
 - **Respect settings**: honor `prefers-reduced-motion` and `prefers-color-scheme`.
 
 # 3. PERFORMANCE & CORE WEB VITALS (non-negotiable)
-Target usable < ~2s; keep the three CWV green.
+Target usable < ~2s. Thresholds — this skill owns them, don't restate elsewhere: **LCP < 2.5s · INP < 200ms · CLS < 0.1.**
 - **LCP**: optimize hero/largest element — WebP/AVIF, sized/responsive `srcset`, preload critical assets.
 - **INP**: keep the main thread free — avoid heavy sync JS, debounce expensive handlers, split/defer non-critical bundles.
 - **CLS**: reserve space for images/embeds (width+height or aspect-ratio); don't insert content above existing content.
@@ -53,7 +53,7 @@ Target usable < ~2s; keep the three CWV green.
 
 # 6. DATA STATES (every data-driven view)
 All four first-class, not just success:
-- Loading → skeleton/spinner, reserve space (no CLS).
+- Loading → skeleton matching the final layout's shape (spinner only where a skeleton can't model it), reserve space (no CLS).
 - Empty → meaningful empty state, not a blank box.
 - Error → plain-language message + recovery action.
 - Success → the data.
@@ -67,18 +67,16 @@ Never ship the happy path alone.
 - [ ] No layout shift (space reserved for async/media)
 - [ ] Motion purposeful, subtle, respects `prefers-reduced-motion`
 - [ ] Data views handle loading / empty / error, not just success
+- [ ] Values fed to bounded/ranged controls (progress, meter, gauge, slider) clamped to the control's range — upstream data can overshoot
 - [ ] Matches the project's design system (tokens, spacing, components)
 - [ ] Referenced i18n/translation keys actually resolve — a missing key often fails silently (renders the raw key), passing typecheck + build
-- [ ] Verified in an actual rendered viewport (layout, stacking, overflow, interaction) — a build/typecheck doesn't catch visual regressions
+- [ ] Build + typecheck clean (rendered viewport / interaction / visual regressions → LIVE VERIFICATION in `skills/_shared/blocks.md`)
 
 # HARD RULES
-- Mobile-first and fluid — never desktop-first with pixel-locked widths.
-- Standard/support detail unclear → verify with `WebSearch`/`WebFetch`, don't assume.
-- Semantic HTML before ARIA; every interactive element keyboard-accessible.
-- Meet WCAG AA contrast; verify, don't guess.
-- Ship green CWV (LCP/INP/CLS); optimize images, defer non-critical code.
-- Motion purposeful and gated behind `prefers-reduced-motion`.
-- Match the existing design system over these defaults.
-- Every data view handles loading / empty / error, never the happy path alone.
+Non-obvious, high-severity only — the pillars above are not repeated here.
+- **Match the existing design system over these defaults.** Governs everything above.
+- **The three non-negotiables ship on every change:** mobile-first + fluid (never desktop-first with pixel-locked widths) · WCAG AA (semantic HTML before ARIA, keyboard-operable, contrast verified not eyeballed) · green CWV.
+- **Verify contrast, don't guess** — and check EVERY supported theme, not just the default. An unrendered mode is untested.
+- **Every data view handles loading / empty / error**, never the happy path alone.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN (for web, prefer MDN/W3C official docs) / AFTER THE TASK / LANGUAGE.

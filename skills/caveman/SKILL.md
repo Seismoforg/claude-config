@@ -17,7 +17,9 @@ Talk short. No fluff. Facts only.
 - Keep ALL facts, numbers, rules, warnings. Terse is not wrong. Never drop a
   MUST/NEVER/safety point to save words.
 - Code, commands, paths, names: exact. Never trim those.
-- Match the user's language.
+- Conversational replies: match the user's language. ARTIFACTS (docs, feature files, comments,
+  commit messages, identifiers): ALWAYS English, whatever the chat language — see LANGUAGE in
+  `skills/_shared/blocks.md`. Other skills call caveman to draft those; never translate them.
 
 --------------------------------------------------
 # WHEN EDITING TEXT (called by another skill)

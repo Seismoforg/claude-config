@@ -89,28 +89,31 @@ Track in `/docs/technical-debt.md`:
 ```
 Add an entry whenever a change knowingly leaves a shortcut/workaround/deferred fix.
 
+# MECHANICAL CHECK
+Sibling + linking rules are deterministic. Run the script; never eyeball them:
+```
+node ${CLAUDE_SKILL_DIR}/scripts/check-docs.mjs [root]
+```
+Exit 1 = violations as `file  rule  detail` (missing/bad CLAUDE.md sibling, one-way link, broken
+link). Fix, re-run to exit 0. Structure only — coverage, prose style and "is this the right doc"
+stay judgment calls below.
+
 # COMPLETION CHECKLIST
 - [ ] Required docs updated (or explicit "no docs required")
 - [ ] AGENTS.md created where a new module emerged
-- [ ] Every AGENTS.md has a CLAUDE.md sibling containing `@AGENTS.md`
-- [ ] AGENTS.md hierarchy bidirectionally linked, unbroken
+- [ ] `check-docs.mjs` exits 0 (covers sibling + bidirectional/unbroken links)
 - [ ] ADR added for any major decision; superseded ones marked
 - [ ] Architecture docs internally consistent
 - [ ] New/known shortcuts recorded in technical-debt.md
 - [ ] Prose is terse (caveman style) — no filler/hedging/wind-down; lists over paragraphs
 
 # HARD RULES
-- Never document trivial fixes, refactors, or styling.
-- Unclear → verify with `WebSearch`/`WebFetch`, don't document a guess.
-- All docs English, regardless of chat language.
-- ALWAYS invoke the `caveman` skill when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose/prose docs are a defect to condense.
-- Code comments/docstrings: English + terse; edit only what you touch (see CODE COMMENTS & DOCSTRINGS).
-- Every AGENTS.md has a CLAUDE.md sibling containing only `@AGENTS.md`.
-- AGENTS.md links bidirectional and current.
-- Removed module/API → its docs removed/updated same change; never describe code that no longer exists.
-- ADR/tech-debt dates are today's date from context, never guessed.
-- Major architectural decisions require an ADR.
-- ADRs appended/superseded, never silently rewritten.
-- This checklist gates the `feature` workflow's documentation validation.
+Non-obvious, high-severity only — the sections above are not repeated here.
+- **Never document trivial fixes, refactors, or styling.** Under-document the trivial, never under-document architecture.
+- **ALWAYS invoke the `caveman` skill** when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose prose is a defect to condense.
+- **Removed module/API → its docs removed/updated in the SAME change.** Never describe code that no longer exists.
+- **ADR/tech-debt dates are today's date from context**, never guessed or fabricated.
+- **ADRs are appended/superseded, never silently rewritten.**
+- This skill's checklist gates the `feature` workflow's documentation validation.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN (never document a guess) / AFTER THE TASK / LANGUAGE.

@@ -8,7 +8,13 @@ Local context first. Still unclear → `WebSearch` (+ `WebFetch` for official do
 never guess.
 
 # AFTER THE TASK
-Concrete friction traceable to this skill? → `/self-improve`. Else silent.
+Skill workflow ended? → `self-improve`. It owns the fire/stay-silent call and scans the
+transcript for failures the user never mentioned — run it, don't pre-judge.
+
+# LIVE VERIFICATION
+Build/typecheck/token correctness is yours. Anything needing a real rendered page — visual check,
+interaction, visual regression, Lighthouse/perf audit, eyeballing a theme — is the USER's job.
+Never run a browser/headless live test yourself. Say what you verified vs what needs their eyes.
 
 # APPROVAL GATES
 Any point marked "STOP. Ask" / "CONFIRM ... (REQUIRED)" → `AskUserQuestion`, multiple choice,
