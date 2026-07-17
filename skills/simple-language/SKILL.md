@@ -51,6 +51,10 @@ personality — a caller that mandates wit, energy or a persona keeps them.
 - Trim words, not law. Every hard rule survives, meaning intact.
 - Kill repeats and dead wording. Imperative voice where the target is instructional — never
   convert a statement of fact into an order; that is a restyle, not a condense.
+- A repeat is not automatically dead. In prose a model EXECUTES, a rule restated in a
+  recap/precedence section (HARD RULES, non-negotiables) may carry force its first statement
+  lacks; cutting it keeps the words and loses the force. Check what the second site DOES
+  before cutting — a header claiming "not repeated here" is not proof.
 - Match the target file's structure/headings; don't restyle what you're not there to change.
 
 --------------------------------------------------

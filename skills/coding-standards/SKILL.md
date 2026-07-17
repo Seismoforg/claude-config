@@ -61,7 +61,7 @@ Match the project's testing setup — don't invent one it lacks.
 # RESEARCH ORDER
 Local first: 1) relevant files 2) AGENTS.md (nearest up) 3) `/features` specs 4) `/docs`, ADRs 5) existing code.
 Before offering the user a keep-vs-change choice about existing behavior, read the code that implements it first — its current state may make the choice moot.
-External only for third-party APIs, framework/SDK updates, version-specific behavior (WHEN UNCERTAIN → blocks.md). Prefer official docs. For any framework/SDK, check the INSTALLED version's docs — APIs may differ from training data. Consuming/pinning an external artifact at a ref → read its API AT that ref (fetch/checkout it), not a local copy that may be dirty or ahead of the pin; the shipped API can differ.
+External only for: third-party APIs · framework/SDK updates · version-specific behavior (WHEN UNCERTAIN → blocks.md). Prefer official docs; for any framework/SDK check the INSTALLED version's docs — APIs may differ from training data. Consuming/pinning an external artifact at a ref → read its API AT that ref (fetch/checkout it), not a local copy that may be dirty or ahead of the pin; the shipped API can differ.
 Adding/upgrading a dependency → also read `reference/dependencies.md`.
 
 # INDEPENDENT REVIEW — main loop only

@@ -30,7 +30,7 @@ Script hits are findings already. Feed them into Step 3 directly; don't re-deriv
 A check cannot run (script missing, wrong stack, no shell) → say so in Step 3 as UNCHECKED. Never let a skipped check read as a clean dimension — that is the one failure this split can cause.
 
 **2b. Judgment sweeps — fan out `audit-scout`.** ONE per applicable dimension, all in a single message so they run in parallel. It is read-only by tool config (Read/Grep/Glob — no Bash, no Edit/Write) and keeps N sweeps out of main context. Trivial scope (one file, one question) → inline is fine.
-Brief each scout with: the dimension name, the module map from Step 1, the rule-source path from the catalog **resolved to absolute** (per Step 2's base — a scout inherits neither your base directory nor your CWD), and any 2a script output relevant to it. Scouts return findings + a FRICTION line; they never fix, never gate.
+Brief each scout with: the dimension name, the module map from Step 1, the rule-source path from the catalog **resolved to absolute** (per Step 2's base), and any 2a script output relevant to it. Scouts return findings + a FRICTION line; they never fix, never gate.
 Main loop dedupes, ranks, and owns Steps 3-8: **subagents cannot call AskUserQuestion, so every gate stays in the main loop.**
 Scout reports FRICTION (missing tool, rule it could not apply) → carry it to Step 8, it is self-improve evidence.
 
@@ -78,7 +78,7 @@ Non-obvious, high-severity only. The dimension list (STEP 2) and the workflow (S
 - Investigation is read-only; no edits before the Step 4 approval gate.
 - Stack-agnostic — detect language/framework/layout, never assume.
 - Evidence-based findings only (`file:line`); rank by severity; don't pad.
-- Before proposing to change a value/structure, confirm the current state isn't an intentional convention (typed sentinel, documented default, deliberate tier) — check the local type/model/definition. Contradicts it → drop or downgrade the finding, don't "fix" it.
+- Before proposing a fix, confirm the current state isn't an intentional convention (typed sentinel, documented default, deliberate tier, a term or rule placed where it is on purpose) — check the local type/model/definition, or the rule that governs it. Contradicts your fix → drop or downgrade the finding, don't "fix" it. (Stated here AND in `reference/dimensions.md` on purpose: a scout never loads this file. Keep both copies identical.)
 - Consistency is paramount: any pattern applied unevenly (imports, config, error handling, i18n, styling, naming, layout) is a finding — fix = align to the dominant pattern, never add another variant.
 - Unless "Report only" (or a trivial no-behavior-change fix per the Step 5 carve-out), capture approved remediation as a `feature` draft and remediate through the feature lifecycle — never edit non-trivial code straight from the audit report.
 - Significant structural changes need explicit approval (`coding-standards` REFACTOR RULES owns the threshold).

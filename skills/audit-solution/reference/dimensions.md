@@ -6,6 +6,11 @@ agents it fans out — a scout briefed on a dimension reads its entry here.
 Every finding: `file:line` · severity · what's wrong · why it matters · proposed fix.
 **No evidence, no finding.** Dimension clean → say so; an empty result is valid.
 Rule source not preloaded → read the named file before judging. Never invent a rule.
+Before proposing a fix, confirm the current state isn't an intentional convention (typed sentinel,
+documented default, deliberate tier, a term or rule placed where it is on purpose) — check the
+local type/model/definition, or the rule that governs it. Contradicts your fix → drop or downgrade
+the finding, don't "fix" it. (Stated here AND in `audit-solution` HARD RULES on purpose: a scout
+never loads that file. Keep both copies identical.)
 
 Rule-source paths below are relative to the SKILLS ROOT (the dir holding `audit-solution/`,
 `taste/`, `_shared/`, …) — no leading `skills/`. The dispatcher resolves them to absolute before
@@ -62,6 +67,9 @@ brief) keeps bare `frontmatter`/`idempotent`; that is correct, not a defect. Fix
 reads plain. READMEs may stay a touch more prose-y for human onboarding.
 Model-facing = anything auto-loaded into a model's context (skills, agent briefs, CLAUDE.md,
 AGENTS.md), not just the examples above.
+Frontmatter `description:`/`name:` (skill or agent) is activation/routing behavior, not prose —
+rewording changes what gets dispatched. Never restyle it; flag only if genuinely bloated, and name
+the routing risk.
 Rule source: ENGLISH + SIMPLE ARTIFACTS in `_shared/blocks.md`.
 
 ## Model-executed prose (skills, agents, prompts, rule files)
