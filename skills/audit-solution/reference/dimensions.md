@@ -60,6 +60,16 @@ every fact/number/path/constraint. Skip what is already terse. READMEs may stay 
 prose-y for human onboarding.
 Rule source: ENGLISH + TERSE ARTIFACTS in `_shared/blocks.md`.
 
+## Model-executed prose (skills, agents, prompts, rule files)
+Content a model EXECUTES, not code a machine runs. Dead paths (a step the reader's tools cannot
+perform) · unreachable rules (stated where the executing context never loads them) · triggers that
+never fire (in the body but absent from the activating metadata) · a gate with no decision
+procedure · cross-references that cannot resolve in the READING context — a path is correct only
+relative to WHO reads it and from where.
+Rule source: the repo's own convention for how its prose loads and who reads it. No convention
+stated → that absence IS the finding.
+Skip if the repo has no model-executed prose.
+
 ## Performance / correctness smells
 Only clear, evidence-backed ones: redundant work on a hot path, dev-only config shipped as
 default, obvious footguns. **Don't speculate** — no measurement or no traceable line → not a

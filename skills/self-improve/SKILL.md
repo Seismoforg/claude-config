@@ -57,6 +57,7 @@ Does NOT count (never manufacture):
    - Write in **caveman** style (invoke the `caveman` skill): terse, imperative, zero filler — every MUST/NEVER preserved. Skill files load into context on activation; tight wording saves tokens.
    - Name exact target file + section.
    - Grep the rule repo-wide BEFORE the gate (`grep -rn` a distinctive phrase). Copy count is NOT knowable by inspection. Every copy is part of the same edit — a scoped edit leaving a stale copy ships a defeated change.
+   - Rule states a CONVENTION (path shape, form, naming) → also grep for sites that VIOLATE it, not just copies of it. A convention with existing violators ships already-defeated; the same commit that writes the rule can break it. Fix the violators in that pass, or the rule is fiction.
 3. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per improvement, labelled with target skill + one-line summary; description holds before/after wording. User picks. Never edit a skill file without this.
 4. **Apply** only selected, minimal surgical edits, to every copy step 2's grep found. Leave the rest. Before saving: check the new wording doesn't contradict an existing rule.
 5. **Report** which skills changed, in one or two lines.
@@ -74,7 +75,7 @@ Does NOT count (never manufacture):
 - NEVER run this skill forked (`context: fork`, or delegated to a subagent). A forked context has
   no conversation history — the session transcript IS the evidence base, so a forked run detects
   nothing and reports silence as "no weaknesses".
-- Shared rules live in `skills/_shared/blocks.md` — its header owns the edit-once rule. Two files cannot point at it and MUST keep an inline copy: agent definitions (a subagent inherits neither blocks.md nor skills) and CLAUDE.md (agents inherit it, so a pointer there strands them). Copy stays word-identical to the block; a block edit is unfinished until every copy matches.
+- Shared rules live in `skills/_shared/blocks.md` — its header owns the edit-once rule. Two files cannot point at it and MUST keep an inline copy: agent definitions (a subagent inherits neither blocks.md nor skills) and CLAUDE.md (agents inherit it, so a pointer there strands them). Copy stays word-identical to the block; a block edit is unfinished until every copy matches. Never move a SITE-LOCAL guard there — a one-liner whose whole value is being AT the step it guards (e.g. "subagent → skip this section"). Its reader may be a subagent, which cannot resolve the pointer, so it strands the exact reader it targets. Repeated wording is not the same as a shared rule: inline is correct, not a duplicate to dedupe.
 
 # SKILL LIFECYCLE
 - New skill added → add one line to README.md's skill list AND to CLAUDE.md's trigger index. Both, same pass, not just one. Workflow/content skill → section 6; output-mode skill (not a workflow, e.g. caveman) → section 0.
