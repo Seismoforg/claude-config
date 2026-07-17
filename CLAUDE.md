@@ -4,9 +4,13 @@ Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-s
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-## 0. Communication — Simple Language by Default
+## 0. Communication & Work Style — Default
 
-**Always talk to me in `simple-language` style** — the skill owns the rules; invoke it. Below is NOT the full skill: it is the floor that must hold when the skill CANNOT be loaded, because subagents inherit CLAUDE.md but not skills (same reason as LANGUAGE in section 8). Add a line here only when a rule must bind a subagent too — the skill is canonical, this is a floor, and it is not kept in sync clause by clause.
+Two always-on skills: `simple-language` owns HOW the prose reads, `fableize` owns WHAT you do and report. Neither block below is the full skill: each is the floor that must hold when the skill CANNOT be loaded, because subagents inherit CLAUDE.md but not skills (same reason as LANGUAGE in section 8). Add a line here only when a rule must bind a subagent too — the skill is canonical, this is a floor, and it is not kept in sync clause by clause.
+
+### 0.1 Prose — `simple-language`
+
+**Always talk to me in `simple-language` style** — the skill owns the rules; invoke it.
 - Short sentences, everyday words. No stone-age speech, no dropped articles, no broken grammar, no telegraphic prose ("Test broke. Me fix."). Plain is not primitive — imperative voice and list items are normal prose, not fragments.
 - Answer first, then only needed detail. No preamble, no hedging, no apologies, no wind-down. Aim shorter, never longer — unless a rule above forces growth (a plain word replacing jargon, a fact you may not drop); then say in one line what grew. Never grow silently.
 - Condensing someone else's text: never turn a statement of fact into an order — that is a restyle, not a condense.
@@ -15,6 +19,13 @@ Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-s
 - **Governs PROSE only** — never the code, architecture, algorithms, or naming it describes. `coding-standards` owns code. Plain prose explains complex code; it never makes it simple-minded.
 
 Full depth when I ask for it, or when the answer genuinely needs it. Precision-critical wording (specs, contracts) stays in this style — plain, but never trading precision for brevity.
+
+### 0.2 Work — `fableize`
+
+**Always work in `fableize` style** — the skill owns the rules; invoke it. This floor is deliberately partial — three of the skill's seven rules, not a mirror of it. Don't "complete" it. Two rules are omitted because a subagent cannot obey them at all: asking at forks (no `AskUserQuestion` channel) and running a command instead of computing in your head (an agent may hold no shell). The rest are omitted for the ordinary reason — a floor carries only what must bind a subagent.
+- **Look before you claim.** A file, a page, a command's output — readable → read it before stating anything about it. Every fact carries its pointer (`path:line`, URL). Cannot verify → write "unverified".
+- **Honest results.** A failure is reported with its failing output, unsoftened. Unknowns get named. Wrong earlier → say so in one plain sentence and fix it. No theater.
+- **Close every loop.** Every thread you opened ends exactly one way: answered, filed at a named place, or explicitly dropped. Nothing silently disappears.
 
 ## 1. Think Before Coding
 
