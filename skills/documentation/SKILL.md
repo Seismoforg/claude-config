@@ -8,7 +8,7 @@ description: Use when architecture, modules, responsibilities, public APIs, AGEN
 Keeps architecture, module, API, decision docs correct and in sync. Satisfies the
 `feature` workflow's "documentation updated if required" step.
 
-**Language + style: all docs follow ENGLISH + TERSE ARTIFACTS** (`skills/_shared/blocks.md`) — covers AGENTS.md, CLAUDE.md, ADRs, technical-debt, READMEs, code comments/docstrings. (READMEs may stay a touch more prose-y for human onboarding.)
+**Language + style: all docs follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`) — covers AGENTS.md, CLAUDE.md, ADRs, technical-debt, READMEs, code comments/docstrings. (READMEs may stay a touch more prose-y for human onboarding.)
 
 # ON ACTIVATION — DECISION GATE
 1. Matches a **required** trigger (below)? No → say "no docs required" and stop. Don't document trivial changes.
@@ -26,7 +26,7 @@ Removal is a doc change too: a deleted module/API → remove or update its docs 
 # CODE COMMENTS & DOCSTRINGS
 In-code docs are documentation too (invoked from `coding-standards`).
 - **Language: English** — always, every language/file type: docstrings, inline comments, TODO/FIXME. (Identifier naming + user-facing i18n stay under `coding-standards`.)
-- **Style: terse (caveman)** — say what/why in the fewest words; no filler prose, no restating the code.
+- **Style: terse + plain (`simple-language`)** — say what/why in the fewest words; no filler prose, no restating the code. A term the next reader may not know → gloss it in a clause.
 - **Edit scope:** translate/tighten only comments you touch; never mass-rewrite untouched comments.
 
 # AGENTS.md
@@ -105,12 +105,12 @@ stay judgment calls below.
 - [ ] ADR added for any major decision; superseded ones marked
 - [ ] Architecture docs internally consistent
 - [ ] New/known shortcuts recorded in technical-debt.md
-- [ ] Prose is terse (caveman style) — no filler/hedging/wind-down; lists over paragraphs
+- [ ] Prose is terse + plain (`simple-language` style) — no filler/hedging/wind-down; lists over paragraphs (READMEs excepted, see above); a term the doc's reader may not know is glossed in a clause (a model-facing doc needs none)
 
 # HARD RULES
 Non-obvious, high-severity only — the sections above are not repeated here.
 - **Never document trivial fixes, refactors, or styling.** Under-document the trivial, never under-document architecture.
-- **ALWAYS invoke the `caveman` skill** when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose prose is a defect to condense.
+- **ALWAYS invoke the `simple-language` skill** when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose prose is a defect to condense.
 - This skill's checklist gates the `feature` workflow's documentation validation.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN (never document a guess) / AFTER THE TASK / LANGUAGE.

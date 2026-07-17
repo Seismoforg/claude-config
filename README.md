@@ -4,7 +4,7 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills + custom s
 
 ## Layout
 - `CLAUDE.md` — global user instructions (behavioral guidelines).
-- `skills/`   — custom skills (coding-standards, web-standards, taste, feature, debugging, security-review, documentation, git-commit, audit-solution, self-improve, caveman, drunken-genius).
+- `skills/`   — custom skills (coding-standards, web-standards, taste, feature, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, drunken-genius).
 - `agents/`   — custom subagents (audit-scout, security-auditor, standards-reviewer).
 
 Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/` (load on demand,

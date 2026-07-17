@@ -53,12 +53,16 @@ Code comments/docstrings, `/features` files, docs (AGENTS.md, ADRs, tech-debt, R
 English. Fix = translate (user-facing UI text → i18n, not inline). Independent of logic quality.
 Rule source: LANGUAGE in `_shared/blocks.md`.
 
-## Caveman-style conformance
-ALL docs terse: AGENTS.md, CLAUDE.md, ADRs, tech-debt, READMEs, `/features` specs, comments,
-docstrings. Flag filler, hedging, flowing paragraphs. Fix = `caveman` skill condenses, keeping
-every fact/number/path/constraint. Skip what is already terse. READMEs may stay a touch more
-prose-y for human onboarding.
-Rule source: ENGLISH + TERSE ARTIFACTS in `_shared/blocks.md`.
+## Simple-language conformance
+ALL docs terse AND plain: AGENTS.md, CLAUDE.md, ADRs, tech-debt, READMEs, `/features` specs,
+comments, docstrings. Flag filler, hedging, flowing paragraphs. Jargon: a finding only where it
+would genuinely lose that doc's reader — judgment, not a quota. A model-facing file (skill, agent
+brief) keeps bare `frontmatter`/`idempotent`; that is correct, not a defect. Fix =
+`simple-language` skill condenses, keeping every fact/number/path/constraint. Skip what already
+reads plain. READMEs may stay a touch more prose-y for human onboarding.
+Model-facing = anything auto-loaded into a model's context (skills, agent briefs, CLAUDE.md,
+AGENTS.md), not just the examples above.
+Rule source: ENGLISH + SIMPLE ARTIFACTS in `_shared/blocks.md`.
 
 ## Model-executed prose (skills, agents, prompts, rule files)
 Content a model EXECUTES, not code a machine runs. Dead paths (a step the reader's tools cannot

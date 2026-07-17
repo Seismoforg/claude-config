@@ -32,8 +32,10 @@ doesn't use.
 Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
 weakened tests, logic in controllers) stays a defect however consistently it is repeated.
 
-# ENGLISH + TERSE ARTIFACTS
-Docs and feature files you write/edit → English (see LANGUAGE) AND terse caveman
-style: imperative, no filler, lists over prose; keep every fact, number, name, path,
-constraint. Invoke the `caveman` skill when drafting/condensing. Non-English or verbose
-artifact → translate + tighten only the sections you touch.
+# ENGLISH + SIMPLE ARTIFACTS
+Docs and feature files you write/edit → English (see LANGUAGE) AND `simple-language`
+style: imperative, no filler, lists over prose; a term the artifact's reader may not know →
+explain in a clause (a model-facing file needs none); keep every fact, number, name, path,
+constraint. READMEs may stay a touch more prose-y for human onboarding. Invoke the
+`simple-language` skill when drafting/condensing. Non-English or verbose artifact → translate
+into English + tighten only the sections you touch.

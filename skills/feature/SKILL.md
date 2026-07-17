@@ -75,7 +75,7 @@ Body (all required):
 # Impact Analysis  (affected/new/deleted files; breaking changes; overlap with other in-flight features editing the same files)
 # Validation       (filled at the READY_FOR_DONE gate)
 ```
-**Language + style: feature files follow ENGLISH + TERSE ARTIFACTS** (`skills/_shared/blocks.md`) — English + caveman-terse across title, all sections, Tasks; every requirement/number/file/constraint kept.
+**Language + style: feature files follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`) — English + terse/plain across title, all sections, Tasks; every requirement/number/file/constraint kept.
 
 # WORKFLOW
 

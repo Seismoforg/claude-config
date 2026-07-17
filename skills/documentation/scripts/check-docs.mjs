@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // documentation — mechanical doc-structure checks.
 // Enforces the HARD RULES that are deterministic: CLAUDE.md sibling, bidirectional
-// # Related Modules links, unbroken relative links. Prose quality (terse/caveman,
+// # Related Modules links, unbroken relative links. Prose quality (terse/simple-language,
 // English, "is this the right doc") is NOT here: that needs judgment.
 // Usage: node check-docs.mjs [root]   Exit 1 = at least one violation.
 

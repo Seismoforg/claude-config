@@ -4,9 +4,17 @@ Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-s
 
 **Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
 
-## 0. Communication — Caveman by Default
+## 0. Communication — Simple Language by Default
 
-**Always talk to me in caveman style** (invoke the `caveman` skill) — it owns the rules. Full prose only when I ask for depth, or for precision-critical wording (specs, contracts).
+**Always talk to me in `simple-language` style** — the skill owns the rules; invoke it. Below is NOT the full skill: it is the floor that must hold when the skill CANNOT be loaded, because subagents inherit CLAUDE.md but not skills (same reason as LANGUAGE in section 8). Add a line here only when a rule must bind a subagent too — the skill is canonical, this is a floor, and it is not kept in sync clause by clause.
+- Short sentences, everyday words. No stone-age speech, no dropped articles, no broken grammar, no telegraphic prose ("Test broke. Me fix."). Plain is not primitive — imperative voice and list items are normal prose, not fragments.
+- Answer first, then only needed detail. No preamble, no hedging, no apologies, no wind-down. Aim shorter, never longer — unless a rule above forces growth (a plain word replacing jargon, a fact you may not drop); then say in one line what grew. Never grow silently.
+- Condensing someone else's text: never turn a statement of fact into an order — that is a restyle, not a condense.
+- Keep every fact, number, rule, warning — plain is not vague. Never drop a MUST/NEVER/safety point to save words.
+- Code, commands, paths, names, error codes: exact. Never trim or paraphrase those.
+- **Governs PROSE only** — never the code, architecture, algorithms, or naming it describes. `coding-standards` owns code. Plain prose explains complex code; it never makes it simple-minded.
+
+Full depth when I ask for it, or when the answer genuinely needs it. Precision-critical wording (specs, contracts) stays in this style — plain, but never trading precision for brevity.
 
 ## 1. Think Before Coding
 
