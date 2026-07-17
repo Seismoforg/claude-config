@@ -14,7 +14,7 @@ Before anything else:
 0. Bare invocation (no feature named/described) → don't guess. Show current non-terminal features (draft, pending, approved, in-progress, ready-for-done) and ask via AskUserQuestion what to do (include a "Brainstorm a new feature" option → Workflow step 0). Proceed only once a feature/intent is chosen.
 0.5. Request reads as another skill's dedicated trigger (e.g. whole-system audit, ad-hoc bug hunt) → surface the mismatch, ask before hand-rolling it inside feature instead of using the purpose-built skill.
 1. Identify which feature the request refers to (name or timestamp).
-2. Exists → open it, read `status`, confirm folder matches status. Folder ≠ status → STOP and report the mismatch, don't guess.
+2. Exists → open it, read `status`, confirm folder matches status (MECHANICAL CHECK below — run it, don't eyeball). Folder ≠ status → STOP and report the mismatch, don't guess.
 3. Doesn't exist → new feature, start at Workflow step 1.
 4. State the current status + the single allowed next action, then proceed.
 
@@ -45,6 +45,15 @@ Rules:
 - Exception — audit remediation fast-path: an approved `audit-solution` scope may create the feature file DIRECTLY in in-progress/ (its Step-4 approval replaces this gate); the empty draft/pending/approved rests collapse. Same one-move collapse, not a skipped state.
 - A transition = update the `status` field first (edit in place), THEN move the file. After moving, re-read before the next in-place edit — the move invalidates the prior read, so an edit at the new path fails otherwise.
 - Move via a path anchored to the features dir (absolute or repo-root-relative), never relative to the shell CWD (it may have drifted after build/test commands). Feature files are usually untracked (the features dir is commonly VCS-ignored) → plain `mv`, not `git mv`.
+
+# MECHANICAL CHECK
+Folder↔status and filename shape are deterministic. Run the script; never eyeball them:
+```
+node ${CLAUDE_SKILL_DIR}/scripts/check-features.mjs [root]
+```
+Exit 1 = violations as `file  rule  detail` (folder-status-mismatch, bad-filename, unknown-folder,
+missing-status, no-frontmatter). Consistency only — that a status was EARNED (work done, validation
+run) stays a judgment call, and a mismatch is never auto-fixed: ON ACTIVATION says STOP and report.
 
 # FEATURE FILE FORMAT
 Frontmatter (source of truth for status):

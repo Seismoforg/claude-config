@@ -44,7 +44,7 @@ Create one when ANY holds:
 Do NOT create one just because a refactor made new files. Extracting a component/helper WITHIN an existing module is not a new module — update the parent's AGENTS.md instead.
 
 ## Structure + worked example
-See `skills/documentation/reference/agents-md-template.md`. Load it only when creating or restructuring an AGENTS.md file.
+See `reference/agents-md-template.md`. Load it only when creating or restructuring an AGENTS.md file.
 
 # CLAUDE.md SIBLING (HARD RULE)
 Every folder with an `AGENTS.md` MUST have a `CLAUDE.md` beside it whose entire content is one line:
@@ -111,9 +111,6 @@ stay judgment calls below.
 Non-obvious, high-severity only — the sections above are not repeated here.
 - **Never document trivial fixes, refactors, or styling.** Under-document the trivial, never under-document architecture.
 - **ALWAYS invoke the `caveman` skill** when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose prose is a defect to condense.
-- **Removed module/API → its docs removed/updated in the SAME change.** Never describe code that no longer exists.
-- **ADR/tech-debt dates are today's date from context**, never guessed or fabricated.
-- **ADRs are appended/superseded, never silently rewritten.**
 - This skill's checklist gates the `feature` workflow's documentation validation.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN (never document a guess) / AFTER THE TASK / LANGUAGE.

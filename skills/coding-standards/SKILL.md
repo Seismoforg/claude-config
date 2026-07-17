@@ -30,10 +30,10 @@ Code comments & docstrings: governed entirely by `documentation` — invoke it, 
 - Too large → extract along seams (components, hooks, services, helpers). Never split mid-responsibility.
 
 ## Frontend / TS-JS specifics
-Building or editing frontend/TS-JS code → also read `skills/coding-standards/reference/frontend.md` (Atomic Design layout, arrow-const function style). Not applicable to non-frontend work (Python, scripts, backend-only, ML) — skip it there.
+Building or editing frontend/TS-JS code → also read `reference/frontend.md` (Atomic Design layout, arrow-const function style). Not applicable to non-frontend work (Python, scripts, backend-only, ML) — skip it there.
 
 ## Python / ML specifics
-Python / ML work (training scripts, notebooks, model configs) → also read `skills/coding-standards/reference/python-ml.md`. Not applicable to frontend/TS-JS work.
+Python / ML work (training scripts, notebooks, model configs) → also read `reference/python-ml.md`. Not applicable to frontend/TS-JS work.
 
 # BACKEND ARCHITECTURE
 Layer: Controllers → Services → Repositories → Domain Models. No business logic in controllers or UI — it belongs in services/domain models.
@@ -62,7 +62,7 @@ Match the project's testing setup — don't invent one it lacks.
 Local first: 1) relevant files 2) AGENTS.md (nearest up) 3) `/features` specs 4) `/docs`, ADRs 5) existing code.
 Before offering the user a keep-vs-change choice about existing behavior, read the code that implements it first — its current state may make the choice moot.
 External only for third-party APIs, framework/SDK updates, version-specific behavior (WHEN UNCERTAIN → blocks.md). Prefer official docs. For any framework/SDK, check the INSTALLED version's docs — APIs may differ from training data. Consuming/pinning an external artifact at a ref → read its API AT that ref (fetch/checkout it), not a local copy that may be dirty or ahead of the pin; the shipped API can differ.
-Adding/upgrading a dependency → also read `skills/coding-standards/reference/dependencies.md`.
+Adding/upgrading a dependency → also read `reference/dependencies.md`.
 
 # INDEPENDENT REVIEW — main loop only
 **You are a subagent → skip this section entirely; you cannot dispatch another agent.**
@@ -70,6 +70,10 @@ Main loop, diff worth a second pair of eyes (broad, structural, or pre-commit) �
 `standards-reviewer` agent: read-only, fetches the diff itself, reviews against THESE rules
 rather than generic best practice. Returns violations + FRICTION. Optional — skip for a
 one-line fix.
+Stack addendum applies (frontend/TS-JS · Python/ML · dependency change) → join the matching
+`reference/<file>.md` onto this skill's announced base directory and hand the agent that
+ABSOLUTE path. It has no base directory and its CWD is the reviewed repo — unbriefed, it cannot
+load the addendum at all.
 
 # COMPLETION CHECKLIST
 - [ ] No obvious duplication introduced
@@ -87,6 +91,5 @@ Non-obvious, high-severity only — the sections above are not repeated here.
 - **No business logic in controllers or UI** — it belongs in services/domain models.
 - **Threading a new param through a call chain:** confirm every function declares it AND every caller passes it (grep the name). A value used in a helper but only added to the outer function is a runtime error that typechecks.
 - **A check guarded on a field's presence never fires when the field is ABSENT.** `if (cfg.x) validate(cfg.x)` passes everything when `x` is omitted. Default-permissive setting → absence IS the dangerous case; test for it explicitly.
-- **Never weaken or delete a test to make it green** — fix the cause.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

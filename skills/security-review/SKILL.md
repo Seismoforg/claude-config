@@ -16,8 +16,9 @@ changes). Verified: the name resolves to THIS skill; the built-in is unreachable
   that similar endpoints have.
 - **Input validation:** all external input (user input, API payloads, file uploads, URL
   params) validated/sanitized before use — never trust it reaching business logic unchecked.
-- **Dependency CVEs:** run the check in `skills/coding-standards/reference/dependencies.md`
-  before a release — one owner for the topic, not restated here.
+- **Dependency CVEs:** run the check in `coding-standards/reference/dependencies.md` (skills-root-
+  relative — parent of this skill's base directory) before a release — one owner for the topic,
+  not restated here.
 - **Secrets:** already a HARD RULE in `coding-standards` (never hardcode secrets/keys/
   tokens) — applies automatically, not restated here.
 

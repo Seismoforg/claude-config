@@ -103,6 +103,10 @@ Once you have the design read (Section 0) and dials (Section 1), pick the right 
 
 **One system per project.** Do not mix Fluent React with Carbon in the same tree. Do not import shadcn/ui components into a Material 3 app.
 
+> Install command per system → `reference/install-commands.md`. Official doc link to ground the
+> choice → `reference/canonical-sources.md`. Load either when you pick a system above — the
+> honesty rule needs the real command, not an invented one.
+
 ## 2.B When the brief is an aesthetic, not a system
 For these directions, there is **no single official package**. Build with native CSS + Tailwind + a maintained component library. Be honest in code comments about what is borrowed inspiration vs. official material.
 
@@ -171,7 +175,7 @@ LLMs default to clichés. Override these defaults proactively. Each rule has a c
 * Max 1 accent colour. Saturation < 80% by default. **One palette per project** — never fluctuate between warm and cool greys.
 * **THE LILA RULE:** "AI Purple / Blue glow" discouraged as default. No automatic purple button glows, no random neon gradients. Neutral bases (Zinc / Slate / Stone) + one high-contrast accent (Emerald, Electric Blue, Deep Rose, Burnt Orange). **Override:** brand explicitly asks for purple/violet → embrace it, but execute with intent (consistent palette, harmonised neutrals, restrained gradients), not AI gradient slop.
 * **COLOR CONSISTENCY LOCK (mandatory):** one accent, locked, across the WHOLE page. No blue CTA in section 7 of a warm-grey site; no teal badge in a rose site's footer. Audit every component before shipping.
-* **PREMIUM-CONSUMER PALETTE BAN (mandatory, second-most-recurring AI-tell):** for premium-consumer briefs (cookware, wellness, artisan, luxury, heritage craft, DTC home goods) the LLM default is warm beige/cream + brass/clay/oxblood/ochre + espresso text. BANNED as the default reach — the brand becomes invisible. Exact hexes + 7 rotation alternatives → reference; `preflight.mjs` greps the hexes. **Rotation rule:** never ship the same warm-craft palette twice in a row. **Override:** only when the brief names those colours, or the identity is genuinely vintage/artisan/warm-craft AND you can articulate why it fits THIS brand.
+* **PREMIUM-CONSUMER PALETTE BAN (mandatory, second-most-recurring AI-tell):** for premium-consumer briefs (cookware, wellness, artisan, luxury, heritage craft, DTC home goods) the LLM default is warm beige/cream + brass/clay/oxblood/ochre + espresso text. BANNED as the default reach — the brand becomes invisible. Exact hexes + 7 rotation alternatives → `reference/design-directives.md`; `preflight.mjs` greps the hexes. **Rotation rule:** never ship the same warm-craft palette twice in a row. **Override:** only when the brief names those colours, or the identity is genuinely vintage/artisan/warm-craft AND you can articulate why it fits THIS brand.
 
 ## 4.3 Layout Diversification
 * **ANTI-CENTER BIAS:** Centered Hero / H1 sections are avoided when `DESIGN_VARIANCE > 4`. Force "Split Screen" (50/50), "Left-aligned content / right-aligned asset", "Asymmetric white-space", or scroll-pinned structures.
@@ -277,7 +281,7 @@ The page has ONE theme. Sections do not invert.
 
 These are tools, not defaults. Use them when the design read calls for them. **None of these fire automatically.**
 
-* **Liquid Glass / Glassmorphism:** for premium consumer, Apple-adjacent, luxury, media-overlay. NOT for dashboards, public-sector, boring B2B. Go beyond `backdrop-blur`: 1px inner border (`border-white/10`) + subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for edge refraction. Solid-fill fallback under `prefers-reduced-transparency`.
+* **Liquid Glass / Glassmorphism:** for premium consumer, Apple-adjacent, luxury, media-overlay. NOT for dashboards, public-sector, boring B2B. Go beyond `backdrop-blur`: 1px inner border (`border-white/10`) + subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for edge refraction. Solid-fill fallback under `prefers-reduced-transparency`. Full approximation recipe → `reference/liquid-glass.md`; load it when the design read calls for glass.
 * **Magnetic Micro-physics:** only at `MOTION_INTENSITY > 5` AND a premium/playful/agency brief. EXCLUSIVELY Motion's `useMotionValue`/`useTransform`, outside the React render cycle. Never `useState` (§3.B).
 * **Perpetual Micro-Interactions** (Pulse, Typewriter, Float, Shimmer, Carousel): only at `MOTION_INTENSITY > 5` AND where the section benefits (status indicators, live feeds, AI-feel). **Not every card needs an infinite loop** — informational section → leave it still. Spring physics (`type: "spring", stiffness: 100, damping: 20`), never linear easing.
 * **"Motion claimed, motion shown."** At `MOTION_INTENSITY > 4` the page MUST actually move: hero entry transitions, scroll-reveal on key sections, hover physics on CTAs, minimum. A static page claiming `MOTION_INTENSITY: 7` is broken. Can't ship working motion in scope → drop the dial to 3 and ship clean static. Never half-build motion that breaks (cut-off ScrollTriggers, jumpy enters, missing cleanups).

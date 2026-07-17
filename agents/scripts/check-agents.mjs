@@ -2,12 +2,13 @@
 // agents — mechanical checks for subagent definitions.
 // Enforces what is deterministic: frontmatter parses, name matches filename, declared tools are
 // known to THIS checker's list (see KNOWN_TOOLS — best-effort, not the harness's truth),
-// read-only agents hold no write tools, preloaded skills exist. Whether an agent LAUNCHES and
-// whether `skills:` actually preloads is NOT here — that needs a live dispatch in a fresh
-// session (agent types are enumerated at session start; files are not hot-reloaded).
+// read-only agents hold no write tools, preloaded skills exist, some skill dispatches the agent.
+// Whether an agent LAUNCHES and whether `skills:` actually preloads is NOT here — that needs a
+// live dispatch in a fresh session (agent types are enumerated at session start; files are not
+// hot-reloaded). Being NAMED is static and checked; being dispatchable is not.
 // Usage: node check-agents.mjs [root]   Exit 1 = at least one violation.
 
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -61,6 +62,27 @@ if (!existsSync(agentsDir)) {
 const files = readdirSync(agentsDir).filter((f) => f.endsWith('.md'));
 const violations = [];
 
+// An agent nothing names is dead on arrival — a description alone does not route work to it.
+// Text of every .md that could dispatch one. agents/ is the definition itself; README.md only
+// documents the roster; features/ records past work — none of the three wires anything, so none
+// counts as being wired.
+// statSync, never Dirent.isDirectory(): a Windows junction reports false as a Dirent, so a
+// junctioned skills/ would vanish and every agent would read as orphaned. This repo is reached
+// via exactly such a junction. Same SKIP_DIRS + statSync shape as check-docs.mjs.
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'out', 'coverage']);
+const walk = (dir) => readdirSync(dir).flatMap((e) => {
+  if (SKIP_DIRS.has(e) || e.startsWith('.')) return [];
+  const p = join(dir, e);
+  return statSync(p).isDirectory() ? walk(p) : (e.endsWith('.md') ? [p] : []);
+});
+const dispatchText = walk(root)
+  .filter((p) => {
+    const r = rel(p);
+    return !r.startsWith('agents/') && !r.startsWith('features/') && r !== 'README.md';
+  })
+  .map((p) => readFileSync(p, 'utf8'))
+  .join('\n');
+
 for (const file of files) {
   const path = join(agentsDir, file);
   const fm = frontmatter(readFileSync(path, 'utf8'));
@@ -84,6 +106,14 @@ for (const file of files) {
   // Skills name these agents, but auto-delegation still leans on description — keep it explicit.
   if (description && description.length < 80) {
     violations.push(`${rel(path)}  thin-description  too short to attract auto-delegation; state WHEN to delegate`);
+  }
+
+  // Word-boundary so "audit-scout" never matches "audit-scouts". Re-test the name shape rather
+  // than trusting bad-name above to have stopped us: it only REPORTS, it does not skip, and an
+  // unescaped metacharacter here throws a SyntaxError instead of printing a violation.
+  // Proves the name APPEARS in a skill, never that the dispatch works.
+  if (name && /^[a-z0-9-]+$/.test(name) && !new RegExp(`\\b${name}\\b`).test(dispatchText)) {
+    violations.push(`${rel(path)}  orphaned  no skill names "${name}" — nothing dispatches it; name it in the skill that owns its job, in the step that fans out (README/features do not count as wiring)`);
   }
 
   // Omitting tools: is NOT neutral — it inherits every tool, Write and Edit included. The

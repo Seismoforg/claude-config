@@ -21,10 +21,14 @@ the unstaged + staged working tree.
 1. Get the diff yourself: `git diff`, `git diff --staged`, `git diff <base>...HEAD`.
 2. Read the FULL changed files, not just the hunks. A minimal-diff or layering violation is
    invisible in a hunk — it only shows against the surrounding file.
-3. Load the addendum that matches the stack, and only that one:
-   - frontend / TS-JS → `skills/coding-standards/reference/frontend.md`
-   - Python / ML → `skills/coding-standards/reference/python-ml.md`
-   - dependency added/upgraded → `skills/coding-standards/reference/dependencies.md`
+3. Stack addendum (frontend/TS-JS · Python/ML · dependency added/upgraded) — the DISPATCHER
+   names its ABSOLUTE path. No path could be hardcoded here: you get no base directory, and a
+   relative one resolves against the reviewed repo, which has no `skills/`.
+   - None applies (backend-only, scripts, prose, config) → skip it. Not a gap, not FRICTION.
+   - Applies and named → read only the one matching the stack.
+   - Applies but NOT named, or the read fails → review without it AND say so in FRICTION. Never
+     silent-skip a rule you could not load: a missing addendum means Atomic Design / arrow-const /
+     ML / dependency rules went unchecked, and an unflagged gap reads as a clean review.
 4. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do
    not inherit:
    > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
