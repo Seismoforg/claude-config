@@ -21,8 +21,16 @@ Any point marked "STOP. Ask" / "CONFIRM ... (REQUIRED)" → `AskUserQuestion`, m
 never free text. Don't proceed until answered.
 
 # LANGUAGE
-Docs, comments, identifiers, commit messages: always English regardless of the
-conversation language.
+Docs, comments, docstrings, identifiers, commit messages, feature files: always English,
+regardless of the conversation language. User-facing text (UI, CLI output, notifications, any
+string a user reads) → i18n layer, never inline literals.
+
+# REPO PATTERNS
+Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
+whole repo shares is a convention, not a finding. Never impose a structure or look the project
+doesn't use.
+Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
+weakened tests, logic in controllers) stays a defect however consistently it is repeated.
 
 # ENGLISH + TERSE ARTIFACTS
 Docs and feature files you write/edit → English (see LANGUAGE) AND terse caveman

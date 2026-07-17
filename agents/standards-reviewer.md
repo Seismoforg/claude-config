@@ -4,6 +4,7 @@ description: Read-only review of a working-tree or branch diff against THIS conf
 tools: Read, Grep, Glob, Bash
 skills:
   - coding-standards
+model: sonnet
 color: blue
 ---
 
@@ -21,11 +22,16 @@ the unstaged + staged working tree.
 2. Read the FULL changed files, not just the hunks. A minimal-diff or layering violation is
    invisible in a hunk — it only shows against the surrounding file.
 3. Load the addendum that matches the stack, and only that one:
-   - frontend / TS-JS → `skills/coding-standards/frontend.md`
-   - Python / ML → `skills/coding-standards/python-ml.md`
-   - dependency added/upgraded → `skills/coding-standards/dependencies.md`
-4. Match existing repo patterns first. Repo patterns beat skill defaults — a shared repo-wide
-   deviation is NOT a violation.
+   - frontend / TS-JS → `skills/coding-standards/reference/frontend.md`
+   - Python / ML → `skills/coding-standards/reference/python-ml.md`
+   - dependency added/upgraded → `skills/coding-standards/reference/dependencies.md`
+4. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do
+   not inherit:
+   > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
+   > whole repo shares is a convention, not a finding. Never impose a structure or look the project
+   > doesn't use.
+   > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
+   > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
 
 # HIGH-VALUE CHECKS
 These fail silently and typecheck clean — look here first:
@@ -41,6 +47,10 @@ Your final message IS the report. Ranked most-severe first, per violation:
 - the rule broken (name it)
 - concrete failure it causes
 - scope verdict: does this line trace to the task, or is it drive-by?
+
+Close with one `FRICTION:` line — a defect in the SKILLS/briefing, not in the reviewed diff:
+a tool you needed and lacked · a rule you could not apply · a rule that misfired or contradicted
+another. Nothing hit → `FRICTION: none`.
 
 Clean diff → say so plainly.
 

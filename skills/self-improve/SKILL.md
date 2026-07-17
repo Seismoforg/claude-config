@@ -35,6 +35,7 @@ These fire with no user input. Evidence is already in the transcript — cite th
 - **Ambiguity stall** — had to ask the user what the skill should have predetermined.
 - **Rule collision** — two skills gave conflicting instructions; picked arbitrarily.
 - **Context waste** — loaded a large skill/reference a change never needed.
+- **Subagent FRICTION report** — a dispatched agent closed with a non-`none` FRICTION line (tool it lacked, rule it could not apply, rule that misfired). Already evidence; cite the agent + line. An agent cannot run this skill itself (no transcript, no gate, no write), so its report is the only channel — dropping it loses the finding.
 
 Bar for both lists: the signal must trace to a SKILL defect. Failure the skill's own wording led
 you into = finding. Failure from your typo or a transient env issue = noise.
@@ -73,11 +74,14 @@ Does NOT count (never manufacture):
 - NEVER run this skill forked (`context: fork`, or delegated to a subagent). A forked context has
   no conversation history — the session transcript IS the evidence base, so a forked run detects
   nothing and reports silence as "no weaknesses".
-- Shared rules live in `skills/_shared/blocks.md` — edit them there once, never re-inline a full copy into a skill file again.
+- Shared rules live in `skills/_shared/blocks.md` — its header owns the edit-once rule. Two files cannot point at it and MUST keep an inline copy: agent definitions (a subagent inherits neither blocks.md nor skills) and CLAUDE.md (agents inherit it, so a pointer there strands them). Copy stays word-identical to the block; a block edit is unfinished until every copy matches.
 
 # SKILL LIFECYCLE
 - New skill added → add one line to README.md's skill list AND to CLAUDE.md's trigger index. Both, same pass, not just one. Workflow/content skill → section 6; output-mode skill (not a workflow, e.g. caveman) → section 0.
 - Skill removed or merged into another → `grep -rln "skill-name"` across the whole repo, remove every reference (README, CLAUDE.md, other skills' cross-references), don't leave a dangling pointer.
-- New addendum file (not a full skill) added under an existing skill → does NOT get its own README/CLAUDE.md entry — only add a pointer inside its parent skill's SKILL.md.
+- New addendum file (not a full skill) added under an existing skill → lives in `skills/<name>/reference/`; a check script lives in `skills/<name>/scripts/`. Never at the skill root. Does NOT get its own README/CLAUDE.md entry — only a pointer inside its parent skill's SKILL.md. Pointer style, by consumer — not by taste:
+  - **Model reads the file** → skill-relative (`reference/<file>.md`). Skill load announces the skill's base directory, so the model resolves it anywhere. This is the convention; match it.
+  - **Path goes into a SHELL command** → `${CLAUDE_SKILL_DIR}/scripts/<file>.mjs`. Substituted to absolute on load. A shell inherits the CWD, not the base directory, and CWD is the user's project — a skill-relative path there is a guaranteed ENOENT.
+  - **Path handed to a SUBAGENT** → resolve to absolute first. A subagent gets neither the base directory nor your CWD.
 - Skill/agent frontmatter/config change → may not register in the SAME turn; a later turn often picks it up, a restart is NOT always needed. A not-found error right after writing is not proof it's broken — re-check later before concluding. Probing a field on a live skill can strip tools for the rest of the turn.
 - Skill body text is SUBSTITUTED before the model sees it: dollar-sign + ARGUMENTS, and dollar-sign + digit, are placeholders — replaced by argument text, silently corrupting any rule holding one (prices, regex, shell vars). Never write such a token literally in skill text, not even as an example: it substitutes ITSELF and the rule teaches garbage. Grep new text for `\$[0-9]` and rephrase.

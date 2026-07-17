@@ -20,19 +20,19 @@ State briefly what the solution is + its module map. Never hard-code stack assum
 User args narrow the scope (a focused question/area) → audit that scope only, with the dimensions that apply to it; name what was skipped as out of scope.
 
 # STEP 2 — INVESTIGATE (read-only; fan out per dimension)
-Dispatch ONE `Explore` agent per applicable dimension, all in a single message so they run in parallel. `Explore` carries no Edit/Write/NotebookEdit, and 9 sweeps stay out of main context. It DOES carry Bash/PowerShell, so the tool config narrows the blast radius but is not a sandbox — brief every agent to read-only commands (no redirection, no `rm`/`Remove-Item`, no `git` writes). Trivial scope (one file, one question) → inline is fine.
-Brief each agent with: the dimension, the module map from Step 1, and the composed skill that owns the rules. Each returns findings as `file:line` · severity · what's wrong · why it matters · proposed fix — no evidence, no finding. Main loop dedupes, ranks, and owns Steps 3-8: **subagents cannot call AskUserQuestion, so every gate stays in the main loop.**
-Every finding needs concrete evidence (`file:line`), not a hunch.
-- **Structure & organization** — layout, separation of concerns, misplaced files, naming, dead code.
-- **Coding-standards conformance** — apply `coding-standards`: file-size, function/declaration style, layering (no business logic in controllers/UI), duplication, premature abstraction, pattern consistency.
-- **Web-standards conformance (UI)** — for web/frontend code, apply `web-standards`: mobile-first responsive layout, accessibility (WCAG — semantics/labels/focus/contrast), Core Web Vitals perf, purposeful motion, minimalist/bento layout. Flag violations with `file:line`. (Skip if the solution has no web UI.)
-- **Design quality (taste)** — for user-facing frontend, esp. landing/marketing/hero/portfolio surfaces, apply `taste`: run its `preflight.mjs` for the mechanical tells (em-dash, eyebrow count, banned palette, AI-tell strings) instead of eyeballing; judge the rest — does it look templated/generic ("slop"), cookie-cutter hero, default component look, no coherent design direction, weak type/spacing/color system? Flag `file:line` (or component/page). This is design-direction quality, distinct from `web-standards` mechanics. (Skip if no such surfaces, or the UI is purely functional/internal-tooling with no design ambition.)
-- **Documentation conformance** — apply `documentation`: run its `check-docs.mjs` for the mechanical part (sibling, bidirectional/unbroken links) instead of eyeballing; judge the rest by hand — AGENTS.md coverage for real modules, ADRs for major decisions, stale/contradictory docs, tech-debt recorded.
-- **Consistency** — is a chosen pattern applied uniformly (imports, config, error handling, i18n, styling)? Flag one-off deviations.
-- **Language (English-only)** — code comments/docstrings, feature files under `/features`, and docs (AGENTS.md, ADRs, tech-debt, READMEs) must be English. Flag non-English with `file:line`; fix = translate to English (user-facing UI text → i18n, not inline). Independent of whether the logic is fine.
-- **Caveman-style conformance** — ALL documentation must be terse (caveman style) per the `documentation`/`coding-standards` mandate: AGENTS.md, CLAUDE.md, ADRs, tech-debt, READMEs, `/features` specs, line comments, docstrings — everything. Flag verbose/prose-heavy ones (filler, hedging, flowing paragraphs) with `file:line`; fix = invoke the `caveman` skill to condense, keeping every fact/number/path/constraint (skip only what is already caveman). (READMEs may stay a touch more prose-y for human onboarding.)
-- **Performance / correctness smells** — only clear, evidence-backed ones (redundant work on a hot path, dev-only config shipped as default, obvious footguns). Don't speculate.
-- **VCS hygiene** — build artifacts / generated files tracked, ignore-file gaps, committed secrets or large binaries that don't belong. Auth / input-validation review beyond this basic scan → `security-review`.
+Dimension catalog → `reference/dimensions.md`. It owns what each dimension checks and which file holds its rules — read it, don't restate it here.
+Its rule-source paths are relative to the skills root (= the parent of this skill's base directory, announced at load; they carry no leading `skills/`). Join them onto that root and hand scouts the ABSOLUTE result — a scout has neither your base directory nor your CWD, so a raw string strands it.
+
+**2a. Mechanical + shell-bound checks — main loop, before any fan-out.** Deterministic and cheap; scouts are read-only by tool config and carry no shell, so these can only run here.
+- Docs present → invoke `documentation`, run ITS mechanical check. Design surface → invoke `taste`, run ITS pre-flight. **Each skill owns its own script path — invoke that skill and take the path from its body, never hand-write one.** Their bodies carry `${CLAUDE_SKILL_DIR}`, already substituted to an absolute path; a hand-written path resolves against the audited repo's CWD and fails. Audited repo defines its own subagents → its own agent check applies too.
+- VCS hygiene (tracked artifacts, ignore gaps, committed secrets) → read-only `git` here: `ls-files`, `check-ignore`, `log`. Never a scout's job — it has no shell.
+Script hits are findings already. Feed them into Step 3 directly; don't re-derive them by eyeball, and don't hand them to a scout.
+A check cannot run (script missing, wrong stack, no shell) → say so in Step 3 as UNCHECKED. Never let a skipped check read as a clean dimension — that is the one failure this split can cause.
+
+**2b. Judgment sweeps — fan out `audit-scout`.** ONE per applicable dimension, all in a single message so they run in parallel. It is read-only by tool config (Read/Grep/Glob — no Bash, no Edit/Write) and keeps N sweeps out of main context. Trivial scope (one file, one question) → inline is fine.
+Brief each scout with: the dimension name, the module map from Step 1, the rule-source path from the catalog **resolved to absolute** (per Step 2's base — a scout inherits neither your base directory nor your CWD), and any 2a script output relevant to it. Scouts return findings + a FRICTION line; they never fix, never gate.
+Main loop dedupes, ranks, and owns Steps 3-8: **subagents cannot call AskUserQuestion, so every gate stays in the main loop.**
+Scout reports FRICTION (missing tool, rule it could not apply) → carry it to Step 8, it is self-improve evidence.
 
 Investigation changes nothing. Dimension clean → say so.
 
@@ -40,6 +40,7 @@ Investigation changes nothing. Dimension clean → say so.
 One findings list, **ranked by severity**. Each: `file:line`, what's wrong, why it matters, proposed fix. Separate:
 - **Must-fix** — real bugs, broken docs/links, standards violations, inconsistencies.
 - **Optional** — guideline-soft items, polish, nice-to-haves.
+- **UNCHECKED** — REQUIRED whenever a 2a check did not run (script missing/failed, no shell, wrong stack) or a dimension was skipped. Name the dimension and what stayed unexamined. A dimension whose mechanical half never ran is NOT clean — listing it as clean is the worst outcome this skill can produce, because it buys false confidence. Empty only if every applicable check actually ran.
 Be honest about what was NOT checked (e.g. runtime behavior needing the user's env). Don't pad — evidence-based only.
 
 # STEP 4 — CONFIRM SCOPE via AskUserQuestion (REQUIRED)
@@ -70,7 +71,7 @@ Apply only approved findings, per the composed skills:
 - Report faithfully: fixed / deferred / remaining, and any check that failed or couldn't run (say why). Don't claim a fix works if you couldn't verify it.
 
 # STEP 8 — SELF-IMPROVE
-Run `self-improve`: audit surfaced a weakness in a skill itself (missing check, misfired rule) → propose a general improvement via multiple choice. Always run it — it owns the fire/stay-silent call, and scans for failures nobody complained about; don't pre-judge.
+Run `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Audit-specific evidence to hand it: every scout FRICTION line from Step 2b, plus any weakness the audit surfaced in a skill itself (missing check, misfired rule).
 
 # HARD RULES
 Non-obvious, high-severity only. The dimension list (STEP 2) and the workflow (STEPS 3-8) are not repeated here.

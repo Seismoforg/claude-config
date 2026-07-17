@@ -129,7 +129,7 @@ Only on explicit user confirmation: move to `/features/done/`.
 Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUserQuestion** whether to commit the landed work now. Only on an explicit yes, commit via `git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip; leave it uncommitted. Never commit before this point.
 
 ## 8. Retrospective — `self-improve`
-After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `self-improve` via the Skill tool to detect friction AND transcript failure signals in this + the applied skills (feature, coding-standards, documentation) and offer to codify improvements. It owns the fire/stay-silent call — so run it, don't pre-judge.
+After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `self-improve` via the Skill tool (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Scope it to this + the skills applied during implementation.
 
 # HARD RULES
 Non-obvious, high-severity only — the state machine and workflow above are not repeated here.

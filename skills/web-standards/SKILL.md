@@ -8,7 +8,7 @@ description: "Use whenever building or changing web UI — pages, components, la
 Governs HOW user-facing web UI looks and behaves. Composes with `coding-standards`
 (code structure) — apply BOTH on web work. This skill = the experience.
 
-Overriding rule: **match the project's existing design system.** Repo tokens, components, spacing, conventions beat the defaults here. Don't impose a new look on a codebase that has one.
+Overriding rule: **match the project's existing design system** — REPO PATTERNS in `skills/_shared/blocks.md` governs; here it reads as tokens, components, spacing, conventions.
 
 # ON ACTIVATION — SCOPE
 1. User-facing web UI? No → "no web-standards needed", stop.

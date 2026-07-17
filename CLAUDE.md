@@ -63,7 +63,7 @@ Invoke the matching skill — don't bypass it and hand-roll:
 - Commit/push → `git-commit`
 - Whole-codebase audit/health check → `audit-solution`
 - Wild brainstorming, "think differently", no-filter creative ideation → `drunken-genius`
-- End of any skill workflow → `self-improve` (it owns the fire/stay-silent call; don't pre-judge)
+- End of any skill workflow → `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule)
 
 ## 7. Skill composition order
 
@@ -76,7 +76,9 @@ This is a default order, not a rigid gate — skip steps that don't apply.
 
 ## 8. Language
 
-Code comments, docstrings, identifiers, all docs → always English (base rule → `skills/_shared/blocks.md`). User-facing text → i18n layer, never inline literals.
+Docs, comments, docstrings, identifiers, commit messages, feature files: always English, regardless of the conversation language. User-facing text (UI, CLI output, notifications, any string a user reads) → i18n layer, never inline literals.
+
+Word-identical copy of LANGUAGE in `skills/_shared/blocks.md` (canonical); an edit there is unfinished until this line matches. Stated inline on purpose — subagents inherit CLAUDE.md but NOT blocks.md, so a pointer here would strand them with no language rule at all.
 
 ---
 

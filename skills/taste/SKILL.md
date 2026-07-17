@@ -392,24 +392,8 @@ Greenfield AND redesigns. **Misclassifying the mode is the single biggest source
 
 Ambiguous → ask **once**: *"Should this redesign preserve the existing brand, or are we starting visually from scratch?"*
 
-## 11.B Audit Before Touching
-Document the current state before proposing anything: **brand tokens** (primary/accent colours, type stack, logo treatment, radii) · **IA** (page tree, primary nav, key conversion paths) · **content blocks** (what exists, what works, what's filler) · **patterns to preserve** (signature interactions, recognisable hero, copy voice) · **patterns to retire** (AI-slop tells, broken layouts, dead links, generic stock, perf traps) · **dial reading of the existing site** (its current VARIANCE/MOTION/DENSITY is your starting point, not the baseline) · **SEO baseline** (ranking pages, meta titles, structured data, OG cards — **SEO migration is the #1 redesign risk**).
-
-## 11.C Preservation Rules
-* **Don't change IA** unless asked — page slugs, anchor IDs, primary nav labels stay stable for SEO and muscle memory.
-* **Extract brand colours BEFORE applying §4.2.** Already-purple brand stays purple — that's the LILA RULE's override.
-* **Preserve copy voice** unless a rewrite was asked for. Visual modernisation ≠ content rewrite.
-* **Honour existing a11y wins** — never regress focus states, alt text, keyboard nav, contrast.
-* **Respect analytics events** — don't rename buttons, form fields or section IDs that downstream tracking depends on.
-
-## 11.D Modernisation Levers (priority order — stop when the brief is satisfied)
-1. **Typography refresh** — biggest visual lift per unit of risk. 2. **Spacing & rhythm** — section padding, vertical rhythm. 3. **Colour recalibration** — desaturate, unify neutrals, keep brand accent. 4. **Motion layer** — `MOTION_INTENSITY`-appropriate micro-interactions on existing components. 5. **Hero & key-section recomposition** — restructure top-of-funnel using §10 vocabulary. 6. **Full block replacement** — only when the block is unsalvageable.
-
-## 11.E Targeted Evolution vs Full Redesign
-IA + content + SEO sound → **targeted evolution** (levers 1-4): ~70% of the value at ~40% of the risk. Visual debt structural (broken IA, no design system, broken mobile) → **full redesign**, strict content preservation. Brand itself changing → **greenfield**.
-
-## 11.F What Never Changes Silently
-Never without explicit user approval: URL structure / route slugs · primary nav labels · form field names or order (breaks analytics + autofill) · brand logo or wordmark · existing legal / consent / cookie copy.
+## 11.B-11.F Redesign detail → `reference/redesign-protocol.md`
+Mode resolved to either **Redesign** → load it now, before touching anything. Covers: audit before touching (brand tokens, IA, SEO baseline — **SEO migration is the #1 redesign risk**) · preservation rules · modernisation levers · targeted-evolution vs full-redesign call · what never changes silently. **Greenfield → skip, nothing there applies.**
 
 ---
 
@@ -427,7 +411,8 @@ premium-consumer palette · icon library · pure #000/#fff · Inter default · m
 AI-tell strings. Fix every hit, re-run until exit 0. A model self-checking 60 boxes misses some;
 grep does not.
 
-**2. Judgment — dispatch ONE reviewer agent**, fresh context, over the changed files +
+**2. Judgment — dispatch ONE reviewer agent** (main loop only; *subagent reading this as a rule
+source → skip, you cannot dispatch another agent*), fresh context, over the changed files +
 `reference/ai-tells.md`. You wrote the page, so you are primed not to see your own tells: self-review
 is the weakest review. The agent checks the judgment boxes (hero fit, zigzag cap, layout-family
 repetition, copy self-audit, div-fake-screenshots, bento rhythm).
@@ -487,6 +472,7 @@ If a single checkbox cannot be honestly ticked, the page is not done. Fix it bef
 ---
 
 # APPENDICES — reference material, load only when relevant
+- `reference/redesign-protocol.md` — §11.B-11.F audit/preservation/levers, only in a redesign mode
 - `reference/design-directives.md` — §4 font pools, palette alternatives + banned hexes, spec-sheet + copy-audit detail
 - `reference/ai-tells.md` — §9.A-9.F banned-pattern catalog + examples
 - `reference/pattern-vocabulary.md` — §10 hero/nav/grid/card/motion naming

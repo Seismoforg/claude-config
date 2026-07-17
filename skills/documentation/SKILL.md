@@ -44,7 +44,7 @@ Create one when ANY holds:
 Do NOT create one just because a refactor made new files. Extracting a component/helper WITHIN an existing module is not a new module — update the parent's AGENTS.md instead.
 
 ## Structure + worked example
-See `agents-md-template.md`. Load it only when creating or restructuring an AGENTS.md file.
+See `skills/documentation/reference/agents-md-template.md`. Load it only when creating or restructuring an AGENTS.md file.
 
 # CLAUDE.md SIBLING (HARD RULE)
 Every folder with an `AGENTS.md` MUST have a `CLAUDE.md` beside it whose entire content is one line:

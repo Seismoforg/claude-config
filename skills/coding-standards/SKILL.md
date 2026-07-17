@@ -14,14 +14,14 @@ Sets read scope + approval needs:
 - **FEATURE** — new behavior. Read only affected modules. Expand scope only when needed.
 - **REFACTOR** — structural. Full impact analysis allowed; significant structural changes REQUIRE approval first.
 
-Overriding rule: **match the surrounding code.** Repo patterns beat the defaults below. Don't impose a structure the project doesn't use.
+Overriding rule: **match the surrounding code** — REPO PATTERNS in `skills/_shared/blocks.md` governs the DEFAULTS below. It never overrides the HARD RULES at the end; those hold against any repo pattern.
 
 # CORE PRINCIPLES
 Prefer: separation of concerns · small focused modules · reusable components · explicit dependencies · consistent patterns.
 Avoid: monolithic files · duplicated logic · hidden side effects · premature abstraction.
 
 # LANGUAGE
-Base English rule → `skills/_shared/blocks.md`. Identifiers English; user-facing UI text → i18n layer, never inline literals.
+LANGUAGE in `skills/_shared/blocks.md` owns it — including identifiers and the i18n rule.
 Code comments & docstrings: governed entirely by `documentation` — invoke it, don't restate its rules here.
 
 # FILE SIZE
@@ -30,10 +30,10 @@ Code comments & docstrings: governed entirely by `documentation` — invoke it, 
 - Too large → extract along seams (components, hooks, services, helpers). Never split mid-responsibility.
 
 ## Frontend / TS-JS specifics
-Building or editing frontend/TS-JS code → also read `skills/coding-standards/frontend.md` (Atomic Design layout, arrow-const function style). Not applicable to non-frontend work (Python, scripts, backend-only, ML) — skip it there.
+Building or editing frontend/TS-JS code → also read `skills/coding-standards/reference/frontend.md` (Atomic Design layout, arrow-const function style). Not applicable to non-frontend work (Python, scripts, backend-only, ML) — skip it there.
 
 ## Python / ML specifics
-Python / ML work (training scripts, notebooks, model configs) → also read `skills/coding-standards/python-ml.md`. Not applicable to frontend/TS-JS work.
+Python / ML work (training scripts, notebooks, model configs) → also read `skills/coding-standards/reference/python-ml.md`. Not applicable to frontend/TS-JS work.
 
 # BACKEND ARCHITECTURE
 Layer: Controllers → Services → Repositories → Domain Models. No business logic in controllers or UI — it belongs in services/domain models.
@@ -62,7 +62,14 @@ Match the project's testing setup — don't invent one it lacks.
 Local first: 1) relevant files 2) AGENTS.md (nearest up) 3) `/features` specs 4) `/docs`, ADRs 5) existing code.
 Before offering the user a keep-vs-change choice about existing behavior, read the code that implements it first — its current state may make the choice moot.
 External only for third-party APIs, framework/SDK updates, version-specific behavior (WHEN UNCERTAIN → blocks.md). Prefer official docs. For any framework/SDK, check the INSTALLED version's docs — APIs may differ from training data. Consuming/pinning an external artifact at a ref → read its API AT that ref (fetch/checkout it), not a local copy that may be dirty or ahead of the pin; the shipped API can differ.
-Adding/upgrading a dependency → also read `skills/coding-standards/dependencies.md`.
+Adding/upgrading a dependency → also read `skills/coding-standards/reference/dependencies.md`.
+
+# INDEPENDENT REVIEW — main loop only
+**You are a subagent → skip this section entirely; you cannot dispatch another agent.**
+Main loop, diff worth a second pair of eyes (broad, structural, or pre-commit) → delegate the
+`standards-reviewer` agent: read-only, fetches the diff itself, reviews against THESE rules
+rather than generic best practice. Returns violations + FRICTION. Optional — skip for a
+one-line fix.
 
 # COMPLETION CHECKLIST
 - [ ] No obvious duplication introduced
@@ -76,7 +83,6 @@ Adding/upgrading a dependency → also read `skills/coding-standards/dependencie
 
 # HARD RULES
 Non-obvious, high-severity only — the sections above are not repeated here.
-- **Match existing patterns over imposing defaults.** Governs everything above.
 - **Never hardcode secrets, API keys, tokens, or credentials** in source — env vars / secret manager per the project's existing pattern. Notice one already committed → flag it immediately, don't silently fix unrelated instances. Reading a config/state file that may hold secrets → read only the keys you need; never dump the whole file into output or logs.
 - **No business logic in controllers or UI** — it belongs in services/domain models.
 - **Threading a new param through a call chain:** confirm every function declares it AND every caller passes it (grep the name). A value used in a helper but only added to the outer function is a runtime error that typechecks.

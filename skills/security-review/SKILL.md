@@ -16,9 +16,15 @@ changes). Verified: the name resolves to THIS skill; the built-in is unreachable
   that similar endpoints have.
 - **Input validation:** all external input (user input, API payloads, file uploads, URL
   params) validated/sanitized before use — never trust it reaching business logic unchecked.
-- **Dependency CVEs:** run the check in `coding-standards/dependencies.md` before a
-  release — one owner for the topic, not restated here.
+- **Dependency CVEs:** run the check in `skills/coding-standards/reference/dependencies.md`
+  before a release — one owner for the topic, not restated here.
 - **Secrets:** already a HARD RULE in `coding-standards` (never hardcode secrets/keys/
   tokens) — applies automatically, not restated here.
+
+**Independent pass — main loop only.** *Subagent reading this → skip; you cannot dispatch another
+agent.* Before a release, or when you want a review not anchored on the implementation's own
+reasoning, delegate the `security-auditor` agent (read-only, isolated context). You wrote the code
+→ you are primed to miss your own gap. It returns findings + FRICTION; you own remediation and
+every gate.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

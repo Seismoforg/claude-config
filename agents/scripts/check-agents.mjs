@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // agents — mechanical checks for subagent definitions.
-// Enforces what is deterministic: frontmatter parses, name matches filename, tools resolve,
+// Enforces what is deterministic: frontmatter parses, name matches filename, declared tools are
+// known to THIS checker's list (see KNOWN_TOOLS — best-effort, not the harness's truth),
 // read-only agents hold no write tools, preloaded skills exist. Whether an agent LAUNCHES and
 // whether `skills:` actually preloads is NOT here — that needs a live dispatch in a fresh
 // session (agent types are enumerated at session start; files are not hot-reloaded).
@@ -21,7 +22,12 @@ const root = resolve(process.argv[2] ?? join(here, '..', '..'));
 const KNOWN_TOOLS = new Set(['Read', 'Grep', 'Glob', 'Bash', 'PowerShell', 'Write', 'Edit',
   'NotebookEdit', 'Agent', 'Skill', 'Task', 'WebFetch', 'WebSearch', 'TodoWrite', 'Artifact',
   'Workflow', 'ToolSearch', 'SendMessage', 'TaskOutput', 'TaskStop', 'Monitor', 'ReportFindings']);
+// Write/Edit/NotebookEdit are the only WRITE capability this check can prove. Bash/PowerShell also
+// write (rm, >, git reset) and cannot be checked statically — an agent holding one is read-only
+// only by its own prose briefing. So a clean exit means "declares no write TOOL", never "cannot
+// write". Adding a shell to an agent obliges you to brief it read-only by hand.
 const WRITE_TOOLS = ['Write', 'Edit', 'NotebookEdit'];
+const SHELL_TOOLS = ['Bash', 'PowerShell'];
 // Alias, alias with a variant suffix (opus[1m]), or a full model id (claude-sonnet-5).
 const MODEL_RE = /^(?:(?:sonnet|opus|haiku|fable|inherit)(?:\[[^\]]+\])?|claude-[a-z0-9.\-\[\]]+)$/;
 
@@ -75,7 +81,7 @@ for (const file of files) {
   if (name && !/^[a-z0-9-]+$/.test(name)) {
     violations.push(`${rel(path)}  bad-name  must be lowercase-kebab: ${name}`);
   }
-  // Dispatch leans entirely on description (no skill points at these agents by name).
+  // Skills name these agents, but auto-delegation still leans on description — keep it explicit.
   if (description && description.length < 80) {
     violations.push(`${rel(path)}  thin-description  too short to attract auto-delegation; state WHEN to delegate`);
   }
@@ -94,6 +100,20 @@ for (const file of files) {
     }
     for (const w of WRITE_TOOLS) {
       if (tools.includes(w)) violations.push(`${rel(path)}  not-read-only  holds ${w}; agents here are analysis-only (see README)`);
+    }
+    // A shell is allowed but not free: the body must spell out the read-only limit itself,
+    // because nothing downstream enforces it. Presence-only heuristic — it proves a briefing was
+    // WRITTEN, never that it is correct or that the agent obeys it. Prose asserting the opposite
+    // would pass. Deliberately not clever: a stricter regex teaches authors to write around it.
+    // Body only — every description opens with "Read-only", so scanning the frontmatter would let
+    // that sentence satisfy the rule and green-light a genuinely unbriefed agent.
+    const body = readFileSync(path, 'utf8').replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
+    for (const s of SHELL_TOOLS) {
+      if (!tools.includes(s)) continue;
+      const briefed = body.split(/\r?\n/).some((l) => l.includes(s) && /READ-ONLY/i.test(l));
+      if (!briefed) {
+        violations.push(`${rel(path)}  unbriefed-shell  holds ${s} but no body line marks it READ-ONLY; a shell writes (rm, >, git reset) and this checker cannot stop it — brief it by hand`);
+      }
     }
   }
 
@@ -114,6 +134,9 @@ for (const file of files) {
 if (!violations.length) {
   console.log(`check-agents: clean — ${files.length} agent definition(s) under ${rel(agentsDir)}`);
   console.log('Static only. Launch + skills: preload still need a live dispatch in a fresh session.');
+  // The pass path is the one people read — disclose here, not only in the failure message.
+  console.log('"Clean" = declares no write TOOL. An agent holding Bash/PowerShell can still write;');
+  console.log('that limit is prose only, unenforceable here. Read its briefing yourself.');
   process.exit(0);
 }
 console.log(violations.join('\n'));
