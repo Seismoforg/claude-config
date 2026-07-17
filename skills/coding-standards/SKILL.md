@@ -80,6 +80,7 @@ Non-obvious, high-severity only — the sections above are not repeated here.
 - **Never hardcode secrets, API keys, tokens, or credentials** in source — env vars / secret manager per the project's existing pattern. Notice one already committed → flag it immediately, don't silently fix unrelated instances. Reading a config/state file that may hold secrets → read only the keys you need; never dump the whole file into output or logs.
 - **No business logic in controllers or UI** — it belongs in services/domain models.
 - **Threading a new param through a call chain:** confirm every function declares it AND every caller passes it (grep the name). A value used in a helper but only added to the outer function is a runtime error that typechecks.
+- **A check guarded on a field's presence never fires when the field is ABSENT.** `if (cfg.x) validate(cfg.x)` passes everything when `x` is omitted. Default-permissive setting → absence IS the dangerous case; test for it explicitly.
 - **Never weaken or delete a test to make it green** — fix the cause.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.
