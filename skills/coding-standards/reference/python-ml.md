@@ -5,6 +5,9 @@ to frontend/TS-JS work. `coding-standards` HARD RULES (secrets, etc.) still appl
 
 - Reproducibility: seeds fixed and logged, hyperparameters in a config file
   (yaml/json), never hardcoded inline in the training loop.
+- Running a script against the project's package: set the interpreter's import root
+  (PYTHONPATH or equivalent) or run from the package root — a bare run resolves imports
+  against the CWD and dies on the first project import.
 - Script vs. notebook: exploratory work → notebook is fine; anything re-run more than
   once or shared → convert to a script with argparse/CLI args before considering it done.
 - GPU memory: on OOM, standard escalation order is batch size → gradient checkpointing

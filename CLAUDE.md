@@ -76,6 +76,7 @@ Invoke the matching skill — don't bypass it and hand-roll:
 - Web/UI work → `web-standards` (+ `coding-standards`)
 - Frontend design — landing pages, portfolios, redesigns, hero/marketing UI, "make it look good / not templated", visual polish, design direction → `taste` (+ `web-standards`)
 - New features (plan/spec/approve/implement) → `feature`
+- Delegate a task to the role-based crew (Teamleiter/PM/devs/tester) → `crew` (drives `feature`)
 - Ad-hoc bug hunt outside a feature ("why is this crashing", "this is broken") → `debugging`
 - Sensitive code (auth, input validation) / pre-release security check → `security-review`
 - Architecture, modules, APIs, AGENTS.md, ADRs, tech-debt → `documentation`

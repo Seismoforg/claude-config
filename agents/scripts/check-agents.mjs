@@ -2,7 +2,10 @@
 // agents — mechanical checks for subagent definitions.
 // Enforces what is deterministic: frontmatter parses, name matches filename, declared tools are
 // known to THIS checker's list (see KNOWN_TOOLS — best-effort, not the harness's truth),
-// read-only agents hold no write tools, preloaded skills exist, some skill dispatches the agent.
+// analysis agents hold no write tools while executor agents may, no agent holds Agent (a subagent
+// cannot nest), preloaded skills exist, some skill dispatches the agent.
+// Two classes (frontmatter `class:`): analysis (default, read-only) and executor (may write, runs
+// in an isolated worktree). Absent = analysis, so the existing read-only agents are unaffected.
 // Whether an agent LAUNCHES and whether `skills:` actually preloads is NOT here — that needs a
 // live dispatch in a fresh session (agent types are enumerated at session start; files are not
 // hot-reloaded). Being NAMED is static and checked; being dispatchable is not.
@@ -24,9 +27,11 @@ const KNOWN_TOOLS = new Set(['Read', 'Grep', 'Glob', 'Bash', 'PowerShell', 'Writ
   'NotebookEdit', 'Agent', 'Skill', 'Task', 'WebFetch', 'WebSearch', 'TodoWrite', 'Artifact',
   'Workflow', 'ToolSearch', 'SendMessage', 'TaskOutput', 'TaskStop', 'Monitor', 'ReportFindings']);
 // Write/Edit/NotebookEdit are the only WRITE capability this check can prove. Bash/PowerShell also
-// write (rm, >, git reset) and cannot be checked statically — an agent holding one is read-only
-// only by its own prose briefing. So a clean exit means "declares no write TOOL", never "cannot
-// write". Adding a shell to an agent obliges you to brief it read-only by hand.
+// write (rm, >, git reset) and cannot be checked statically — an analysis agent holding one is
+// read-only only by its own prose briefing. So a clean exit means "an analysis agent declares no
+// write TOOL", never "cannot write". Adding a shell to an analysis agent obliges you to brief it
+// read-only by hand. Executor agents are ALLOWED these — they write by design; their containment
+// is the worktree (a dispatch-time flag this check cannot see), so it requires the briefing instead.
 const WRITE_TOOLS = ['Write', 'Edit', 'NotebookEdit'];
 const SHELL_TOOLS = ['Bash', 'PowerShell'];
 // Alias, alias with a variant suffix (opus[1m]), or a full model id (claude-sonnet-5).
@@ -116,11 +121,19 @@ for (const file of files) {
     violations.push(`${rel(path)}  orphaned  no skill names "${name}" — nothing dispatches it; name it in the skill that owns its job, in the step that fans out (README/features do not count as wiring)`);
   }
 
-  // Omitting tools: is NOT neutral — it inherits every tool, Write and Edit included. The
-  // read-only rule therefore has to fail on the ABSENCE of the line, not just on a bad value.
+  // Class gates the write rules below. Absent = analysis, so untagged agents stay read-only.
+  const klass = str(fm.class) ?? 'analysis';
+  if (klass !== 'analysis' && klass !== 'executor') {
+    violations.push(`${rel(path)}  bad-class  class "${klass}" — expected analysis or executor`);
+  }
+  const isExecutor = klass === 'executor';
+  const body = readFileSync(path, 'utf8').replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
+
+  // Omitting tools: is NOT neutral — it inherits every tool, Write/Edit AND Agent included. The
+  // allowlist rule therefore has to fail on the ABSENCE of the line, not just on a bad value.
   const declared = str(fm.tools);
   if (!declared) {
-    violations.push(`${rel(path)}  not-read-only  no tools: — inherits ALL tools incl. Write/Edit; declare an explicit allowlist`);
+    violations.push(`${rel(path)}  no-tools  no tools: — inherits ALL tools incl. Write/Edit and Agent; declare an explicit allowlist`);
   } else {
     const tools = declared.split(',').map((s) => s.trim()).filter(Boolean);
     for (const t of tools) {
@@ -128,22 +141,40 @@ for (const file of files) {
         violations.push(`${rel(path)}  unknown-tool  "${t}" not in this checker's known-tool list — verify against the harness; a name it does not accept prevents launch`);
       }
     }
-    for (const w of WRITE_TOOLS) {
-      if (tools.includes(w)) violations.push(`${rel(path)}  not-read-only  holds ${w}; agents here are analysis-only (see README)`);
+    // No agent nests — a subagent cannot dispatch another subagent (README). Both classes.
+    if (tools.includes('Agent')) {
+      violations.push(`${rel(path)}  no-nesting  holds Agent; a subagent cannot dispatch another — dispatch stays in the main loop`);
     }
-    // A shell is allowed but not free: the body must spell out the read-only limit itself,
-    // because nothing downstream enforces it. Presence-only heuristic — it proves a briefing was
-    // WRITTEN, never that it is correct or that the agent obeys it. Prose asserting the opposite
-    // would pass. Deliberately not clever: a stricter regex teaches authors to write around it.
-    // Body only — every description opens with "Read-only", so scanning the frontmatter would let
-    // that sentence satisfy the rule and green-light a genuinely unbriefed agent.
-    const body = readFileSync(path, 'utf8').replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
+    // Write tools: analysis agents are read-only; executors write by design, so skip them.
+    if (!isExecutor) {
+      for (const w of WRITE_TOOLS) {
+        if (tools.includes(w)) violations.push(`${rel(path)}  not-read-only  holds ${w}; analysis agents are read-only. An agent that must write declares class: executor (see README)`);
+      }
+    }
+    // A shell is allowed but not free. Analysis: the body must spell out the read-only limit
+    // itself, because nothing downstream enforces it. Presence-only heuristic — it proves a
+    // briefing was WRITTEN, never that it is correct or that the agent obeys it. Prose asserting
+    // the opposite would pass. Deliberately not clever: a stricter regex teaches authors to write
+    // around it. Body only — every analysis description opens with "Read-only", so scanning the
+    // frontmatter would let that sentence satisfy the rule and green-light an unbriefed agent.
+    // Executor: its shell legitimately writes, so this read-only briefing does not apply; the
+    // worktree check below covers its containment instead.
     for (const s of SHELL_TOOLS) {
-      if (!tools.includes(s)) continue;
+      if (!tools.includes(s) || isExecutor) continue;
       const briefed = body.split(/\r?\n/).some((l) => l.includes(s) && /READ-ONLY/i.test(l));
       if (!briefed) {
         violations.push(`${rel(path)}  unbriefed-shell  holds ${s} but no body line marks it READ-ONLY; a shell writes (rm, >, git reset) and this checker cannot stop it — brief it by hand`);
       }
+    }
+  }
+
+  // An executor writes — its blast radius is contained only by running in an isolated worktree,
+  // which is a dispatch-time flag this check cannot see. So it demands the briefing be present,
+  // same presence-only logic (and same limits) as unbriefed-shell.
+  if (isExecutor) {
+    const briefed = body.split(/\r?\n/).some((l) => /worktree/i.test(l));
+    if (!briefed) {
+      violations.push(`${rel(path)}  unbriefed-executor  class: executor but no body line mentions its worktree isolation; it must be dispatched with isolation: worktree and say so — brief it by hand`);
     }
   }
 
@@ -165,8 +196,10 @@ if (!violations.length) {
   console.log(`check-agents: clean — ${files.length} agent definition(s) under ${rel(agentsDir)}`);
   console.log('Static only. Launch + skills: preload still need a live dispatch in a fresh session.');
   // The pass path is the one people read — disclose here, not only in the failure message.
-  console.log('"Clean" = declares no write TOOL. An agent holding Bash/PowerShell can still write;');
-  console.log('that limit is prose only, unenforceable here. Read its briefing yourself.');
+  console.log('"Clean" for an analysis agent = declares no write TOOL; for an executor = declares its');
+  console.log('worktree briefing. Either can still write via Bash/PowerShell, and an executor writes by');
+  console.log('design — that containment is prose + a dispatch-time worktree flag, unenforceable here.');
+  console.log('Read its briefing yourself.');
   process.exit(0);
 }
 console.log(violations.join('\n'));

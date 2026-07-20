@@ -12,9 +12,12 @@ Skill workflow ended? → `self-improve`. It owns the fire/stay-silent call and 
 transcript for failures the user never mentioned — run it, don't pre-judge.
 
 # LIVE VERIFICATION
-Build/typecheck/token correctness is yours. Anything needing a real rendered page — visual check,
-interaction, visual regression, Lighthouse/perf audit, eyeballing a theme — is the USER's job.
-Never run a browser/headless live test yourself. Say what you verified vs what needs their eyes.
+Build/typecheck/token correctness is yours. A real rendered page — visual check, interaction,
+visual regression, perf audit, eyeballing a theme — defaults to the USER's job; don't spin up a
+browser as routine. EXCEPTION: one is actually available AND the change is style/layout-heavy —
+green build+typecheck+lint is NOT proof it renders right (style-prop unit misreads, inherited
+default styling, valid-but-worse layout show only in pixels). Then drive it yourself and assert
+measured values, not a screenshot glance. Either way, report verified vs what still needs their eyes.
 
 # APPROVAL GATES
 Any point marked "STOP. Ask" / "CONFIRM ... (REQUIRED)" → `AskUserQuestion`, multiple choice,

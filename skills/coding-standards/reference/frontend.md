@@ -33,3 +33,10 @@ export default function Page() { … }
 ```
 Default export → declare arrow-const then `export default Name`. Object/class methods
 (`method() {}`) are exempt. Project-wide; never reintroduce `function`.
+
+# STYLE-PROP UNITS
+A component library's style prop may reinterpret a bare number — a spacing-scale multiple, a
+theme-token multiplier, a 0-1 fraction read as a percentage — NOT as px. Never assume bare number
+= px; check the library's unit semantics, prefer an explicit unit string where the prop takes one.
+A wrong assumption typechecks and builds clean, then renders wrong (a radius several times too big,
+a 1px box that fills 100%). Confirm in the rendered output, not the source.
