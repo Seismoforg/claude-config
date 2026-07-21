@@ -92,3 +92,5 @@ Does NOT count (never manufacture):
   - **USE** one inside a command you want executed → correct; that IS the mechanism.
   - **TEACH** one — any rule ABOUT the token — → it substitutes ITSELF and ships a rule teaching garbage (a price becomes an argument, a skill-dir token becomes one hardcoded absolute path). Name it in prose instead ("the skill-dir placeholder"); never spell it.
   - Grep new text for `\$[0-9]` and for the skill-dir token; every hit that TEACHES rather than USES → rephrase.
+
+See `skills/_shared/blocks.md` for LANGUAGE / APPROVAL GATES.

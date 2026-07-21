@@ -112,7 +112,7 @@ Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks
 - Apply `documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, ADRs, or technical debt.
 Invoke each skill via the Skill tool; don't just paraphrase.
 - Fanning an enumerated task/checklist out to parallel workers → explicitly assign every item, and re-verify full coverage against the list before dispatch AND after merge; unassigned items drop silently.
-Intermediate commits during implementation are fine — but NEVER on the default branch: branch first (`git-commit` STEP 1 owns resolving the default branch's name and its Q0 gate; don't hand-roll either). The FINAL deliverable commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
+Intermediate commits during implementation are fine — but NEVER on the default branch: branch first (`git-commit` STEP 1 owns resolving the default branch's name; don't hand-roll it). The FINAL deliverable commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
 
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
@@ -123,7 +123,7 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 - tests pass (if available)
 - every changed code path actually exercised. A path needing an unavailable dep (model, GPU, paid API) is NOT "outside your control" — drive it with a stub/mock before declaring done; an unrun changed branch is unverified, not "structurally verified"
 - data/config entries consumed by existing code (catalog/registry/list) count as a changed path — "it parses" is NOT validation. Exercise ≥1 representative entry through the real consuming path; entries vary in format and only the live path reveals a break
-- changed path is harness-registered config (agent/skill/hook definition) → it may not be dispatchable in the SAME turn it was written. A not-found error is NOT proof the definition is wrong — re-check in a later turn before reporting it blocked or broken
+- changed path is harness-registered config (agent/skill/hook definition) → apply the harness-registration rule in `self-improve` SKILL LIFECYCLE before you judge it; a not-found error right after writing proves neither broken nor working
 - validating a RULE you wrote by RUNNING it yourself tests your hand-operation, not the rule. Whatever the text tells its executor to derive (a path, a command, a value) must be derived FROM THE TEXT during the test — supply it by hand and a green run proves nothing about the step you skipped, which is exactly where the rule can be wrong
 - changed path is PROSE a model executes (skill, workflow, rule file, prompt) → "it reads fine" is NOT validation. You cannot audit your own prose — you know what you meant. Hand it to a FRESH model with no context; demand a reachability/coherence trace naming every dead or offered-but-unexecutable path. Expect it to find defects the change itself introduced
 - exercising a changed path that MUTATES persisted/user state (settings store, DB, on-disk files) → find the store's REAL path first (don't assume it), snapshot it, restore it after; never leave test data in the user's state
@@ -144,9 +144,9 @@ After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), in
 
 # HARD RULES
 Non-obvious, high-severity only — the state machine and workflow above are not repeated here.
-- **Only `/features` files define state; chat doesn't.** A requirement that exists only in chat does not exist.
-- **No implementation before status = APPROVED and the file sits in in-progress/.**
-- **No skipping states; folder and status ALWAYS match** (bar the documented approve&implement / audit-remediation fast-paths).
+- **Only `/features` files define state; chat doesn't** — see the authoritative rule at the top of this skill.
+- **No implementation before status = APPROVED and the file sits in in-progress/** — see workflow step 4.
+- **No skipping states; folder and status ALWAYS match** — see STATE MACHINE, incl. its documented fast-paths.
 - **DONE requires explicit user confirmation — never automatic.** READY_FOR_DONE requires recorded, passing validation.
 - **The FINAL DELIVERABLE commit happens ONLY after the user moves the feature to DONE, and only if they opt in** via AskUserQuestion. Never at READY_FOR_DONE, never automatically. This governs the DELIVERABLE commit only — intermediate commits during implementation are fine (Step 5), including the integration commits a delegating workflow needs to hand work between workers. Those are still never made on the default branch: branch first.
 - **Every user-waiting transition MUST use AskUserQuestion** — never a free-text prompt.

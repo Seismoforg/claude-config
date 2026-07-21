@@ -83,7 +83,7 @@ Non-obvious, high-severity only — the steps above are not repeated here. This 
 - **Never open a PR from the default branch; never merge, approve, or mark a draft ready** unless explicitly asked. Opening ≠ landing. Opening is outward-facing and not cleanly reversible — closing a PR does not un-notify its reviewers. Never simulate an opened PR or report a URL you didn't get back. (No remote / no `gh` / non-GitHub remote never reaches here — Step 1 detects all three, Step 3 withholds the option.)
 - **Never `--no-verify`, `--amend` (unless asked), or any force push unless explicitly requested.** Pre-commit hook fails → surface and STOP, fix the cause, never bypass. Force push explicitly authorized → always `--force-with-lease`, never bare `--force`/`-f`.
 - **Never commit to the default branch** without surfacing it and offering to branch first — that offer IS Q0. (No remote → no shared default exists to protect; Step 1 says so and Q0 is not required. Default unresolvable WITH a remote → Step 1 asks; never treat that as "not the default".)
-- **Never commit obvious secrets, large binaries, or build artifacts** — flag them, suggest `.gitignore`, never blind-stage via `git add -A`.
+- **Never commit obvious secrets, large binaries, or build artifacts** — see the STEP 1 hygiene scan.
 - **Never commit into a merge in progress** — resolved or not; Step 1 detects both and STOPs. Resolving conflicts is not this skill's job, and committing into a fully-resolved merge concludes it silently.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES.
