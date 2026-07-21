@@ -90,7 +90,7 @@ load the addendum at all.
 # HARD RULES
 Non-obvious, high-severity only — the sections above are not repeated here.
 - **Never hardcode secrets, API keys, tokens, or credentials** in source — env vars / secret manager per the project's existing pattern. Notice one already committed → flag it immediately, don't silently fix unrelated instances. Reading a config/state file that may hold secrets → read only the keys you need; never dump the whole file into output or logs.
-- **No business logic in controllers or UI** — it belongs in services/domain models.
+- **No business logic in controllers or UI** — BACKEND ARCHITECTURE above owns it.
 - **Threading a new param through a call chain:** confirm every function declares it AND every caller passes it (grep the name). A value used in a helper but only added to the outer function is a runtime error that typechecks.
 - **A check guarded on a field's presence never fires when the field is ABSENT.** `if (cfg.x) validate(cfg.x)` passes everything when `x` is omitted. Default-permissive setting → absence IS the dangerous case; test for it explicitly.
 - **Changing a DEFAULT another layer can also send** (client form, config file, CLI flag): grep every layer that supplies that value. The caller's own default silently overrides the new one and typechecks — the source of truth looks correct while every real request still carries the old value.
