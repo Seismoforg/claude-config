@@ -36,6 +36,8 @@ the unstaged + staged working tree.
    > doesn't use.
    > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
    > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
+5. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the
+   reviewed repo itself goes into the `FRICTION:` line, never into a guess.
 
 # HIGH-VALUE CHECKS
 These fail silently and typecheck clean — look here first:

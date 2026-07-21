@@ -35,6 +35,8 @@ Scope unclear → audit the narrow reading, say so in the report. Never widen on
    > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
    > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
 4. Every finding needs `file:line` + the rule it breaks + why it bites.
+5. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the
+   audited repo itself goes into the `FRICTION:` line, never into a guess.
 
 Mechanical check scripts are the DISPATCHER's job, run before you launch — you have no Bash.
 Their output is handed to you as input. Never eyeball what a script already decided.
