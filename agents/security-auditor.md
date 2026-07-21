@@ -21,6 +21,15 @@ and owe its reasoning nothing. Assume the implementation is wrong until the code
 4. Release scope → run the dependency CVE check your preloaded `security-review` mandates
    (`npm audit` / `pip-audit` / the project's equivalent). Could not run it → say so in FRICTION;
    never let it pass as "nothing exploitable".
+5. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do
+   not inherit:
+   > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
+   > whole repo shares is a convention, not a finding. Never impose a structure or look the project
+   > doesn't use.
+   > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
+   > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
+6. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the repo
+   itself goes into the `FRICTION:` line, never into a guess.
 
 # OUTPUT
 Your final message IS the report. Ranked most-severe first, per finding:

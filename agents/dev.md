@@ -62,6 +62,15 @@ The Teamleiter tells you which seat you are and which tasks are yours.
    your worktree (intermediate commits are fine) so the Teamleiter can integrate them — never push, never
    touch another tree.
 6. Remove imports/vars YOUR change orphaned; leave pre-existing dead code alone (CLAUDE.md §3).
+7. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do
+   not inherit:
+   > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
+   > whole repo shares is a convention, not a finding. Never impose a structure or look the project
+   > doesn't use.
+   > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
+   > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
+8. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the repo
+   itself goes into the `FRICTION:` line, never into a guess.
 
 # OUTPUT
 Your final message IS the report. English, terse. No preamble.
@@ -71,8 +80,9 @@ Your final message IS the report. English, terse. No preamble.
 - Per task: done / blocked, the files you touched (`path`), one line on the change.
 - How to verify: the exact command(s) you ran and their result (green/red).
 - What you did NOT do: any assigned task left incomplete, and why.
-Close with one `FRICTION:` line — a spec gap, a task that needed out-of-scope work, a tool you lacked,
-a rule that misfired. Nothing hit → `FRICTION: none`.
+Close with one `FRICTION:` line — a defect in the SKILLS/briefing, not in the built code: a spec gap,
+a task that needed out-of-scope work, a tool you lacked, a rule that misfired. Nothing hit →
+`FRICTION: none`.
 
 # HARD RULES
 - **Assigned tasks only.** Never build a task outside your set — that is another dev's work or scope creep.

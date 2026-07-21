@@ -47,6 +47,15 @@ ask the user. Never invent scope; never pick silently between interpretations.
    - Validation: name what "done + verified" means; it is filled for real at the gate, not now.
 6. Tasks are the build's work-list — each item small, verifiable, independently assignable to a dev.
    A plan the devs cannot split is not done; vague tasks strand them.
+7. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do
+   not inherit:
+   > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
+   > whole repo shares is a convention, not a finding. Never impose a structure or look the project
+   > doesn't use.
+   > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
+   > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
+8. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the repo
+   itself goes into `OPEN`, never into a guess.
 
 # OUTPUT
 Your final message IS the spec. English, terse, imperative (the feature-file style). No preamble.
