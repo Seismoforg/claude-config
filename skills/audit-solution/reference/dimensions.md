@@ -48,6 +48,19 @@ tech-debt recorded. Sibling + link mechanics are the dispatcher's script (`check
 not yours; judge coverage and correctness.
 Rule source: `documentation/SKILL.md`.
 
+## Redundancy & contradiction
+Two failures of the same root: one rule living in more than one place.
+- **Redundancy** — the same rule/logic stated twice or more. Name EVERY copy, say which one should own
+  it, and which become pointers. Duplication the text itself declares AND justifies is not a finding —
+  look for a stated reason first, then only check the copies still match.
+- **Contradiction** — two statements that cannot both hold for the same reader in the same situation.
+  Cite `file:line` for BOTH sides; never pick a winner without saying why.
+Method: a contradiction worded differently shares no search string with its counterpart, so grep cannot
+find it. Read invariant sections (HARD RULES, "always/never", ownership claims) end to end and hold them
+against each other.
+Rule source: the repo's own anti-duplication mechanism (a shared/common rule file), if one exists. None
+exists while duplication is widespread → that absence IS the finding.
+
 ## Consistency
 Is a chosen pattern applied uniformly (imports, config, error handling, i18n, styling, naming,
 layout)? Flag one-off deviations. Fix = align to the dominant pattern, never add a variant.

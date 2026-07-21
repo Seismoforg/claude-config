@@ -76,7 +76,7 @@ date: YYYY-MM-DD
 # Rationale
 # Consequences
 ```
-Write an ADR for any major/hard-to-reverse architectural decision (framework, data store, auth model, API style, build pipeline). Supersede — never silently edit — an accepted ADR: add a new one, set the old to `superseded`.
+Write an ADR for any major/hard-to-reverse architectural decision. Application repos: framework, data store, auth model, API style, build pipeline. Those are EXAMPLES, not the test — other repo shapes have their own hard-to-reverse decisions. The test is "hard to reverse AND shapes everything after it", never whether it matches an example. Supersede — never silently edit — an accepted ADR: add a new one, set the old to `superseded`.
 Dates (ADR `date:` and tech-debt `added`) are ALWAYS today's date from context — never guessed or fabricated.
 
 # TECHNICAL DEBT

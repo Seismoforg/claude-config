@@ -88,6 +88,7 @@ When the feature is vague, exploratory, or the user asks for ideas/options/"what
 ## 1. Create → DRAFT
 Write the spec into `/features/draft/`. Fill all sections as far as known.
 Change mirrors an existing one (same layer, sibling module) → read that precedent FIRST and mirror its structure. A plan drafted from the file tree alone puts constants and wiring in plausible-but-wrong places, and the correction lands mid-implementation.
+Spec fixes a defect CLASS (a rule missing from several files, one pattern wrong in several places) → grep every instance BEFORE writing Tasks; count from the grep, not from the report you are working off. A spec naming 4 of 6 instances looks complete, passes its own review, and ships the other 2 unfixed.
 
 ## 2. Request approval → NEEDS_APPROVAL
 Move to `/features/pending/`. Summarize for the user. **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file). Offer at least:

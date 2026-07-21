@@ -97,6 +97,10 @@ its workflow — the crew only assigns the work.
    she returns the test code as TEXT and predicts red or green per test. **YOU** write that code into the
    main checkout and run it, and YOU report the real pass/fail — she never observed a run, so the result
    is yours to state, never hers.
+   **Decide WHERE that code lands before you dispatch her, and put it in the brief.** Repo has no test
+   setup → do not invent one (`coding-standards`); pick a home the repo's own layout justifies, or agree
+   one with the user. MEASURED: a suite with no home was written, run once and discarded, leaving the
+   very defects it had just proven fixed with no regression guard.
    Triage the run before you act on it — the prediction is what makes this possible:
    - Code that does not RUN (syntax, wrong runner, missing import) → a defect in her deliverable, not in
      the product. Fix the test or send it back to her; never write it into the spec as a product task.
@@ -178,8 +182,18 @@ Every worker dispatch carries all of it. A missing item is YOUR miss, not the wo
   Never a repo-relative path: `features/` does not exist inside a worktree. The PM dispatch is the one
   exception: it PRODUCES the spec, so there is none to hand yet.
 - ABSOLUTE rule-source file paths that apply, plus their load-bearing companions.
-- Executors only: report back `git branch --show-current` and `git rev-parse HEAD`. That turns the base
-  assumption into a measurement you can fail on, and names the branch you will merge.
+- **Paths by DIRECTION, never one blanket "absolute".** READ-ONLY inputs (the spec, rule sources) →
+  MAIN-checkout absolute; they resolve fine from inside a worktree. WRITE TARGETS → the worker's OWN
+  worktree: hand them repo-relative and let the worker join them onto its worktree root. MEASURED:
+  edit targets handed as main-checkout absolutes were REJECTED — "this agent is isolated in the
+  worktree; edit the worktree copy instead" — and every dev in that round hit it.
+- Executors only: the EXPECTED base — branch name AND commit — plus "check `git rev-parse HEAD` first;
+  behind it → move onto that base before editing". A worktree is cut from the tip as of SESSION START,
+  so every round after a merge starts stale. MEASURED: three dispatches in one feature, each 2-3 commits
+  behind, one of them dispatched AFTER the merge it needed; briefed line numbers did not resolve until
+  the worker fast-forwarded. Naming the base is what makes the worker's own check actionable — without
+  it the worker can measure the drift but not know what to correct to. They still report back
+  `git branch --show-current` and `git rev-parse HEAD`; that names the branch you will merge.
 
 # HARD RULES
 - **Every gate stays in the main loop.** Subagents have no AskUserQuestion channel — approval,

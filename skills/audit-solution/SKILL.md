@@ -17,6 +17,7 @@ Understand before judging, in order:
 2. Build/manifest files → detect stack, modules, entry points (don't assume language/framework).
 3. Top-level layout of each module.
 State briefly what the solution is + its module map. Never hard-code stack assumptions — works for any language/framework.
+**ENUMERATE the map, never recall it.** Glob each file class you will brief scouts on and count from that listing — not from memory, not from a README's own list of itself. A miscount ships as a silently unaudited file: no scout ever receives it, yet its dimension still reads as swept.
 User args narrow the scope (a focused question/area) → audit that scope only, with the dimensions that apply to it; name what was skipped as out of scope.
 
 # STEP 2 — INVESTIGATE (read-only; fan out per dimension)
@@ -78,6 +79,7 @@ Non-obvious, high-severity only. The dimension list (STEP 2) and the workflow (S
 - Investigation is read-only; no edits before the Step 4 approval gate.
 - Stack-agnostic — detect language/framework/layout, never assume.
 - Evidence-based findings only (`file:line`); rank by severity; don't pad.
+- **A scout whose dimension defers to a mechanical check gets that check's OUTPUT in its brief.** Omit it and the scout must either eyeball what a script already decided or stand down — both leave the dimension unverified while it reads as swept. STEP 2b states this; it belongs here too because omitting it is invisible in the result.
 - Before proposing a fix, confirm the current state isn't an intentional convention (typed sentinel, documented default, deliberate tier, a term or rule placed where it is on purpose) — check the local type/model/definition, or the rule that governs it. Contradicts your fix → drop or downgrade the finding, don't "fix" it. (Stated here AND in `reference/dimensions.md` on purpose: a scout never loads this file. Keep both copies identical.)
 - Consistency is paramount: any pattern applied unevenly (imports, config, error handling, i18n, styling, naming, layout) is a finding — fix = align to the dominant pattern, never add another variant.
 - Unless "Report only" (or a trivial no-behavior-change fix per the Step 5 carve-out), capture approved remediation as a `feature` draft and remediate through the feature lifecycle — never edit non-trivial code straight from the audit report.
