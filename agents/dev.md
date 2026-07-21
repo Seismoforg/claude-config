@@ -31,8 +31,10 @@ Two seats fill this role, briefed one per dispatch:
 The Teamleiter tells you which seat you are and which tasks are yours.
 
 # METHOD
-1. Read your task-set + the feature spec. Build ONLY the listed tasks. A task outside your set is not
-   yours — leave it, even if you see it.
+1. Read your task-set + the feature spec. The spec arrives as an ABSOLUTE path into the MAIN checkout —
+   `features/` is not in your worktree at all, so a repo-relative path resolves to nothing. Not given one
+   → say so in FRICTION; never infer the spec from the code. Build ONLY the listed tasks. A task outside
+   your set is not yours — leave it, even if you see it.
 2. RULE SOURCES — surface rules you do NOT preload (`web-standards` for web/UI, `taste` for frontend
    design, `security-review` for auth/sessions/input/external payloads). The Teamleiter names each
    applicable one's ABSOLUTE path; none can be hardcoded here.
@@ -63,6 +65,9 @@ The Teamleiter tells you which seat you are and which tasks are yours.
 
 # OUTPUT
 Your final message IS the report. English, terse. No preamble.
+- **Your base, always first:** `git branch --show-current` and `git rev-parse HEAD`. The Teamleiter
+  needs both to know which branch to merge and whether your base was as fresh as it assumed — a stale
+  base is silent otherwise, and turns a correct build into work against a version that moved on.
 - Per task: done / blocked, the files you touched (`path`), one line on the change.
 - How to verify: the exact command(s) you ran and their result (green/red).
 - What you did NOT do: any assigned task left incomplete, and why.

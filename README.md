@@ -5,7 +5,7 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills + custom s
 ## Layout
 - `CLAUDE.md` — global user instructions (behavioral guidelines).
 - `skills/`   — custom skills (coding-standards, web-standards, taste, feature, crew, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
-- `agents/`   — custom subagents. Analysis (read-only): audit-scout, security-auditor, standards-reviewer, pm. Executor (write, worktree): dev, tester.
+- `agents/`   — custom subagents. Analysis (read-only): audit-scout, security-auditor, standards-reviewer, pm, tester. Executor (write, worktree): dev.
 
 Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/` (load on demand,
 never at the skill root). Check scripts → `<skill>/scripts/`. Shared rule text → `skills/_shared/blocks.md`.
@@ -13,9 +13,17 @@ never at the skill root). Check scripts → `<skill>/scripts/`. Shared rule text
 ## Agents — two classes
 Agents come in two classes, set by the `class:` frontmatter field:
 - **analysis** (default, absent = this) — read-only workers: audit-scout, security-auditor,
-  standards-reviewer, `pm`. Hold no write tools.
-- **executor** — write-capable workers that build: `dev`, `tester`. May hold `Write`/`Edit`; they run
-  in an isolated git worktree, so their writes never touch the user's live tree.
+  standards-reviewer, `pm`, `tester`. Hold no write tools; they return findings or code as TEXT.
+- **executor** — write-capable workers that build: `dev`. May hold `Write`/`Edit`, and ALWAYS runs in an
+  isolated git worktree, so its writes never touch the user's live tree (`unbriefed-executor` enforces
+  that the briefing exists).
+
+**Why `tester` is analysis and not an executor.** A worktree is cut from the branch tip as of SESSION
+START, not current HEAD — MEASURED: two workers dispatched after a commit landed both reported the older
+tip. So a worktree cannot hand one worker's output to the next. A tester that WROTE its tests would need
+a worktree and would then faithfully test a version lacking the build it was sent to check. Making it
+read-only — it returns test code, the dispatcher writes and runs it — removes the problem instead of
+patching around it, and keeps "every executor is isolated" true with no exception.
 
 Three harness constraints bind BOTH classes — and none forbids *writing*; they forbid a worker from
 *gating* or *dispatching*, which is why write-capable executors are still safe:
@@ -44,6 +52,10 @@ Each agent's report closes with a `FRICTION:` line — a defect in the SKILLS, n
 (tool it lacked, rule it could not apply, rule that misfired). An agent cannot run `self-improve`
 itself (no transcript, no gate, no write), so this is the only channel back; the main loop feeds it
 to `self-improve` as evidence.
+Exception: `pm` closes with `OPEN:` instead, because everything it surfaces at plan time is a question
+for the USER, not yet a skill defect. The dispatcher still has to split that list — a genuine skill
+defect hiding in it (a rule source that applied but was never handed over) is `self-improve` evidence
+and must not be answered at the approval gate as if it were a scope question.
 
 Editing an agent definition → run the mechanical check, don't eyeball it:
 ```

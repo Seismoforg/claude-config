@@ -168,9 +168,12 @@ for (const file of files) {
     }
   }
 
-  // An executor writes — its blast radius is contained only by running in an isolated worktree,
-  // which is a dispatch-time flag this check cannot see. So it demands the briefing be present,
-  // same presence-only logic (and same limits) as unbriefed-shell.
+  // An executor writes — its blast radius is contained only by running in an isolated worktree, which
+  // is a dispatch-time flag this check cannot see. So it demands the briefing be present, same
+  // presence-only logic (and same limits) as unbriefed-shell.
+  // Every executor is an isolated PARALLEL writer: a worker that must SEE earlier work cannot use a
+  // worktree at all (it is cut from a possibly-older base), so such a role is built read-only instead
+  // and returns its output as text. That keeps this rule unconditional — no un-isolated executor exists.
   if (isExecutor) {
     const briefed = body.split(/\r?\n/).some((l) => /worktree/i.test(l));
     if (!briefed) {

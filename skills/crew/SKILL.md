@@ -39,9 +39,12 @@ the rules does not replace the review, it stops defects from being written in th
 - **PM — `pm` agent** ("Rieke"). Read-only. Plans: returns a DRAFT feature spec. Never files it, never gates.
 - **Devs — `dev` agent** ("Kern", "Mara"). Executors, write in isolated worktrees. Two parallel seats,
   disjoint task-sets. Build only assigned tasks.
-- **Tester — `tester` agent** ("Vera"). Executor, isolated worktree. Tests the spec, runs it, reports red/green.
+- **Tester — `tester` agent** ("Vera"). Read-only test designer: derives tests from the spec and returns
+  the code as TEXT. You write it into the main checkout and run it — she never writes and never runs.
 
 Names are handles, not costumes — reuse a name via SendMessage to continue that worker with its context.
+Never for post-fix work, though: an isolated worker's worktree is frozen at a stale base and may already
+be gone (THE INVARIANT). Dispatch a fresh one instead.
 
 # CHOREOGRAPHY
 `feature` owns the state transitions and gates; below is WHO does each step. Invoke `feature` and follow
@@ -72,49 +75,59 @@ its workflow — the crew only assigns the work.
    - Otherwise `git switch -c <feature-slug>`; the branch already exists (a resumed feature) →
      `git switch <feature-slug>`. `switch -c` errors on an existing branch, so try plain `switch` first
      when resuming.
-   - The tree must be CLEAN before the first dispatch. Pre-existing uncommitted work is invisible to a
-     worker (its worktree is cut from a commit-ish) and, worse, `git checkout <branch> -- <paths>` at
-     integration OVERWRITES an uncommitted file at the same path with no prompt and no reflog. Dirty tree
-     → commit or stash it first, or tell the user; never dispatch over it.
-   The crew never builds on the default branch, and every integration commit below lands on this branch.
-   Without it there is nothing to commit onto, and step 6 breaks.
-5. **Build (Devs).** Split the approved Tasks into sets that touch DISJOINT files — tasks sharing a file go
-   to the same dev, so parallel worktrees never collide. Dispatch the `dev` agent once per set, IN
-   PARALLEL, EACH with `isolation: worktree`, its seat name, and the ABSOLUTE rule-source paths for the
-   surface its task-set touches (see DISPATCH RULES). Assign EVERY task explicitly; re-check coverage
-   against the Tasks list before dispatch AND after integration — an unassigned task drops silently. Each
-   dev commits its finished tasks inside its worktree (intermediate commits are fine — `feature` step 5);
-   YOU integrate each worktree's commits onto the working branch AND COMMIT THEM THERE. The commit is not
-   bookkeeping — step 6 creates its worktree from this branch's HEAD, so anything left uncommitted is
-   invisible to the tester. Then run a cross-cutting pass over the
-   integrated result with the same skills — the devs wrote WITH them, you confirm the whole holds together
-   — and run the shell-bound checks for whichever skills ACTUALLY applied: `taste`'s pre-flight if this was
-   a design surface (a worker was structurally unable — it only read the file), `documentation`'s check-docs
-   if the change touched docs (a dev could run it, but only ever saw its own worktree). Applied-but-unrun is
-   not "clean"; a skill that never applied needs no run.
-   Any fix YOU make in that pass is a change like any other — COMMIT it on the working branch too before
-   step 6. Left uncommitted, the tester's worktree is cut from a HEAD without it and tests a version that
-   no longer exists; on red, the fix-devs re-introduce what you just fixed.
-6. **Test (Tester).** Only after step 5's integration commit exists — dispatching earlier hands the tester
-   an empty tree and buys a false red across the whole spec. Dispatch the `tester` agent with the spec,
-   `isolation: worktree`, and the same ABSOLUTE rule-source paths the surface needs. It writes tests
-   against the spec, runs them, reports red/green. YOU integrate its committed tests onto the working
-   branch and COMMIT them too — else they vanish with its worktree and the fix-devs, whose worktrees also
-   start from this branch, never see the failing test. Red → ADD the fix items to the spec's Tasks first
-   (`feature` step 5: "Scope changes → update the spec first"), then back to step 5 with a fix task-set
-   built ON the committed failing test. Skipping that, a fix-dev is entitled to refuse work its spec never
-   listed, and the coverage re-check has no list to check round 2 against. Never proceed on red.
+   - The tree must be CLEAN before the first dispatch — merges land here, and a dirty tree turns an
+     integration into a conflict you did not plan. Commit or stash first, or tell the user.
+   The crew never builds on the default branch, and every merge below lands on this branch.
+5. **Build (parallel devs, ISOLATED).** Split the approved Tasks into sets that touch DISJOINT files —
+   tasks sharing a file go to the same dev. Dispatch the `dev` agent once per set, IN PARALLEL, EACH
+   with `isolation: worktree` and a full DISPATCH BRIEF (below). Assign EVERY task explicitly; re-check
+   coverage against the Tasks list before dispatch AND after merge — an unassigned task drops silently.
+   **Dispatch the whole round before you merge anything.** Every worktree in a round is cut from the same
+   base; commits you make mid-round are invisible to workers already dispatched, so a late dispatch would
+   silently build on a different state than its peers.
+   Each dev commits inside its worktree; you merge each branch in (see DISPATCH RULES). Then run a
+   cross-cutting pass over the merged result with the applicable skills — the devs wrote WITH them, you
+   confirm the whole holds together — plus the shell-bound checks for whichever skills ACTUALLY applied:
+   `taste`'s pre-flight if this was a design surface (a worker that only READ the file could not run it),
+   `documentation`'s check-docs if the change touched docs. Applied-but-unrun is not "clean"; a skill that
+   never applied needs no run. Commit any fix you make in that pass.
+6. **Test (Vera, read-only).** Dispatch the `tester` agent with a full DISPATCH BRIEF and **NO
+   `isolation: worktree`** — do not mirror step 5's flag. She holds no write tools, so there is nothing
+   to contain, and a worktree would only feed her a stale tree to read the code from. She is read-only:
+   she returns the test code as TEXT and predicts red or green per test. **YOU** write that code into the
+   main checkout and run it, and YOU report the real pass/fail — she never observed a run, so the result
+   is yours to state, never hers.
+   Triage the run before you act on it — the prediction is what makes this possible:
+   - Code that does not RUN (syntax, wrong runner, missing import) → a defect in her deliverable, not in
+     the product. Fix the test or send it back to her; never write it into the spec as a product task.
+   - Predicted red, went red → the finding she was dispatched for. Real work.
+   - Predicted red, went GREEN → the test is toothless or the promise was already met. Do not bank it as
+     validation; work out which, and say so.
+   - Predicted green, went red → a genuine regression, the most valuable outcome here.
+   Why she does not run it herself: running means writing, writing means a worktree, and a worktree is
+   cut from a base that may predate this very build (THE INVARIANT) — an isolated tester would faithfully
+   test a version that lacks the work. Read-only sidesteps that instead of patching around it.
+   Red → ADD the fix items to the spec's Tasks first (`feature` step 5: "Scope changes → update the spec
+   first"), then fix in the MAIN LOOP. Never dispatch a fix round into a worktree: it would not contain
+   the failing test you just wrote. Never proceed on red.
+   **Bound the loop.** The same test still red after a fix attempt → stop, report the failure and your
+   diagnosis, and ask before a third attempt. Two rounds that each close their named defects while opening
+   new ones = not converging → report the pattern and ask. `feature` step 6 owns both rules; they apply
+   here too, and grinding on without them is the exact failure this skill has already lived through.
 7. **Validation + finish (Teamleiter).** `feature` step 6 — fill # Validation, move to ready-for-done/,
    **STOP, AskUserQuestion**. Then `feature` step 7 (DONE) and step 8 (`self-improve`), both main-loop.
-   At step 7 the build is ALREADY committed on the working branch — that is the crew's normal end state,
-   not a skipped gate. So the step-7 opt-in is about what remains: pushing the branch, opening a PR, or
-   committing anything still loose. Say that when you ask, and expect `git-commit` to report a clean tree
-   if nothing is left; a clean tree there is success, not an error.
+   The devs' work is already on the working branch as merges; the tests you wrote in step 6 and any
+   main-loop fixes are still loose in the tree. So step 7's commit ask routes through `git-commit`
+   exactly as `feature` step 7 requires — it owns the confirmation, the default-branch gate, and push/PR.
+   Never hand-roll a push or a PR.
 
 # DISPATCH RULES
-- **Executors always get `isolation: worktree`.** A dev or tester writing in the live tree defeats the
-  containment the whole executor class rests on; two devs without worktrees corrupt each other's diffs.
-- **Assign every task; verify coverage twice** (before dispatch, after integration). Fanning a checklist
+- **Every executor is isolated — no exceptions, and that is what keeps them safe.** An executor is by
+  definition a parallel independent writer, so it always gets `isolation: worktree`; two devs without it
+  corrupt each other's diffs. A role that must SEE earlier work cannot use a worktree at all (THE
+  INVARIANT), so it is not built as an executor: make it read-only and have it return text. That is
+  exactly why the tester is read-only and why fix rounds are main-loop work.
+- **Assign every task; verify coverage twice** (before dispatch, after merge). Fanning a checklist
   to parallel workers with a gap drops that item with no error.
 - **Hand surface rules as ABSOLUTE FILE paths.** Decide which apply — `web-standards` (web/UI), `taste`
   (frontend design), `security-review` (auth/sessions/input/external payloads). Join each onto the skills
@@ -129,29 +142,44 @@ its workflow — the crew only assigns the work.
   `taste/reference/ai-tells.md` (the banned-pattern catalogue — taste without it is half a rule set).
   Cannot or will not hand one → say so in the brief, so the worker flags the gap instead of assuming
   coverage.
-- **⚠ The worktree-integration mechanic below is KNOWN-INCOMPLETE — do not treat it as verified.**
-  A redesign is specced separately. Known holes: the feature spec is NOT in a worker's worktree at all
-  (`features/` is gitignored), so hand its ABSOLUTE path in the MAIN tree or the worker cannot read what
-  it is building/testing against; `git checkout <branch> -- <paths>` cannot carry a deletion or rename and
-  aborts on a missing pathspec; reusing a worker via SendMessage hands it a stale or removed worktree; and
-  what `isolation: worktree` cuts from is ASSUMED, never verified — have each worker report
-  `git branch --show-current` and `git rev-parse HEAD` until it is. Prefer `git merge --no-ff
-  <worker-branch>`, which carries deletions/renames and IS the commit. Role choreography above is sound;
-  this git protocol is the part still under construction.
-- **Integrating a worktree ends in a COMMIT, always.** The worker commits on its own branch
-  (`git worktree list` names it). Pull its work onto the working branch — `git checkout
-  <worktree-branch> -- <paths>` lands the files without disturbing other uncommitted work, or cherry-pick
-  the commit — then **commit on the working branch**. Never stop at "integrated but uncommitted": a
-  worktree is created from a commit-ish, so the next worker you dispatch starts from this branch's HEAD
-  and sees exactly what is COMMITTED there and nothing else. Verified: stage a file, make a worktree from
-  HEAD, and the file is absent. Only after that commit: remove the worktree and delete its branch — a
-  finished worker's worktree left behind accumulates, and its branch is the sole copy until you commit.
+- **Merge a worker in; never copy paths out.** `git merge --no-ff <worker-branch>` (`git worktree list`
+  names the branch). It carries deletions and renames, needs no path list, cannot half-apply, and IS the
+  commit. MEASURED: against a worker that deleted one file, renamed a second and edited a third, the merge
+  applied all three, while `git checkout <branch> -- <paths>` aborted on the deleted pathspec
+  (`did not match any file(s) known to git`) and landed NOTHING. Only after the merge: remove the worktree
+  and delete its branch — until then that branch is the sole copy.
 - **Give each worker only its slice** — the PM the brief, each dev its disjoint task-set, the tester the
   spec. A worker widening its own scope is a defect, not initiative.
 - **Model is a lever.** Workers default to the session model; downgrade a cheap mechanical task-set to a
   smaller model at dispatch (the Agent `model` param). Quality-critical build → leave it.
 - **Workers report, they do not gate.** A worker's FRICTION line is evidence for you and for
   `self-improve` — carry it, act on it; never let a worker decide to proceed.
+
+# THE INVARIANT
+**A worker sees only its own worktree, cut from a base that may be older than yours — verify its
+reported HEAD, never assume it matches.** MEASURED: two workers of different types, dispatched after a
+commit landed on the working branch, both reported the tip as of SESSION START, not that commit; their
+own `git worktree list` showed the main checkout ahead of them.
+Everything else about isolation follows from this one line:
+- Worktrees are for PARALLEL INDEPENDENT work. They cannot hand state from one worker to the next.
+- A step that must SEE earlier work therefore cannot be a worktree worker at all. Build it read-only so
+  it returns TEXT (the tester), or do it in the main loop (fix rounds). Do not try to hand it state.
+- Dispatch a parallel round from a base you will not change until that round is merged.
+- The feature spec is not in any worktree at all (`features/` is ignored) — hand its ABSOLUTE
+  main-checkout path, which resolves fine from inside a worktree.
+- Do NOT resume a finished worker via SendMessage for post-fix work: its worktree is frozen at that
+  stale base, and may already have been removed. Dispatch a fresh one.
+
+# DISPATCH BRIEF
+Every worker dispatch carries all of it. A missing item is YOUR miss, not the worker's:
+- Seat name (`Kern`, `Mara`, `Vera`, `Rieke`) and the role's scope.
+- Its slice: the PM the task brief; a dev its disjoint task-set; the tester the spec's promises.
+- **ABSOLUTE path to the feature spec in the MAIN checkout** — for every worker that CONSUMES a spec.
+  Never a repo-relative path: `features/` does not exist inside a worktree. The PM dispatch is the one
+  exception: it PRODUCES the spec, so there is none to hand yet.
+- ABSOLUTE rule-source file paths that apply, plus their load-bearing companions.
+- Executors only: report back `git branch --show-current` and `git rev-parse HEAD`. That turns the base
+  assumption into a measurement you can fail on, and names the branch you will merge.
 
 # HARD RULES
 - **Every gate stays in the main loop.** Subagents have no AskUserQuestion channel — approval,
