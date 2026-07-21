@@ -39,8 +39,21 @@ const MODEL_RE = /^(?:(?:sonnet|opus|haiku|fable|inherit)(?:\[[^\]]+\])?|claude-
 
 const rel = (p) => relative(root, p).split('\\').join('/') || '.';
 // A key with no value parses to [] (a block list may follow). [] is truthy — so never test a
-// field for presence with a bare truthiness check.
-const str = (v) => (typeof v === 'string' && v.trim() ? v.trim() : null);
+// field for presence with a bare truthiness check. Also unwraps YAML quoting and drops a
+// trailing ` # comment`, so `name: "pm"  # seat` reads as pm and not as the whole line.
+const str = (v) => {
+  if (typeof v !== 'string') return null;
+  const quoted = v.trim().match(/^(['"])([\s\S]*?)\1\s*(?:#.*)?$/);
+  const s = (quoted ? quoted[2] : v.replace(/(^|\s)#.*$/, '')).trim();
+  return s || null;
+};
+// A sequence field in any of its three YAML spellings: scalar `A, B`, flow `[A, B]`, or a block
+// list (already an Array from frontmatter()). Reading only the scalar shape is what silently
+// disabled every tools: rule — an Array made str() return null and skipped the whole branch.
+const list = (v) => {
+  const items = Array.isArray(v) ? v : [String(str(v) ?? '').replace(/^\[|\]$/g, '')];
+  return items.flatMap((i) => String(i).split(',')).map(str).filter(Boolean);
+};
 
 // Minimal frontmatter reader: `key: value` + `  - item` block lists. Enough for agent defs.
 const frontmatter = (src) => {
@@ -57,6 +70,14 @@ const frontmatter = (src) => {
   }
   return fm;
 };
+
+// A bad root must be a named error, never a quiet "nothing to check" — the two look identical
+// in a log otherwise. isDirectory() as well as existsSync: a FILE passed as root reaches
+// readdirSync and dies on a raw ENOTDIR stack trace.
+if (!existsSync(root) || !statSync(root).isDirectory()) {
+  console.error(`check-agents: not a directory: ${root}`);
+  process.exit(2);
+}
 
 const agentsDir = join(root, 'agents');
 if (!existsSync(agentsDir)) {
@@ -75,10 +96,20 @@ const violations = [];
 // junctioned skills/ would vanish and every agent would read as orphaned. This repo is reached
 // via exactly such a junction. Same SKIP_DIRS + statSync shape as check-docs.mjs.
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'out', 'coverage']);
+// statSync throws ENOENT on a dangling symlink/junction, which killed the whole run with a raw
+// stack trace. Report the entry and keep walking — a broken link is a finding, not a crash.
+const statOr = (p) => {
+  try { return statSync(p); } catch (e) {
+    violations.push(`${rel(p)}  unreadable-path  ${e.code ?? e.message} — dangling symlink/junction or unreadable entry`);
+    return null;
+  }
+};
 const walk = (dir) => readdirSync(dir).flatMap((e) => {
   if (SKIP_DIRS.has(e) || e.startsWith('.')) return [];
   const p = join(dir, e);
-  return statSync(p).isDirectory() ? walk(p) : (e.endsWith('.md') ? [p] : []);
+  const st = statOr(p);
+  if (!st) return [];
+  return st.isDirectory() ? walk(p) : (e.endsWith('.md') ? [p] : []);
 });
 const dispatchText = walk(root)
   .filter((p) => {
@@ -90,7 +121,10 @@ const dispatchText = walk(root)
 
 for (const file of files) {
   const path = join(agentsDir, file);
-  const fm = frontmatter(readFileSync(path, 'utf8'));
+  // Strip a leading BOM once, here: an editor-added U+FEFF sits in front of the opening --- and
+  // makes every ^--- match below miss, so the file reads as having no frontmatter at all.
+  const src = readFileSync(path, 'utf8').replace(/^\uFEFF/, '');
+  const fm = frontmatter(src);
 
   if (!fm) { violations.push(`${rel(path)}  no-frontmatter  agent definition needs a --- block`); continue; }
   if (fm.__bad) { violations.push(`${rel(path)}  bad-frontmatter  unparsable line: ${fm.__bad}`); continue; }
@@ -113,11 +147,13 @@ for (const file of files) {
     violations.push(`${rel(path)}  thin-description  too short to attract auto-delegation; state WHEN to delegate`);
   }
 
-  // Word-boundary so "audit-scout" never matches "audit-scouts". Re-test the name shape rather
-  // than trusting bad-name above to have stopped us: it only REPORTS, it does not skip, and an
-  // unescaped metacharacter here throws a SyntaxError instead of printing a violation.
+  // Boundary so "audit-scout" never matches "audit-scouts". `-` is a NON-word character, so \b
+  // alone let "dev" match inside "dev-only" and reported a dead agent as wired — the boundary
+  // has to exclude `-` too. Re-test the name shape rather than trusting bad-name above to have
+  // stopped us: it only REPORTS, it does not skip, and an unescaped metacharacter here throws a
+  // SyntaxError instead of printing a violation.
   // Proves the name APPEARS in a skill, never that the dispatch works.
-  if (name && /^[a-z0-9-]+$/.test(name) && !new RegExp(`\\b${name}\\b`).test(dispatchText)) {
+  if (name && /^[a-z0-9-]+$/.test(name) && !new RegExp(`(?<![\\w-])${name}(?![\\w-])`).test(dispatchText)) {
     violations.push(`${rel(path)}  orphaned  no skill names "${name}" — nothing dispatches it; name it in the skill that owns its job, in the step that fans out (README/features do not count as wiring)`);
   }
 
@@ -127,15 +163,14 @@ for (const file of files) {
     violations.push(`${rel(path)}  bad-class  class "${klass}" — expected analysis or executor`);
   }
   const isExecutor = klass === 'executor';
-  const body = readFileSync(path, 'utf8').replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
+  const body = src.replace(/^---\r?\n[\s\S]*?\r?\n---\r?\n/, '');
 
   // Omitting tools: is NOT neutral — it inherits every tool, Write/Edit AND Agent included. The
   // allowlist rule therefore has to fail on the ABSENCE of the line, not just on a bad value.
-  const declared = str(fm.tools);
-  if (!declared) {
+  const tools = list(fm.tools);
+  if (!tools.length) {
     violations.push(`${rel(path)}  no-tools  no tools: — inherits ALL tools incl. Write/Edit and Agent; declare an explicit allowlist`);
   } else {
-    const tools = declared.split(',').map((s) => s.trim()).filter(Boolean);
     for (const t of tools) {
       if (!KNOWN_TOOLS.has(t)) {
         violations.push(`${rel(path)}  unknown-tool  "${t}" not in this checker's known-tool list — verify against the harness; a name it does not accept prevents launch`);
@@ -179,8 +214,7 @@ for (const file of files) {
   }
 
   // Preloaded skills must exist — skills are NOT auto-discovered inside a subagent.
-  const skills = Array.isArray(fm.skills) ? fm.skills : (fm.skills ? [String(fm.skills)] : []);
-  for (const s of skills) {
+  for (const s of list(fm.skills)) {
     if (!existsSync(join(root, 'skills', s, 'SKILL.md'))) {
       violations.push(`${rel(path)}  unknown-skill  skills: "${s}" has no skills/${s}/SKILL.md`);
     }

@@ -6,22 +6,55 @@
 // Usage: node check-docs.mjs [root]   Exit 1 = at least one violation.
 
 import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
-import { join, dirname, relative, resolve, posix } from 'node:path';
+import { join, dirname, relative, resolve, isAbsolute, posix } from 'node:path';
 
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'out', 'coverage']);
 const root = resolve(process.argv[2] ?? '.');
+
+const rel = (p) => relative(root, p).split('\\').join('/') || '.';
+const violations = [];
+
+// statSync throws ENOENT on a dangling symlink/junction, which killed the whole run with a raw
+// stack trace. Report the entry and keep walking — a broken link is a finding, not a crash.
+const statOr = (p) => {
+  try { return statSync(p); } catch (e) {
+    violations.push(`${rel(p)}  unreadable-path  ${e.code ?? e.message} — dangling symlink/junction or unreadable entry`);
+    return null;
+  }
+};
 
 const findAgents = (dir, out = []) => {
   for (const e of readdirSync(dir)) {
     if (SKIP_DIRS.has(e)) continue;
     const p = join(dir, e);
-    if (statSync(p).isDirectory()) findAgents(p, out);
+    const st = statOr(p);
+    if (!st) continue;
+    if (st.isDirectory()) findAgents(p, out);
     else if (e === 'AGENTS.md') out.push(p);
   }
   return out;
 };
 
-const rel = (p) => relative(root, p).split('\\').join('/') || '.';
+// existsSync is CASE-INSENSITIVE on Windows/NTFS, so a link written `docs/agents.md` resolves
+// against `docs/AGENTS.md` and a genuinely broken link passes. Worse, the edges Map is keyed by
+// the on-disk spelling, so the mis-cased path never matches and a valid pair reads as one-way.
+// Walk the segments below root and demand readdirSync's exact spelling for each.
+const existsExact = (abs) => {
+  if (!existsSync(abs)) return false;
+  const relPath = relative(root, abs);
+  const parts = relPath.split(/[\\/]/).filter((p) => p && p !== '.');
+  // Outside root there is nothing of ours to compare against — existsSync is the only answer.
+  // A target on another drive relativizes to an absolute path with no `..`, so test both.
+  if (isAbsolute(relPath) || parts.includes('..')) return true;
+  let dir = root;
+  for (const part of parts) {
+    let entries;
+    try { entries = readdirSync(dir); } catch { return false; }
+    if (!entries.includes(part)) return false;
+    dir = join(dir, part);
+  }
+  return true;
+};
 // Markdown links, minus external + pure-anchor targets.
 const links = (src) =>
   [...src.matchAll(/\[[^\]]*\]\(([^)]+)\)/g)]
@@ -37,13 +70,14 @@ const section = (src, heading) => {
   return next ? rest.slice(0, next.index) : rest;
 };
 
-if (!existsSync(root)) {
-  console.error(`check-docs: no such path: ${root}`);
+// isDirectory() as well as existsSync: a FILE passed as root reached readdirSync and died on a
+// raw ENOTDIR stack trace instead of reporting anything.
+if (!existsSync(root) || !statSync(root).isDirectory()) {
+  console.error(`check-docs: not a directory: ${root}`);
   process.exit(2);
 }
 
 const agents = findAgents(root);
-const violations = [];
 const edges = new Map(); // AGENTS.md abs path -> Set of linked AGENTS.md abs paths
 
 for (const file of agents) {
@@ -60,7 +94,7 @@ for (const file of agents) {
 
   // Broken relative links, anywhere in the file.
   for (const target of links(src)) {
-    if (!existsSync(resolve(dir, target))) {
+    if (!existsExact(resolve(dir, target))) {
       violations.push(`${rel(file)}  broken-link  ${target} does not resolve`);
     }
   }
@@ -70,7 +104,9 @@ for (const file of agents) {
   for (const target of links(section(src, 'Related Modules'))) {
     const abs = resolve(dir, target);
     const asAgents = abs.endsWith('AGENTS.md') ? abs : join(abs, 'AGENTS.md');
-    if (existsSync(asAgents)) set.add(asAgents);
+    // Exact spelling required: the Map is keyed by findAgents' on-disk paths, so a mis-cased
+    // edge would never match its key and would fabricate a one-way-link.
+    if (existsExact(asAgents)) set.add(asAgents);
   }
   edges.set(file, set);
 }
