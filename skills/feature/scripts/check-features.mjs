@@ -27,12 +27,31 @@ const STATUS_BY_FOLDER = {
 const FILENAME_RE = /^\d{8}-\d{4}-[a-z0-9-]+\.md$/;
 
 const rel = (p) => relative(root, p).split('\\').join('/') || '.';
+// YAML scalar: unwrap quoting and drop a trailing ` # comment`, so `status: "DONE"  # note`
+// reads as DONE. Deliberately duplicated from check-agents.mjs rather than shared — these
+// scripts stay standalone, reachable through both the ~/.claude junction and the real path.
+const str = (v) => {
+  if (typeof v !== 'string') return null;
+  const quoted = v.trim().match(/^(['"])([\s\S]*?)\1\s*(?:#.*)?$/);
+  const s = (quoted ? quoted[2] : v.replace(/(^|\s)#.*$/, '')).trim();
+  return s || null;
+};
 const status = (src) => {
-  const m = src.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
+  // Strip a leading BOM first: an editor-added U+FEFF sits in front of the opening --- and makes
+  // this ^--- match miss, so a perfectly good feature file reads as having no frontmatter.
+  const m = src.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n/);
   if (!m) return null;
   const s = m[1].match(/^status:\s*(.+)$/m);
-  return s ? s[1].trim() : '';
+  return s ? (str(s[1]) ?? '') : '';
 };
+
+// A bad root must be a named error, never a quiet "nothing to check" — a typo'd path and a
+// project without a feature lifecycle printed the same line and the same exit 0. isDirectory()
+// as well: a FILE passed as root has no features/ under it either, and would read as clean.
+if (!existsSync(root) || !statSync(root).isDirectory()) {
+  console.error(`check-features: not a directory: ${root}`);
+  process.exit(2);
+}
 
 const featuresDir = join(root, 'features');
 if (!existsSync(featuresDir)) {
@@ -48,7 +67,13 @@ for (const entry of readdirSync(featuresDir)) {
   // statSync, never Dirent.isDirectory(): a Windows junction reports false as a Dirent, so the
   // whole folder would vanish and the run would report "clean" having checked nothing. Matches
   // check-docs.mjs. A false clean is the worst output a checker can produce.
-  if (!statSync(join(featuresDir, entry)).isDirectory()) continue;
+  // It throws on a DANGLING junction, though — report that entry and carry on, never crash.
+  let st;
+  try { st = statSync(join(featuresDir, entry)); } catch (e) {
+    violations.push(`features/${entry}  unreadable-path  ${e.code ?? e.message} — dangling symlink/junction or unreadable entry`);
+    continue;
+  }
+  if (!st.isDirectory()) continue;
   const expected = STATUS_BY_FOLDER[entry];
   if (!expected) {
     violations.push(`features/${entry}  unknown-folder  not a state in the machine (${Object.keys(STATUS_BY_FOLDER).join(', ')})`);
