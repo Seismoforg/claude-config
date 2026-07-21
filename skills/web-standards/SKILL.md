@@ -76,7 +76,7 @@ Never ship the happy path alone.
 Non-obvious, high-severity only — the pillars above are not repeated here.
 - **Match the existing design system over these defaults.** Governs everything above.
 - **The three non-negotiables ship on every change:** mobile-first + fluid (never desktop-first with pixel-locked widths) · WCAG AA (semantic HTML before ARIA, keyboard-operable, contrast verified not eyeballed) · green CWV.
-- **Verify contrast, don't guess** — and check EVERY supported theme, not just the default. An unrendered mode is untested.
-- **Every data view handles loading / empty / error**, never the happy path alone.
+- **Verify contrast, don't guess** — ACCESSIBILITY above owns it, every supported theme included.
+- **Every data view handles loading / empty / error** — DATA STATES above owns it.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN (for web, prefer MDN/W3C official docs) / AFTER THE TASK / LANGUAGE.

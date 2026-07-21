@@ -109,7 +109,7 @@ stay judgment calls below.
 
 # HARD RULES
 Non-obvious, high-severity only — the sections above are not repeated here.
-- **Never document trivial fixes, refactors, or styling.** Under-document the trivial, never under-document architecture.
+- **Never document trivial fixes, refactors, or styling.** ON ACTIVATION above owns the under-document bias.
 - **Never document a rule the code does not enforce.** Writing "X always happens" / "component Y uses Z" → check the code DOES it; don't infer from intent or from another doc. A doc describing unimplemented behaviour reads as a guarantee and is worse than no doc.
 - **ALWAYS invoke the `simple-language` skill** when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose prose is a defect to condense.
 - This skill's checklist gates the `feature` workflow's documentation validation.

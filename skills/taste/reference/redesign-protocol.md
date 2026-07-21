@@ -15,7 +15,7 @@ Document the current state before proposing anything:
 
 ## 11.C Preservation Rules
 * **Don't change IA** unless asked — page slugs, anchor IDs, primary nav labels stay stable for SEO and muscle memory.
-* **Extract brand colours BEFORE applying §4.2.** Already-purple brand stays purple — that's the LILA RULE's override.
+* **Extract brand colours BEFORE applying §4.2.** Already-purple brand stays purple — that's the AI-PURPLE DEFAULT RULE's override.
 * **Preserve copy voice** unless a rewrite was asked for. Visual modernisation ≠ content rewrite.
 * **Honour existing a11y wins** — never regress focus states, alt text, keyboard nav, contrast.
 * **Respect analytics events** — don't rename buttons, form fields or section IDs that downstream tracking depends on.
