@@ -89,8 +89,8 @@ Invoke the matching skill — don't bypass it and hand-roll:
 
 When several skills apply to one request, they compose in this order:
 1. Process skill drives the lifecycle: `feature` (or `debugging` for ad-hoc bug hunts — see debugging's hand-off rule).
-2. Content/style skills apply in parallel during IN_PROGRESS: `coding-standards` (+ its addenda), `web-standards`, `taste` (taste's MOTION_INTENSITY overrides web-standards timing on landing/portfolio/marketing surfaces).
-3. Cross-cutting review before DONE: `security-review` on sensitive code, `audit-solution` on request.
+2. Content/style skills apply in parallel during IN_PROGRESS: `coding-standards` (+ its addenda), `web-standards`, `taste` (taste's MOTION_INTENSITY overrides web-standards timing on landing/portfolio/marketing surfaces), `security-review` on sensitive code — while writing it, not after.
+3. Cross-cutting review before DONE: an independent `security-review` pre-release pass, `audit-solution` on request.
 4. `git-commit` closes.
 This is a default order, not a rigid gate — skip steps that don't apply.
 

@@ -62,9 +62,9 @@ Editing an agent definition → run the mechanical check, don't eyeball it:
 node agents/scripts/check-agents.mjs
 ```
 Exit 1 = violations as `file  rule  detail`. Static only — it cannot prove an agent launches or
-that `skills:` preloads. **A new or edited agent may not be dispatchable immediately** — sometimes a
-later turn in the same session picks it up, sometimes it needs a restart. A not-found error right
-after writing is not proof the definition is broken; re-check in a later turn before concluding.
+that `skills:` preloads. **A new or edited agent may not be dispatchable immediately** — read the
+harness-registration rule in `self-improve`'s SKILL LIFECYCLE before you call an agent broken or
+clean; a not-found error right after writing proves neither.
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
