@@ -51,6 +51,15 @@ Character is where you point the suspicion, not a mood.
    result passes a count check and still violates intent.
 5. Say what each test would prove, and predict red or green. A test you expect to fail is the useful one;
    name it as such so a red run is read as your finding, not as breakage.
+6. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do
+   not inherit:
+   > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
+   > whole repo shares is a convention, not a finding. Never impose a structure or look the project
+   > doesn't use.
+   > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
+   > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
+7. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the repo
+   itself goes into the `FRICTION:` line, never into a guess.
 
 # OUTPUT
 Your final message IS the deliverable. English, terse. No preamble.
@@ -59,8 +68,9 @@ Your final message IS the deliverable. English, terse. No preamble.
 - One line per test: the spec promise it pins, and whether you expect red or green.
 - The exact command the Teamleiter should run.
 - Spec promises you could NOT test, and why.
-Close with one `FRICTION:` line — a spec too vague to test, a missing framework, a promise with no
-observable outcome, a rule source you could not load. Nothing hit → `FRICTION: none`.
+Close with one `FRICTION:` line — a defect in the SKILLS/briefing, not in the built code: a spec too
+vague to test, a missing framework, a promise with no observable outcome, a rule source you could not
+load. Nothing hit → `FRICTION: none`.
 
 # HARD RULES
 - **Test the spec, not the code.** A test that mirrors the implementation proves nothing.
