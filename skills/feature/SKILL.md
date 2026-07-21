@@ -112,7 +112,7 @@ Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks
 - Apply `documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, ADRs, or technical debt.
 Invoke each skill via the Skill tool; don't just paraphrase.
 - Fanning an enumerated task/checklist out to parallel workers → explicitly assign every item, and re-verify full coverage against the list before dispatch AND after merge; unassigned items drop silently.
-Intermediate commits during implementation are fine; the FINAL commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
+Intermediate commits during implementation are fine — but NEVER on the default branch: branch first (`git-commit` STEP 1 owns resolving the default branch's name and its Q0 gate; don't hand-roll either). The FINAL deliverable commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
 
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
@@ -124,19 +124,20 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 - every changed code path actually exercised. A path needing an unavailable dep (model, GPU, paid API) is NOT "outside your control" — drive it with a stub/mock before declaring done; an unrun changed branch is unverified, not "structurally verified"
 - data/config entries consumed by existing code (catalog/registry/list) count as a changed path — "it parses" is NOT validation. Exercise ≥1 representative entry through the real consuming path; entries vary in format and only the live path reveals a break
 - changed path is harness-registered config (agent/skill/hook definition) → it may not be dispatchable in the SAME turn it was written. A not-found error is NOT proof the definition is wrong — re-check in a later turn before reporting it blocked or broken
+- validating a RULE you wrote by RUNNING it yourself tests your hand-operation, not the rule. Whatever the text tells its executor to derive (a path, a command, a value) must be derived FROM THE TEXT during the test — supply it by hand and a green run proves nothing about the step you skipped, which is exactly where the rule can be wrong
 - changed path is PROSE a model executes (skill, workflow, rule file, prompt) → "it reads fine" is NOT validation. You cannot audit your own prose — you know what you meant. Hand it to a FRESH model with no context; demand a reachability/coherence trace naming every dead or offered-but-unexecutable path. Expect it to find defects the change itself introduced
 - exercising a changed path that MUTATES persisted/user state (settings store, DB, on-disk files) → find the store's REAL path first (don't assume it), snapshot it, restore it after; never leave test data in the user's state
 - exercising a streaming/real-time/async changed path → size the test so the observed window outlasts connect/setup latency; a run that finishes before the observer attaches proves nothing — observe events arriving over time, not just a final snapshot
 - a path that EMITS events/metrics/callbacks → assert the payload VALUES, not just that events fire; a fired-but-null/empty event (e.g. metric present but its value None) passes a count check yet violates intent
 - full validation needs a genuinely external action (deploy, service restart, third-party run) → record what you DID verify vs what remains under `# Validation`, surface the pending step to the user — never report it as fully validated
 - changed a rule/value that can exist in MORE THAN ONE place (shared constant, config default, duplicated doc/rule text) → grep repo-wide for other copies before ready-for-done. A spec scoped to one file does not stop a stale copy elsewhere from silently defeating the change. **Grep finds literal COPIES, not DEPENDENTS** — a rule stated in OTHER words whose truth your change just broke shares no string with it, so every literal grep passes while an absolute rule elsewhere now contradicts you. Also re-read each invariant section (HARD RULES, "always/never") end to end and ask of every rule: still true?
-- do NOT commit here. The commit waits until after DONE (Step 7), and is user-opt-in.
+- do NOT make the DELIVERABLE commit here. It waits until after DONE (Step 7), and is user-opt-in. Intermediate commits already made during Step 5 are fine and stay.
 Verification fails (build/tests red) → fix the root cause, re-run. Same check fails again after a fix attempt → stop, report the failure and your diagnosis to the user, do NOT weaken the check, skip it, or keep guessing at patches. Ask before a third attempt at the same failing check. Same stop when each fix round CLOSES its named defects but opens new ones in its own blast radius: two such rounds = not converging → report the pattern and ask, don't start a third.
 Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion**: "Implementation complete and validation passed. Move to DONE?" Offer at least **Move to DONE** / **Leave open for now**. Only DONE counts as the explicit confirmation for step 7.
 
 ## 7. Finalize → DONE
 Only on explicit user confirmation: move to `/features/done/`.
-Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUserQuestion** whether to commit the landed work now. Only on an explicit yes, commit via `git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip; leave it uncommitted. Never commit before this point.
+Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUserQuestion** whether to commit the landed work now. Only on an explicit yes, commit via `git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip; leave it as it is. Never make the DELIVERABLE commit before this point — intermediate commits from Step 5 may already exist and stay. Work that was already committed intermediately reaches here on a branch, with nothing left to commit: then this ask is about pushing / opening a PR, and `git-commit` reporting a clean tree is a valid end, not a failure.
 
 ## 8. Retrospective — `self-improve`
 After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `self-improve` via the Skill tool (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Scope it to this + the skills applied during implementation.
@@ -147,7 +148,7 @@ Non-obvious, high-severity only — the state machine and workflow above are not
 - **No implementation before status = APPROVED and the file sits in in-progress/.**
 - **No skipping states; folder and status ALWAYS match** (bar the documented approve&implement / audit-remediation fast-paths).
 - **DONE requires explicit user confirmation — never automatic.** READY_FOR_DONE requires recorded, passing validation.
-- **Commit ONLY after the user moves the feature to DONE, and only if they opt in** via AskUserQuestion. Never at READY_FOR_DONE, never automatically.
+- **The FINAL DELIVERABLE commit happens ONLY after the user moves the feature to DONE, and only if they opt in** via AskUserQuestion. Never at READY_FOR_DONE, never automatically. This governs the DELIVERABLE commit only — intermediate commits during implementation are fine (Step 5), including the integration commits a delegating workflow needs to hand work between workers. Those are still never made on the default branch: branch first.
 - **Every user-waiting transition MUST use AskUserQuestion** — never a free-text prompt.
 - **A follow-up change contradicting an already-DONE spec** → new feature, or a brief amendment note in the DONE file. The terminal spec never drifts from the code.
 - **High-risk features require explicit approval before implementation.**

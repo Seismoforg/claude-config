@@ -19,6 +19,7 @@ Overriding rule: **match the surrounding code** — REPO PATTERNS in `skills/_sh
 # CORE PRINCIPLES
 Prefer: separation of concerns · small focused modules · reusable components · explicit dependencies · consistent patterns.
 Avoid: monolithic files · duplicated logic · hidden side effects · premature abstraction.
+Prefer a primitive that makes rules unnecessary over rules patching a primitive's gaps — if one invariant needs three or more restatements to hold, the mechanic is wrong, not the wording.
 
 # LANGUAGE
 LANGUAGE in `skills/_shared/blocks.md` owns it — including identifiers and the i18n rule.

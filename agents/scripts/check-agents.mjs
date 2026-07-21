@@ -7,8 +7,8 @@
 // Two classes (frontmatter `class:`): analysis (default, read-only) and executor (may write, runs
 // in an isolated worktree). Absent = analysis, so the existing read-only agents are unaffected.
 // Whether an agent LAUNCHES and whether `skills:` actually preloads is NOT here — that needs a
-// live dispatch in a fresh session (agent types are enumerated at session start; files are not
-// hot-reloaded). Being NAMED is static and checked; being dispatchable is not.
+// live dispatch, which may take a later turn or a restart; registration is not guaranteed
+// immediate. Being NAMED is static and checked; being dispatchable is not.
 // Usage: node check-agents.mjs [root]   Exit 1 = at least one violation.
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
@@ -194,7 +194,7 @@ for (const file of files) {
 
 if (!violations.length) {
   console.log(`check-agents: clean — ${files.length} agent definition(s) under ${rel(agentsDir)}`);
-  console.log('Static only. Launch + skills: preload still need a live dispatch in a fresh session.');
+  console.log('Static only. Launch + skills: preload still need a live dispatch (maybe a later turn).');
   // The pass path is the one people read — disclose here, not only in the failure message.
   console.log('"Clean" for an analysis agent = declares no write TOOL; for an executor = declares its');
   console.log('worktree briefing. Either can still write via Bash/PowerShell, and an executor writes by');

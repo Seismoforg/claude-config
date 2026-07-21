@@ -50,8 +50,9 @@ Editing an agent definition → run the mechanical check, don't eyeball it:
 node agents/scripts/check-agents.mjs
 ```
 Exit 1 = violations as `file  rule  detail`. Static only — it cannot prove an agent launches or
-that `skills:` preloads. **Agent types are enumerated at session start; new or edited files need a
-session restart before they can be dispatched at all.**
+that `skills:` preloads. **A new or edited agent may not be dispatchable immediately** — sometimes a
+later turn in the same session picks it up, sometimes it needs a restart. A not-found error right
+after writing is not proof the definition is broken; re-check in a later turn before concluding.
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
