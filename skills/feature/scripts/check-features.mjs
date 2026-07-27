@@ -62,6 +62,10 @@ if (!existsSync(featuresDir)) {
 
 const violations = [];
 let count = 0;
+// <timestamp> → the files claiming it. Two concurrent sessions derive the next free minute from the
+// same rule and land on the same id; the filenames differ by slug, so nothing else catches it, yet
+// the skill identifies a feature BY timestamp. Collected across all folders, reported at the end.
+const byId = new Map();
 
 for (const entry of readdirSync(featuresDir)) {
   // statSync, never Dirent.isDirectory(): a Windows junction reports false as a Dirent, so the
@@ -84,6 +88,9 @@ for (const entry of readdirSync(featuresDir)) {
     const path = join(featuresDir, entry, file);
     if (!FILENAME_RE.test(file)) {
       violations.push(`${rel(path)}  bad-filename  expected YYYYMMDD-HHMM-lowercase-kebab.md`);
+    } else {
+      const id = file.slice(0, 13); // YYYYMMDD-HHMM — shape already guaranteed by FILENAME_RE
+      byId.set(id, [...(byId.get(id) ?? []), rel(path)]);
     }
     const found = status(readFileSync(path, 'utf8'));
     if (found === null) {
@@ -94,6 +101,11 @@ for (const entry of readdirSync(featuresDir)) {
       violations.push(`${rel(path)}  folder-status-mismatch  status "${found}" but folder expects "${expected}" — do not guess which is right; the skill says STOP and report`);
     }
   }
+}
+
+for (const [id, paths] of byId) {
+  if (paths.length < 2) continue;
+  violations.push(`${paths[0]}  duplicate-id  ${id} is also used by ${paths.slice(1).join(', ')} — a feature is identified by its timestamp, so renumber all but one`);
 }
 
 if (!violations.length) {

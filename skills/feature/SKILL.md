@@ -15,14 +15,14 @@ Before anything else:
 0.5. Request reads as another skill's dedicated trigger (e.g. whole-system audit, ad-hoc bug hunt) → surface the mismatch, ask before hand-rolling it inside feature instead of using the purpose-built skill.
 1. Identify which feature the request refers to (name or timestamp).
 2. Exists → open it, read `status`, confirm folder matches status (MECHANICAL CHECK below — run it, don't eyeball). Folder ≠ status → STOP and report the mismatch, don't guess.
-3. Doesn't exist → new feature, start at Workflow step 1.
+3. Doesn't exist → new feature, start at Workflow step 0. Not a detour: step 0's first branch sends an already-specified request straight on to step 1. Entering at step 1 directly skips the router and is how step 0 stayed dead.
 4. State the current status + the single allowed next action, then proceed.
 
 Never plan/approve/implement/validate/change status without this check.
 
 # STRUCTURE
 Path: `/features/<state-folder>/<timestamp>-<slug>.md`
-Time: `YYYYMMDD-HHMM` — date part is ALWAYS today's date from context. Clock time unavailable → derive only the time part: newest file dated today across ALL folders (draft/pending/approved/in-progress/ready-for-done/done/discarded — not just non-terminal) → a minute just after it; else start today early (e.g. 0001). Never move the date off today; never fabricate a wall-clock time.
+Time: `YYYYMMDD-HHMM` — date part is ALWAYS today's date from context. Clock time unavailable → derive only the time part: newest file dated today across ALL folders (draft/pending/approved/in-progress/ready-for-done/done/discarded — not just non-terminal) → a minute just after it; else start today early (e.g. 0001). Never move the date off today; never fabricate a wall-clock time. Chosen id already exists in ANY folder → step to the next free minute; a parallel session may have claimed it, and the derivation is deterministic enough that two sessions land on the same one.
 Slug: lowercase-kebab, no spaces. Example: `/features/pending/20260124-1530-user-auth.md`
 
 One feature per file. Chronological by filename. No index file. One request bundling multiple independent features → split into separate files; ambiguous grouping → confirm the split with the user.
@@ -44,7 +44,7 @@ Rules:
 - Exception — "Approve & implement" fast-path: user picks that combined option at the approval gate → file may advance NEEDS_APPROVAL → APPROVED → IN_PROGRESS in one move (record approval, land in in-progress/) with no rest in approved/. A collapse of adjacent transitions, not a skipped state.
 - Exception — audit remediation fast-path: an approved `audit-solution` scope may create the feature file DIRECTLY in in-progress/ (its Step-4 approval replaces this gate); the empty draft/pending/approved rests collapse. Same one-move collapse, not a skipped state.
 - A transition = update the `status` field first (edit in place), THEN move the file. After moving, re-read before the next in-place edit — the move invalidates the prior read, so an edit at the new path fails otherwise.
-- Move via a path anchored to the features dir (absolute or repo-root-relative), never relative to the shell CWD (it may have drifted after build/test commands). Feature files are usually untracked (the features dir is commonly VCS-ignored) → plain `mv`, not `git mv`.
+- Move via a path anchored to the features dir (absolute or repo-root-relative), never relative to the shell CWD (it may have drifted after build/test commands). Feature files are usually untracked (the features dir is commonly VCS-ignored) → plain `mv`, not `git mv`. Destination state-folder may not exist yet → create it before the move.
 
 # MECHANICAL CHECK
 Folder↔status and filename shape are deterministic. Run the script; never eyeball them:
@@ -52,7 +52,7 @@ Folder↔status and filename shape are deterministic. Run the script; never eyeb
 node ${CLAUDE_SKILL_DIR}/scripts/check-features.mjs [root]
 ```
 Exit 1 = violations as `file  rule  detail` (folder-status-mismatch, bad-filename, unknown-folder,
-missing-status, no-frontmatter). Consistency only — that a status was EARNED (work done, validation
+missing-status, no-frontmatter, duplicate-id). Consistency only — that a status was EARNED (work done, validation
 run) stays a judgment call, and a mismatch is never auto-fixed: ON ACTIVATION says STOP and report.
 
 # FEATURE FILE FORMAT
@@ -79,16 +79,20 @@ Body (all required):
 
 # WORKFLOW
 
-## 0. Brainstorm (optional) → ideas
-When the feature is vague, exploratory, or the user asks for ideas/options/"what could we do" — before writing any spec, invoke `drunken-genius` via the Skill tool to generate and filter ideas. Let it run its wild-round → sober-look → nightcap process.
-- Skip when the request is already a concrete, well-specified feature — go straight to step 1.
-- Brainstorming stays in chat; it is NOT feature state. Nothing exists until step 1 writes it into `/features/draft/`.
-- Once the user picks an idea (or a merge of several), carry it into step 1 as the DRAFT's Summary/Problem/Solution seed.
+## 0. Route → brainstorm, or straight to the spec
+Every new feature enters here. Not optional, and not a detour — one of its branches is "go to step 1 now". Two brainstorm paths, both before any spec is written, both invoked via the Skill tool.
+
+The test that picks — **to fill the spec, would you have to INVENT a decision the user has an opinion about?** Not "can I write fluent prose for this section": you always can, and that fluency is the failure. Ask instead which concrete choices you would be making FOR them — a limit, a default, a storage location, a scope cut.
+- **None — you would invent nothing** → skip both, straight to step 1.
+- **Several, and the IDEA itself is one of them.** Vague, exploratory, "what could we do", or the user says brainstorm/wild ideas → `drunken-genius`. Let it run its wild-round → sober-look → nightcap process. Its output stays in chat; it is NOT feature state, it never writes a file. Once the user picks an idea (or a merge of several), carry it into step 1 as the DRAFT's Summary/Problem/Solution seed — or into `feature-brainstorming` if the details are still open.
+- **Several, but the idea is settled — the DETAILS or the APPROACH are open.** The feature is named but underspecified → `feature-brainstorming`. Mostly multiple-choice `AskUserQuestion` interview, then it performs step 1 for you: DRAFT written into `/features/draft/` with status `DRAFT`. It returns there. You resume at **step 2** and do NOT redo step 1. That file IS feature state the moment it exists.
+- **The idea is open AND the details under it are** → `drunken-genius` first, then `feature-brainstorming` on the picked idea.
 
 ## 1. Create → DRAFT
 Write the spec into `/features/draft/`. Fill all sections as far as known.
 Change mirrors an existing one (same layer, sibling module) → read that precedent FIRST and mirror its structure. A plan drafted from the file tree alone puts constants and wiring in plausible-but-wrong places, and the correction lands mid-implementation.
 Spec fixes a defect CLASS (a rule missing from several files, one pattern wrong in several places) → grep every instance BEFORE writing Tasks; count from the grep, not from the report you are working off. A spec naming 4 of 6 instances looks complete, passes its own review, and ships the other 2 unfixed.
+Plan changes an exported SIGNATURE → count call sites by grepping the SYMBOL, not the feature's surface description; the two sets differ. Sizing Impact Analysis from the wrong set understates it, and the missed callers surface as build errors mid-implementation.
 
 ## 2. Request approval → NEEDS_APPROVAL
 Move to `/features/pending/`. Summarize for the user. **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file). Offer at least:
@@ -97,6 +101,7 @@ Move to `/features/pending/`. Summarize for the user. **STOP. Ask via AskUserQue
 - **Change spec** — stay in NEEDS_APPROVAL, refine.
 - **Discard** — → DISCARDED, move to `/features/discarded/` (abandon, keep the record).
 Only an explicit "Approve" choice counts as approval. An implement option IS the explicit confirmation to proceed.
+Spec settles a choice the user judges by LOOK or FEEL (layout, composition, interaction shape) → never record it as decided. Offer the viable options AT this gate. An internally-made visual choice ships, gets rejected on sight, and costs a full rework.
 
 ## 3. Approve → APPROVED
 Only on explicit approval: move to `/features/approved/`.
@@ -122,14 +127,17 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 - code conforms to `coding-standards`
 - build succeeds (if applicable)
 - tests pass (if available)
-- every changed code path actually exercised. A path needing an unavailable dep (model, GPU, paid API) is NOT "outside your control" — drive it with a stub/mock before declaring done; an unrun changed branch is unverified, not "structurally verified"
+- every changed code path actually exercised. A path needing an unavailable dep (model, GPU, paid API) is NOT "outside your control" — drive it with a stub/mock before declaring done; an unrun changed branch is unverified, not "structurally verified". An INSTALLABLE dep (CLI, tool, package) is NOT unavailable — install it and run the REAL path; "it parses" / "external, not validated" on something installable ships latent bugs (a cross-platform spawn, a shell quirk) that only a real run catches
+- changed path SPAWNS an external command → put the stub ON THE PATH under that command's name, so the real spawn runs and the real argv is observed. Mocking the calling function instead proves nothing about the command line actually built — which is usually the thing that was wrong
 - data/config entries consumed by existing code (catalog/registry/list) count as a changed path — "it parses" is NOT validation. Exercise ≥1 representative entry through the real consuming path; entries vary in format and only the live path reveals a break
 - changed path is harness-registered config (agent/skill/hook definition) → apply the harness-registration rule in `self-improve` SKILL LIFECYCLE before you judge it; a not-found error right after writing proves neither broken nor working
 - validating a RULE you wrote by RUNNING it yourself tests your hand-operation, not the rule. Whatever the text tells its executor to derive (a path, a command, a value) must be derived FROM THE TEXT during the test — supply it by hand and a green run proves nothing about the step you skipped, which is exactly where the rule can be wrong
 - changed path is PROSE a model executes (skill, workflow, rule file, prompt) → "it reads fine" is NOT validation. You cannot audit your own prose — you know what you meant. Hand it to a FRESH model with no context; demand a reachability/coherence trace naming every dead or offered-but-unexecutable path. Expect it to find defects the change itself introduced
-- exercising a changed path that MUTATES persisted/user state (settings store, DB, on-disk files) → find the store's REAL path first (don't assume it), snapshot it, restore it after; never leave test data in the user's state
+- exercising a changed path that MUTATES persisted/user state (settings store, DB, on-disk files) → find the store's REAL path first (don't assume it), snapshot it, restore it after; never leave test data in the user's state. This binds any TEST/verify you RUN as validation too, not just a path you changed: a script that writes to a REAL config/DB/store (not an isolated temp) corrupts the user's environment when run — check it isolates or snapshot+restores first; never assume a verify script is side-effect-free
 - exercising a streaming/real-time/async changed path → size the test so the observed window outlasts connect/setup latency; a run that finishes before the observer attaches proves nothing — observe events arriving over time, not just a final snapshot
 - a path that EMITS events/metrics/callbacks → assert the payload VALUES, not just that events fire; a fired-but-null/empty event (e.g. metric present but its value None) passes a count check yet violates intent
+- feature OUTPUT is DATA it DERIVES (from user content, a heuristic, a model) → read a real SAMPLE of the values and judge each against EVERY invariant that constrains them (language, format, allowed-set, no-secrets), not just that values appeared. Derived output carries values no test anticipated; one that violates an invariant sits VISIBLE in the sample yet passes every count/mechanism check. Seeing a value is not checking it
+- feature OUTPUT is DATA it DERIVES (from user content, a heuristic, a model) → read a real SAMPLE of the values and judge each against EVERY invariant that constrains them (language, format, allowed-set, no-secrets), not just that values appeared. Derived output carries values no test anticipated; one that violates an invariant sits VISIBLE in the sample yet passes every count/mechanism check. Seeing a value is not checking it
 - full validation needs a genuinely external action (deploy, service restart, third-party run) → record what you DID verify vs what remains under `# Validation`, surface the pending step to the user — never report it as fully validated
 - changed a rule/value that can exist in MORE THAN ONE place (shared constant, config default, duplicated doc/rule text) → grep repo-wide for other copies before ready-for-done. A spec scoped to one file does not stop a stale copy elsewhere from silently defeating the change. **Grep finds literal COPIES, not DEPENDENTS** — a rule stated in OTHER words whose truth your change just broke shares no string with it, so every literal grep passes while an absolute rule elsewhere now contradicts you. Also re-read each invariant section (HARD RULES, "always/never") end to end and ask of every rule: still true?
 - do NOT make the DELIVERABLE commit here. It waits until after DONE (Step 7), and is user-opt-in. Intermediate commits already made during Step 5 are fine and stay.
@@ -138,7 +146,7 @@ Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion**: "Im
 
 ## 7. Finalize → DONE
 Only on explicit user confirmation: move to `/features/done/`.
-Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUserQuestion** whether to commit the landed work now. Only on an explicit yes, commit via `git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip; leave it as it is. Never make the DELIVERABLE commit before this point — intermediate commits from Step 5 may already exist and stay. Work that was already committed intermediately reaches here on a branch, with nothing left to commit: then this ask is about pushing / opening a PR, and `git-commit` reporting a clean tree is a valid end, not a failure.
+Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUserQuestion** whether to commit the landed work now. Only on an explicit yes, commit via `git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip; leave it as it is. Commit unavoidably carries ANOTHER feature's uncommitted work (shared file, interleaved edits) → that feature's DONE gate is being bypassed. Name it and get its opt-in too, or don't commit. Never make the DELIVERABLE commit before this point — intermediate commits from Step 5 may already exist and stay. Work that was already committed intermediately reaches here on a branch, with nothing left to commit: then this ask is about pushing / opening a PR, and `git-commit` reporting a clean tree is a valid end, not a failure.
 
 ## 8. Retrospective — `self-improve`
 After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `self-improve` via the Skill tool (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Scope it to this + the skills applied during implementation.
@@ -149,7 +157,7 @@ Non-obvious, high-severity only — the state machine and workflow above are not
 - **No implementation before status = APPROVED and the file sits in in-progress/** — see workflow step 4.
 - **No skipping states; folder and status ALWAYS match** — see STATE MACHINE, incl. its documented fast-paths.
 - **DONE requires explicit user confirmation — never automatic.** READY_FOR_DONE requires recorded, passing validation.
-- **The FINAL DELIVERABLE commit happens ONLY after the user moves the feature to DONE, and only if they opt in** via AskUserQuestion. Never at READY_FOR_DONE, never automatically. This governs the DELIVERABLE commit only — intermediate commits during implementation are fine (Step 5), including the integration commits a delegating workflow needs to hand work between workers. Those are still never made on the default branch: branch first.
+- **The FINAL DELIVERABLE commit happens ONLY after the user moves the feature to DONE, and only if they opt in** via AskUserQuestion. Never at READY_FOR_DONE, never automatically. This binds a commit that carries a feature's work SIDEWAYS too: sweeping in another feature's uncommitted changes lands it without its own gate. Name it and get its opt-in, or don't commit. This governs the DELIVERABLE commit only — intermediate commits during implementation are fine (Step 5), including the integration commits a delegating workflow needs to hand work between workers. Those are still never made on the default branch: branch first.
 - **Every user-waiting transition MUST use AskUserQuestion** — never a free-text prompt.
 - **A follow-up change contradicting an already-DONE spec** → new feature, or a brief amendment note in the DONE file. The terminal spec never drifts from the code.
 - **High-risk features require explicit approval before implementation.**

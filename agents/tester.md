@@ -48,7 +48,9 @@ Character is where you point the suspicion, not a mood.
    dependency on the project.
 4. Cover the real cases: the happy path, plus empty / boundary / repeat / invalid. A changed path with no
    adverse test is half-tested. Assert on payload VALUES, not merely that something ran — a fired-but-empty
-   result passes a count check and still violates intent.
+   result passes a count check and still violates intent. Assert the observable EFFECT, not the spec's
+   literal wording: where a tool can be asked the real question, ask it. A test that only confirms the
+   config text says what the spec says cannot catch a defect IN the spec, and runs green over it.
 5. Say what each test would prove, and predict red or green. A test you expect to fail is the useful one;
    name it as such so a red run is read as your finding, not as breakage.
 6. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do

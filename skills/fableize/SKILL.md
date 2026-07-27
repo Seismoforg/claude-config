@@ -42,7 +42,9 @@ and what you report, not how the sentences read.
 7. **Never compute in your head.** Counting, arithmetic, sorting, dedup, diffs, word/letter counts:
    run a command — deterministic work belongs to deterministic code. Recipes →
    `reference/offload-calc.md`. Input too big to keep re-reading → compact it once into a note, then
-   work from the note → `reference/offload-summarize.md`.
+   work from the note → `reference/offload-summarize.md`. A figure from a command still needs one
+   cross-check against a figure it must agree with. Two numbers that cannot both be true → the
+   method is wrong, not the data; fix it before reporting either.
 
 --------------------------------------------------
 # RESPONSE SKELETON

@@ -50,8 +50,13 @@ be gone (THE INVARIANT). Dispatch a fresh one instead.
 `feature` owns the state transitions and gates; below is WHO does each step. Invoke `feature` and follow
 its workflow — the crew only assigns the work.
 
-1. **Intake (Teamleiter).** Read the task. Vague/exploratory → brainstorm first (`feature` step 0).
-   Concrete → go on.
+1. **Intake (Teamleiter).** Read the task. Vague/exploratory, or named but underspecified → brainstorm
+   first (`feature` step 0; its own test picks `drunken-genius` vs `feature-brainstorming`). Concrete →
+   go on. `feature-brainstorming` RETURNS WITH THE DRAFT ALREADY WRITTEN, so CREW step 2 below is done —
+   go to CREW step 3, the approval gate. Every number in this list is a crew step unless it says
+   `feature`; reading them as `feature` steps skips the gate. Dispatching the PM anyway writes a second
+   spec for the same feature — and so does routing a later "Change spec" answer back to it. Refine that
+   DRAFT in place instead, staying in NEEDS_APPROVAL as `feature` step 2 prescribes.
 2. **Plan (PM).** Dispatch the `pm` agent with the task brief + repo AND the ABSOLUTE rule-source paths
    the BRIEF's surface implies (see DISPATCH RULES) — a web or auth feature must be PLANNED against those
    rules, not only built against them. The surface is readable from the brief; you do not need a task-set
@@ -64,7 +69,10 @@ its workflow — the crew only assigns the work.
      rests, never step 4 itself.
    - **Approve, don't implement yet** → APPROVED, rest in approved/ (`feature` step 3), STOP. Resuming
      later re-enters at step 4, not step 5 — the branch may not exist yet in a new session.
-   - Change spec → back to PM (step 2). Discard → discarded/.
+   - **Change spec** → REVISE the existing DRAFT in place. It stays NEEDS_APPROVAL in pending/ (`feature`
+     step 2); never move it back to draft/. Needs a re-plan → re-dispatch the `pm` agent with the current
+     spec and what must change, and fold its answer into that same file. Sending it back to crew step 2
+     unread writes a second spec and walks the state backwards. Discard → discarded/.
 4. **Implementation gate (Teamleiter).** Before any dev is dispatched, the file must be IN_PROGRESS in
    in-progress/. The fast-path already landed it there (step 3). Resuming a held feature (still APPROVED
    in approved/) → set status IN_PROGRESS, then move it (`feature` step 4). Folder and status always match.
@@ -119,7 +127,7 @@ its workflow — the crew only assigns the work.
    new ones = not converging → report the pattern and ask. `feature` step 6 owns both rules; they apply
    here too, and grinding on without them is the exact failure this skill has already lived through.
 7. **Validation + finish (Teamleiter).** `feature` step 6 — fill # Validation, move to ready-for-done/,
-   **STOP, AskUserQuestion**. Then `feature` step 7 (DONE) and step 8 (`self-improve`), both main-loop.
+   **STOP, AskUserQuestion**. Then `feature` step 7 (DONE) and `feature` step 8 (`self-improve`), both main-loop.
    The devs' work is already on the working branch as merges; the tests you wrote in step 6 and any
    main-loop fixes are still loose in the tree. So step 7's commit ask routes through `git-commit`
    exactly as `feature` step 7 requires — it owns the confirmation, the default-branch gate, and push/PR.
@@ -144,6 +152,8 @@ its workflow — the crew only assigns the work.
   skill-relative and resolve only from an announced base directory, which a worker does not have — so they
   are dead on arrival. Pass every load-bearing companion explicitly, e.g. `taste/SKILL.md` AND
   `taste/reference/ai-tells.md` (the banned-pattern catalogue — taste without it is half a rule set).
+  A handed file may also point into ANOTHER skill (`<skill>/reference/...`) — that is skills-root-relative
+  and equally dead for a worker. Resolve and hand it too, or name it as not handed.
   Cannot or will not hand one → say so in the brief, so the worker flags the gap instead of assuming
   coverage.
 - **Merge a worker in; never copy paths out.** `git merge --no-ff <worker-branch>` (`git worktree list`

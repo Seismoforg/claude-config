@@ -96,7 +96,8 @@ node ${CLAUDE_SKILL_DIR}/scripts/check-docs.mjs [root]
 ```
 Exit 1 = violations as `file  rule  detail` (missing/bad CLAUDE.md sibling, one-way link, broken
 link). Fix, re-run to exit 0. Structure only — coverage, prose style and "is this the right doc"
-stay judgment calls below.
+stay judgment calls below. Exit 0 on a repo with NO AGENTS.md says "nothing checked", not "clean" —
+an empty set is not a pass, and whether a module needs one is your call, not the script's.
 
 # COMPLETION CHECKLIST
 - [ ] Required docs updated (or explicit "no docs required")

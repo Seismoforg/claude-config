@@ -20,12 +20,16 @@ changes). Verified: the name resolves to THIS skill; the built-in is unreachable
   relative — parent of this skill's base directory) before a release — one owner for the topic,
   not restated here.
 - **Secrets:** already a HARD RULE in `coding-standards` (never hardcode secrets/keys/
-  tokens) — applies automatically, not restated here.
+  tokens) — applies automatically, not restated here. One case it does NOT cover: while
+  INVESTIGATING, never print a secret's VALUE — not from a config file, not from an env file,
+  not from a command's output. Report presence, location and a hash. A transcript is a copy.
 
 **Independent pass — main loop only.** *Subagent reading this → skip; you cannot dispatch another
 agent.* Before a release, or when you want a review not anchored on the implementation's own
 reasoning, delegate the `security-auditor` agent (read-only, isolated context). You wrote the code
 → you are primed to miss your own gap. It returns findings + FRICTION; you own remediation and
-every gate.
+every gate. Scope it so the out-of-scope line does not exclude what your own questions need — a
+default value or a platform-specific no-op is often only answerable inside the dependency you
+just excluded.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

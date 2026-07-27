@@ -412,8 +412,9 @@ node ${CLAUDE_SKILL_DIR}/scripts/preflight.mjs <changed files or dir>
 Exit 1 = violations as `file:line:col  rule (§)  detail`. Covers: em-dash · eyebrow count vs
 ceil(sections/3) · scroll listener · viewport stability · flex-math · banned serif · banned
 premium-consumer palette · icon library · pure #000/#fff · Inter default · marquee count ·
-AI-tell strings. Fix every hit, re-run until exit 0. A model self-checking 60 boxes misses some;
-grep does not.
+AI-tell strings. Rules about what the user SEES (em-dash, serif, Inter, AI-tell) skip comment-only
+lines; code rules fire everywhere. Fix every hit, re-run until exit 0. A model self-checking 60 boxes
+misses some; grep does not.
 
 **2. Judgment — dispatch ONE reviewer agent** (main loop only; *subagent reading this as a rule
 source → skip, you cannot dispatch another agent*), fresh context, over the changed files +

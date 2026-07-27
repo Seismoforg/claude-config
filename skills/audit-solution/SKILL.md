@@ -30,7 +30,9 @@ Its rule-source paths are relative to the skills root (= the parent of this skil
 Script hits are findings already. Feed them into Step 3 directly; don't re-derive them by eyeball, and don't hand them to a scout.
 A check cannot run (script missing, wrong stack, no shell) → say so in Step 3 as UNCHECKED. Never let a skipped check read as a clean dimension — that is the one failure this split can cause.
 
-**2b. Judgment sweeps — fan out `audit-scout`.** ONE per applicable dimension, all in a single message so they run in parallel. It is read-only by tool config (Read/Grep/Glob — no Bash, no Edit/Write) and keeps N sweeps out of main context. Trivial scope (one file, one question) → inline is fine.
+**2b. Judgment sweeps — fan out `audit-scout`.** ONE per applicable dimension, all in a single message so they run in parallel. It is read-only by tool config (Read/Grep/Glob — no Bash, no Edit/Write) and keeps N sweeps out of main context. Trivial scope (one file, one question) → inline is fine. Cannot dispatch AT ALL (harness or policy forbids
+unrequested agents) → run every sweep INLINE and say so in Step 3. Never let an undispatchable sweep
+silently not happen; the dimension is unswept either way, and only one of those is honest.
 Brief each scout with: the dimension name, the module map from Step 1, the rule-source path from the catalog **resolved to absolute** (per Step 2's base), and any 2a script output relevant to it. Scouts return findings + a FRICTION line; they never fix, never gate.
 Main loop dedupes, ranks, and owns Steps 3-8: **subagents cannot call AskUserQuestion, so every gate stays in the main loop.**
 Scout reports FRICTION (missing tool, rule it could not apply) → carry it to Step 8, it is self-improve evidence.

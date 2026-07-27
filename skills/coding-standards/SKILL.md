@@ -39,6 +39,7 @@ Python / ML work (training scripts, notebooks, model configs) → also read `ref
 # BACKEND ARCHITECTURE
 Layer: Controllers → Services → Repositories → Domain Models. No business logic in controllers or UI — it belongs in services/domain models.
 API conventions (if building anything consumed externally): consistent error response shape · pick one versioning strategy (URL vs. header) and one pagination pattern (cursor vs. offset), stay consistent · idempotent mutating endpoints.
+Scheduled or polled work (cron, timer, queue poller) must not overlap itself. Interval shorter than worst-case runtime → every tick starts a run that still sees the same unprocessed input, and they all act on it. Guard it: concurrency limit, lock, or lease. Check WHEN the "handled" marker becomes visible to other runs — state persisted only at run end is invisible to runs already in flight, so it guards nothing.
 
 # CHANGE STRATEGY
 Prefer: minimal diffs · localized edits · existing patterns · incremental improvements.
@@ -85,6 +86,7 @@ load the addendum at all.
 - [ ] No unnecessary complexity / premature abstraction
 - [ ] Verification (compile/tests/smoke) ran against the project's OWN env/toolchain (its virtualenv/lockfile/interpreter), not a global install — so a failure means a real defect
 - [ ] Long-running verification launched in the background prints UNBUFFERED (`PYTHONUNBUFFERED`, `stdbuf`, equivalent) — a buffered pipe hides all progress until exit, so a stalled or mis-sized run looks identical to a working one
+- [ ] A path that can run concurrently (scheduled, triggered, multi-user) was exercised with runs OVERLAPPING — green unit tests prove logic, never timing
 - [ ] Orphaned imports/vars/functions YOUR change made unused are removed (see CLAUDE.md Surgical Changes — don't touch pre-existing dead code)
 
 # HARD RULES
@@ -95,6 +97,7 @@ Non-obvious, high-severity only — the sections above are not repeated here.
 - **A check guarded on a field's presence never fires when the field is ABSENT.** `if (cfg.x) validate(cfg.x)` passes everything when `x` is omitted. Default-permissive setting → absence IS the dangerous case; test for it explicitly.
 - **Changing a DEFAULT another layer can also send** (client form, config file, CLI flag): grep every layer that supplies that value. The caller's own default silently overrides the new one and typechecks — the source of truth looks correct while every real request still carries the old value.
 - **A field's value domain is set by its PRODUCER, not its type.** `string` hides how many values it emits — read the producing code before branching on it. A two-way test on an N-value field mislabels every other value (a sentinel read as success).
-- **A performance claim about a primitive is a claim about a BACKEND, not a fact.** "cheap", "one extra layer's cost", "negligible" hold for ONE implementation; another library/driver may lack the fast path and fall back orders of magnitude slower. Measure on the TARGET before the claim goes into a comment, doc, or design rationale — a figure reasoned from the literature is not a measurement.
+- **A return value that conflates FAILURE with EMPTY reports false success.** Returning `[]`/`null`/`""`/`0` for both "the operation failed" and "it legitimately produced nothing" leaves the caller unable to tell them apart — the failure path then gets persisted or announced as a successful empty result. Distinguish them: a discriminated result (`{ ok, value | error }`), a status flag, or a thrown error. Most critical right before persisting or reporting an outcome.
+- **A claim about how a BACKEND behaves — its COST ("cheap"/"negligible") or its FAILURE MODE ("X evicts Y", "X is the bottleneck", "X contends") — is a claim, not a fact.** It holds for ONE implementation/environment; another lacks the fast path, or the contention never happens. Measure it on the TARGET before it enters a comment, doc, design rationale, or a FIX built on it. A cause reasoned from plausibility is not a measurement — and a costly fix (slower path, workaround) built on a wrong cause is pure loss.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

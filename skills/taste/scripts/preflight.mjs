@@ -17,21 +17,31 @@ const BANNED_HEX = [
   '#1a1714', '#1a1814', '#1b1814',                                             // espresso near-black
 ];
 
-// Per-line rules: [id, section, regex, message]. All global — a line can violate a rule twice
+// Per-line rules: [id, section, regex, message, prose?]. All global — a line can violate a rule twice
 // (e.g. two banned hexes in one className) and every instance must surface, or fixing one and
 // re-running just reveals the next.
+// `prose: true` marks a rule about text the USER SEES (§9.G bans em-dashes "anywhere visible to the
+// user"; a font name or an AI-tell string only counts where it ships). Those skip comment-only lines —
+// otherwise a well-commented file drowns the real hits, and this script flags its own source.
+// Code rules (scroll listener, h-screen, flex math, hexes, icon lib) stay on: they are defects wherever
+// they appear.
 const LINE_RULES = [
-  ['em-dash', '§9.G', /[—–]/g, 'em/en-dash is completely banned. Use a period, comma, or hyphen'],
+  ['em-dash', '§9.G', /[—–]/g, 'em/en-dash is completely banned. Use a period, comma, or hyphen', true],
   ['scroll-listener', '§5.D', /addEventListener\s*\(\s*['"`]scroll['"`]/g, 'banned. Use useScroll / ScrollTrigger / IntersectionObserver'],
   ['viewport-stability', '§3.E', /(?<![\w-])(?:min-)?h-screen(?![\w-])/g, 'use min-h-[100dvh]; h-screen/min-h-screen jump on iOS Safari'],
   ['flex-math', '§3.E', /w-\[calc\(/g, 'no flexbox percentage math. Use CSS Grid'],
-  ['banned-serif', '§4.1', /\b(Fraunces|Instrument[_ ]Serif)\b/g, 'banned as default display serif'],
+  ['banned-serif', '§4.1', /\b(Fraunces|Instrument[_ ]Serif)\b/g, 'banned as default display serif', true],
   ['banned-palette', '§4.2', new RegExp(BANNED_HEX.join('|'), 'gi'), 'premium-consumer default palette (beige/brass/espresso). Rotate to a different family'],
   ['icon-library', '§3.C', /['"`]lucide-react['"`]/g, 'discouraged. Use Phosphor / HugeIcons / Radix / Tabler'],
   ['pure-black-white', '§8.B', /#(?:000000|ffffff|fff|000)\b/gi, 'no pure #000/#fff. Use off-black / off-white'],
-  ['inter-default', '§4.1', /\bInter\b/g, 'Inter discouraged as default. Prefer Geist/Outfit/Cabinet Grotesk/Satoshi'],
-  ['ai-tell', '§9.D', /\b(Jane Doe|John Doe|Acme|Quietly (?:in use at|trusted by)|Elevate|Seamless|Unleash|Next-Gen|Revolutionize)\b/gi, 'AI-tell string'],
+  ['inter-default', '§4.1', /\bInter\b/g, 'Inter discouraged as default. Prefer Geist/Outfit/Cabinet Grotesk/Satoshi', true],
+  ['ai-tell', '§9.D', /\b(Jane Doe|John Doe|Acme|Quietly (?:in use at|trusted by)|Elevate|Seamless|Unleash|Next-Gen|Revolutionize)\b/gi, 'AI-tell string', true],
 ];
+
+// A line that is ONLY a comment: JS/TS line comments, block-comment openers/bodies/closers, and the
+// JSX braced-block-comment form. Written as line comments on purpose — a block comment cannot hold the
+// closing token this regex matches.
+const isCommentLine = (line) => /^\s*(\/\/|\/\*|\*\/|\*|\{\s*\/\*)/.test(line);
 
 // Page-wide counters (§4.7 eyebrow cap, §5 marquee cap) — aggregate, not per-line.
 const EYEBROW = /uppercase[^"'`\n]*tracking|tracking[^"'`\n]*uppercase/;
@@ -70,7 +80,9 @@ for (const file of files) {
   const lines = src.split(/\r?\n/);
 
   lines.forEach((line, i) => {
-    for (const [id, sec, re, msg] of LINE_RULES) {
+    const comment = isCommentLine(line);
+    for (const [id, sec, re, msg, prose] of LINE_RULES) {
+      if (prose && comment) continue; // a rule about what the user SEES cannot be violated in a comment
       for (const m of line.matchAll(re)) {
         violations.push(`${rel}:${i + 1}:${m.index + 1}  ${id} (${sec})  ${msg}`);
       }

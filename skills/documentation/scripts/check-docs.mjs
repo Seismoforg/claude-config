@@ -120,8 +120,17 @@ for (const [from, tos] of edges) {
   }
 }
 
+const where = rel(root) === '.' ? root : rel(root);
 if (!violations.length) {
-  console.log(`check-docs: clean — ${agents.length} AGENTS.md file(s) under ${rel(root) === '.' ? root : rel(root)}`);
+  // Zero files is NOT a clean bill of health — it is an empty set, and a repo with undocumented modules
+  // produces exactly this. Say so in different words, or a caller reading "clean" + exit 0 concludes the
+  // dimension was checked and passed. Exit stays 0: whether a module NEEDS an AGENTS.md is judgment,
+  // which this script cannot make.
+  if (agents.length === 0) {
+    console.log(`check-docs: no AGENTS.md found under ${where} — nothing checked. Coverage is a judgment call, not a script's.`);
+  } else {
+    console.log(`check-docs: clean — ${agents.length} AGENTS.md file(s) under ${where}`);
+  }
   process.exit(0);
 }
 console.log(violations.join('\n'));

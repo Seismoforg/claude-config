@@ -4,7 +4,7 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills + custom s
 
 ## Layout
 - `CLAUDE.md` — global user instructions (behavioral guidelines).
-- `skills/`   — custom skills (coding-standards, web-standards, taste, feature, crew, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
+- `skills/`   — custom skills (coding-standards, web-standards, taste, feature, feature-brainstorming, crew, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
 - `agents/`   — custom subagents. Analysis (read-only): audit-scout, security-auditor, standards-reviewer, pm, tester. Executor (write, worktree): dev.
 
 Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/` (load on demand,
@@ -28,7 +28,7 @@ patching around it, and keeps "every executor is isolated" true with no exceptio
 Three harness constraints bind BOTH classes — and none forbids *writing*; they forbid a worker from
 *gating* or *dispatching*, which is why write-capable executors are still safe:
 - Subagents cannot call `AskUserQuestion` — no user channel. A gate-bound skill (`feature`,
-  `git-commit`, `self-improve`) can never run inside one; it would guess or stall. **Workers do the
+  `git-commit`, `self-improve`, `feature-brainstorming`) can never run inside one; it would guess or stall. **Workers do the
   work, the main loop keeps every gate.**
 - A subagent cannot dispatch another subagent. All dispatch stays in the main loop, and
   `check-agents.mjs` forbids the `Agent` tool on any agent (`no-nesting`). A skill that delegates marks
