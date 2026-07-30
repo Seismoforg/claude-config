@@ -52,6 +52,48 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 - Remove imports/vars/functions YOUR change orphaned; leave pre-existing dead code alone.
 - Test: every changed line traces directly to the user's request.
 
+**Every process you start, you end — and you verify it ended.** The mess is not only in the code, it is
+on the machine.
+- Started a server, app, watcher, tunnel or test run → stop it before the turn ends, or say plainly that
+  it is still running and why.
+- **Killing the PID you know is not enough.** A launcher spawns children (`npm`/`tsx`/`cmd` → node →
+  helper), and a hard kill of the parent ORPHANS them. Kill the tree, then LIST the survivors and
+  confirm none are left. A process holding a port, a lock, a device or a global hotkey keeps holding it
+  after its parent is gone.
+- Verify by the EFFECT, not by the absence of a PID: the port binds again, the hotkey registers again,
+  the lock file is gone. "The process is not in the list" and "the resource is free" are different claims.
+- Kill only what YOU started. Check parentage first — the user's own long-running session may be in the
+  same process list, and it looks identical.
+- Same for temp files and scratch scripts you created to test with.
+
+**A long-running process you start gets a VISIBLE window — never a hidden child.** The user must be able
+to watch the thing that keeps running, and read its output when it dies.
+- Two triggers, either one is enough. **Lifetime:** server, app, watcher, tunnel, REPL — anything meant to
+  outlive the command that launched it. **Duration:** any command you expect to run longer than ~30s —
+  install, build, migration, full test suite — even when it ends inside the same turn. The user should not
+  stare at a frozen prompt wondering whether it hung.
+- Short commands whose output you consume stay captured. Do NOT wrap those; you need their stdout and a
+  window per `ls` is noise.
+- Applies to EVERY shell you can reach, not just the one you happen to prefer. PowerShell and bash both.
+- PowerShell: `Start-Process powershell -ArgumentList '-NoExit','-Command','<cmd>' -PassThru`.
+- bash: `nohup mintty --title '<name>' --hold always /usr/bin/bash -lc '<cmd>' >/dev/null 2>&1 &`.
+  `--hold always` is bash's `-NoExit`. Git Bash ships mintty at `/usr/bin/mintty`; check before relying on
+  it, and fall back to `powershell.exe -Command "Start-Process ..."` if it is missing.
+- **Visible and captured is not a tradeoff — pipe through `tee`.** Long command whose output you still need:
+  `... 2>&1 | tee '<logfile>'` inside the visible window, then read the logfile. The user watches it live,
+  you get the full output. Verified working.
+- Keep the window open after exit (`-NoExit` / `--hold always`). A crashed process must leave its error on
+  screen, not vanish with the window.
+- **Capture the PID at launch** — `-PassThru` in PowerShell, `ps -W` in bash (the 4th column is the WINPID
+  you need for a Windows-side kill). These children are detached; without the PID you cannot honour the
+  kill-the-tree rule above. A visible window is still your mess to clean up.
+- Do not trust `MainWindowHandle` to confirm visibility — for console apps the window belongs to `conhost`
+  or Windows Terminal, so the handle reads 0 on a window that is plainly visible. Confirm by enumerating
+  visible top-level windows, or just ask the user.
+- **Limit, state it rather than pretend otherwise:** your own tool calls run in a captured subprocess with
+  no window. That is harness behaviour and no rule here changes it. This rule governs processes you
+  launch, not the shell you were handed.
+
 ## 4. Goal-Driven Execution
 
 **Define success criteria. Loop until verified.**
