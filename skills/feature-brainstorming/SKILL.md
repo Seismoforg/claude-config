@@ -80,6 +80,9 @@ no "shall I continue".
 
 ## 4. Stop
 Every category answered or marked not relevant → stop asking. No second pass.
+User CORRECTS an earlier answer mid-interview → that is NOT a second pass. Re-ask that ONE question
+in the next batch, the correction in its options. Never reinterpret the old answer silently: it was
+given against different facts.
 Still unclear → it becomes `Open assumption: <what you assumed, and why>` in the spec. Never another
 question.
 
@@ -96,6 +99,11 @@ The rules you reach for first, and where each lives:
   every instance, count from the grep. Spec changes an exported SIGNATURE → count call sites by
   grepping the SYMBOL. Both feed `# Tasks` and `# Impact Analysis`, the sections no interview answer
   fills for you.
+
+An answer the repo makes IMPOSSIBLE — you find out here, while grounding the spec — is never dropped
+and never quietly substituted. Write into the spec: the constraint with its evidence, the closest
+achievable option, and the one you rejected. Then hand it to the caller for the gate as a QUESTION.
+The user chose against different facts; only they can change that choice.
 
 Map the answers:
 

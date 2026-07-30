@@ -31,7 +31,7 @@ Hygiene scan: flag obvious secrets (`.env`, key/token/credential files), large b
 # STEP 2 — ANALYZE & PROPOSE
 Prepare BOTH options:
 1. **Single commit** — one message, when changes are one cohesive unit.
-2. **Split into N commits** — group changed files by concern (feature vs fix vs docs vs config, or by module). Each group = its own `{files, message}`. Split only along real seams; never invent artificial splits. Concerns interleaved WITHIN one file (i18n bundle, shared doc/config) can't be file-split — surface it and offer a combined commit, or STOP so the USER stages the hunks themselves. Never patch-stage: this flow has no non-interactive way to do it (`git add -p` needs a terminal you don't have), so offering it would promise what STEP 4 can't execute. Never silently sweep one concern into another's commit.
+2. **Split into N commits** — group changed files by concern (feature vs fix vs docs vs config, or by module). Each group = its own `{files, message}`. Split only along real seams; never invent artificial splits. Concerns interleaved WITHIN one file (i18n bundle, shared doc/config) can't be file-split — surface it and offer a combined commit, or STOP so the USER stages the hunks themselves. Only SOME files interleaved → a third option beats both: isolate the clean groups into their own commits and confine the mixing to ONE. Name which commit is mixed and why. Never patch-stage: this flow has no non-interactive way to do it (`git add -p` needs a terminal you don't have), so offering it would promise what STEP 4 can't execute. Never silently sweep one concern into another's commit.
 
 Message format (English, Conventional-Commits-friendly, not mandatory):
 - Imperative subject ≤ ~72 chars, no trailing period.
@@ -63,7 +63,7 @@ On the **default branch** (the name Step 1 resolved — not the literal main/mas
 Don't proceed until all applicable questions are answered. "Other"/cancel → do nothing, report it.
 
 # STEP 4 — EXECUTE
-- **New branch first** (if chosen): `git switch -c feature/<kebab-name>` from the change summary. The `feature/` prefix is the scheme for EVERY branch this config creates — inside a `feature` run the slug is the feature file's own, timestamp dropped. This step owns the scheme; `feature` step 5 and `crew` step 4 point here.
+- **New branch first** (if chosen): `git switch -c feature/<kebab-name>` from the change summary. The `feature/` prefix is the scheme for EVERY branch this config creates — inside a `feature` run the slug is the feature file's own, timestamp dropped. Slug already starts with the prefix → don't double it (`feature/x`, never `feature/feature-x`). This step owns the scheme; `feature` step 5 and `crew` step 4 point here.
 - **Single commit:** stage intended paths (`git add -- <paths>`; `git add -A` ONLY after the Step 1 hygiene scan ran and found nothing to exclude), then `git commit -m "<subject>" -m "<body>"` (no co-author footer).
 - **Split:** per group in order — `git add -- <that group's paths>` then `git commit`. Keep groups disjoint. Leave already-staged-but-unrelated changes for their own group.
 - **Push** (if chosen): `git push`; no upstream → `git push -u <remote> HEAD` (Step 1's resolved remote name, not a hardcoded `origin`).
