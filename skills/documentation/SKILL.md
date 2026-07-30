@@ -34,6 +34,8 @@ In-code docs are documentation too (invoked from `coding-standards`).
 ## Editing an existing doc
 Before an in-place edit (AGENTS.md/ADR/debt), confirm exact current text on disk by reading/grepping the target lines — a snapshot/recalled copy drifts in whitespace/wording, and an inexact match fails the edit.
 
+Documenting a control byte or an escape sequence → the write may insert the CHARACTER instead of the text describing it. Re-read the saved bytes; a doc about a NUL can contain one.
+
 ## When to create a local AGENTS.md
 Create one when ANY holds:
 - Folder becomes a distinct module
