@@ -76,7 +76,7 @@ date: YYYY-MM-DD
 # Rationale
 # Consequences
 ```
-Write an ADR for any major/hard-to-reverse architectural decision. Application repos: framework, data store, auth model, API style, build pipeline. Those are EXAMPLES, not the test — other repo shapes have their own hard-to-reverse decisions. The test is "hard to reverse AND shapes everything after it", never whether it matches an example. Supersede — never silently edit — an accepted ADR: add a new one, set the old to `superseded`.
+Write an ADR for any major/hard-to-reverse architectural decision. Application repos: framework, data store, auth model, API style, build pipeline. Those are EXAMPLES, not the test — other repo shapes have their own hard-to-reverse decisions. The test is "hard to reverse AND shapes everything after it", never whether it matches an example. Supersede — never silently edit — an accepted ADR: add a new one, set the old to `superseded`. Only PART of an accepted ADR went stale (one bullet, a renamed symbol) while its decision still holds → don't supersede the whole record. Append `**Amended by NNNN:**` at that point, naming what changed and what still stands. Superseding a live decision loses it; leaving the stale line documents code that no longer exists.
 Dates (ADR `date:` and tech-debt `added`) are ALWAYS today's date from context — never guessed or fabricated.
 
 # TECHNICAL DEBT
@@ -104,7 +104,7 @@ an empty set is not a pass, and whether a module needs one is your call, not the
 - [ ] AGENTS.md created where a new module emerged
 - [ ] `check-docs.mjs` exits 0 (covers sibling + bidirectional/unbroken links)
 - [ ] ADR added for any major decision; superseded ones marked
-- [ ] Architecture docs internally consistent
+- [ ] Architecture docs internally consistent — a doc that states the same fact twice drifts in one copy. Re-read COUNTS and ORDINALS ("three things", "starts at the third") against the code: nothing greps for them, and the change that invalidates one shares no string with it
 - [ ] New/known shortcuts recorded in technical-debt.md
 - [ ] Prose is terse + plain (`simple-language` style) — no filler/hedging/wind-down; lists over paragraphs (READMEs excepted, see above); a term the doc's reader may not know is glossed in a clause (a model-facing doc needs none)
 
