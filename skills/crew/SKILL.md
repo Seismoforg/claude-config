@@ -108,7 +108,8 @@ its workflow — the crew only assigns the work.
    `isolation: worktree`** — do not mirror step 5's flag. She holds no write tools, so there is nothing
    to contain, and a worktree would only feed her a stale tree to read the code from. She is read-only:
    she returns the test code as TEXT and predicts red or green per test. **YOU** write that code into the
-   main checkout and run it, and YOU report the real pass/fail — she never observed a run, so the result
+   main checkout and run it (a run qualifying under LOCAL RESOURCE RUNS in `skills/_shared/blocks.md`
+   asks the user first), and YOU report the real pass/fail — she never observed a run, so the result
    is yours to state, never hers.
    **Decide WHERE that code lands before you dispatch her, and put it in the brief.** Repo has no test
    setup → do not invent one (`coding-standards`); pick a home the repo's own layout justifies, or agree
@@ -171,6 +172,9 @@ its workflow — the crew only assigns the work.
   spec. A worker widening its own scope is a defect, not initiative.
 - **Model is a lever.** Workers default to the session model; downgrade a cheap mechanical task-set to a
   smaller model at dispatch (the Agent `model` param). Quality-critical build → leave it.
+- **A brief carrying a qualifying run needs the user's yes BEFORE dispatch** — LOCAL RESOURCE RUNS in
+  `skills/_shared/blocks.md`. A worker has no `AskUserQuestion`, so its brief IS its authorization:
+  approved → the run may sit in the brief; not approved → the brief must not name it.
 - **Workers report, they do not gate.** A worker's FRICTION line is evidence for you and for
   `self-improve` — carry it, act on it; never let a worker decide to proceed.
 
@@ -223,4 +227,4 @@ Every worker dispatch carries all of it. A missing item is YOUR miss, not the wo
   are fine"). What waits for DONE is only the FINAL deliverable commit, and only on the user's opt-in via
   `git-commit`. It assigns work inside feature's gates; it does not replace them.
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS.

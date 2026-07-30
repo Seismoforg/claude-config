@@ -18,6 +18,30 @@ browser as routine. EXCEPTION: one is actually available AND the change is style
 green build+typecheck+lint is NOT proof it renders right (style-prop unit misreads, inherited
 default styling, valid-but-worse layout show only in pixels). Then drive it yourself and assert
 measured values, not a screenshot glance. Either way, report verified vs what still needs their eyes.
+Driving it yourself is subject to LOCAL RESOURCE RUNS below — a drive that qualifies asks first.
+
+# LOCAL RESOURCE RUNS
+A run that spends the user's machine is THEIR call. Ask first via `AskUserQuestion`; never start it
+on your own. Ask when EITHER holds:
+- **GPU or a local model** — local LLM inference, model load, training, fine-tune, embedding run,
+  anything on GPU/NPU/VRAM. No duration exemption: a 5-second GPU run still asks. A command NAME does
+  not reveal this — check the PROJECT once per task (`ollama`, `transformers`, `torch`, `llama.cpp`,
+  a `models/` dir, a test path naming embed/infer/model). Any hit, or unsure → every run there is
+  this arm.
+- **Longer than ~30s** — test suite, build, install, migration. Same threshold as CLAUDE.md §3's
+  visible-window rule, deliberately: one threshold, not two. Do not estimate — a full suite, a full
+  build, an install, or the FIRST run of a command you have not timed counts as over.
+Free without asking: one-shot commands under ~30s touching neither arm — lint, typecheck, a single
+unit test, git, grep, reads, mechanical check scripts.
+Once per TASK, not per command. A task = one feature file, one bug hunt, or one user request not yet
+answered; a new request for something else starts a new one. The first qualifying run in a task asks;
+a yes covers further runs of the SAME KIND in it. New task, or a different kind → ask again.
+No → do not run. Record it where the skill already records partial validation (`feature` step 6's
+"genuinely external action" bullet), naming the path that stayed unverified and why, then continue
+with the rest. Never re-ask hoping for a different answer; never soften it to "structurally verified".
+Dispatching a worker whose brief contains such a run → ask BEFORE dispatch; approved, the brief may
+carry it. Subagent: your brief is your authorization — a qualifying run it does not name is reported
+back, not started.
 
 # APPROVAL GATES
 Any point marked "STOP. Ask" / "CONFIRM ... (REQUIRED)" → `AskUserQuestion`, multiple choice,

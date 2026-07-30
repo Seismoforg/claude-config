@@ -52,6 +52,26 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 - Remove imports/vars/functions YOUR change orphaned; leave pre-existing dead code alone.
 - Test: every changed line traces directly to the user's request.
 
+**A run that spends this machine gets ASKED FIRST — never started on your own.** Canonical text is
+LOCAL RESOURCE RUNS in `skills/_shared/blocks.md`; this is the floor for anyone who cannot load it —
+subagents inherit CLAUDE.md but not blocks.md (README, "Three harness constraints"). Two triggers, either
+one is enough. **GPU or a local model:** local LLM inference, model load, training, fine-tune,
+embedding run — no duration exemption, a 5-second GPU run still asks. **Longer than ~30s:** test
+suite, build, install, migration (same threshold as the visible-window rule below).
+- **Neither trigger is something you may estimate away.** A command NAME does not tell you whether it
+  loads a model — check the project once per task (`ollama`, `transformers`, `torch`, `llama.cpp`, a
+  `models/` dir). Any hit, or unsure → treat every run there as a model run. Same for duration: a full
+  suite, a full build, an install, or the FIRST run of a command you have not timed counts as over.
+- Ask via `AskUserQuestion`, once per TASK — one feature, one bug hunt, or one user request not yet
+  answered. A yes covers further runs of the SAME KIND in that task, not the next task.
+- Free without asking: one-shot commands under ~30s that touch no GPU and no model — lint, typecheck,
+  a single unit test, git, grep, reads.
+- No → do not run. Write down which path stayed unverified and why, then carry on with the rest.
+  Never report it as verified.
+- **Subagent: your brief is your authorization** — you have no `AskUserQuestion`. A qualifying run
+  your brief does not name → do not start it; report back what you would have run. The dispatcher
+  asks the user BEFORE dispatch, so an authorized run already sits in your brief.
+
 **Every process you start, you end — and you verify it ended.** The mess is not only in the code, it is
 on the machine.
 - Started a server, app, watcher, tunnel or test run → stop it before the turn ends, or say plainly that

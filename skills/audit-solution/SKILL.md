@@ -24,7 +24,7 @@ User args narrow the scope (a focused question/area) → audit that scope only, 
 Dimension catalog → `reference/dimensions.md`. It owns what each dimension checks and which file holds its rules — read it, don't restate it here.
 Its rule-source paths are relative to the skills root (= the parent of this skill's base directory, announced at load; they carry no leading `skills/`). Join them onto that root and hand scouts the ABSOLUTE result — a scout has neither your base directory nor your CWD, so a raw string strands it.
 
-**2a. Mechanical + shell-bound checks — main loop, before any fan-out.** Deterministic and cheap; scouts are read-only by tool config and carry no shell, so these can only run here.
+**2a. Mechanical + shell-bound checks — main loop, before any fan-out.** Deterministic and cheap; scouts are read-only by tool config and carry no shell, so these can only run here. One-shot and cheap makes them the free case under LOCAL RESOURCE RUNS (`skills/_shared/blocks.md`) — run them without asking.
 - Docs present → invoke `documentation`, run ITS mechanical check. Design surface → invoke `taste`, run ITS pre-flight. **Each skill owns its own script path — invoke that skill and take the path from its body, never hand-write one.** Their bodies carry the skill-dir placeholder, so the path arrives already absolute; a hand-written one resolves against the audited repo's CWD and fails. Audited repo defines its own subagents → its own agent check applies too.
 - VCS hygiene (tracked artifacts, ignore gaps, committed secrets) → read-only `git` here: `ls-files`, `check-ignore`, `log`. Never a scout's job — it has no shell.
 Script hits are findings already. Feed them into Step 3 directly; don't re-derive them by eyeball, and don't hand them to a scout.
@@ -43,7 +43,7 @@ Investigation changes nothing. Dimension clean → say so.
 One findings list, **ranked by severity**. Each: `file:line`, what's wrong, why it matters, proposed fix. Separate:
 - **Must-fix** — real bugs, broken docs/links, standards violations, inconsistencies.
 - **Optional** — guideline-soft items, polish, nice-to-haves.
-- **UNCHECKED** — REQUIRED whenever a 2a check did not run (script missing/failed, no shell, wrong stack) or a dimension was skipped. Name the dimension and what stayed unexamined. A dimension whose mechanical half never ran is NOT clean — listing it as clean is the worst outcome this skill can produce, because it buys false confidence. Empty only if every applicable check actually ran.
+- **UNCHECKED** — REQUIRED whenever a 2a check did not run (script missing/failed, no shell, wrong stack, or the user declined the run under LOCAL RESOURCE RUNS) or a dimension was skipped. Name the dimension and what stayed unexamined. A dimension whose mechanical half never ran is NOT clean — listing it as clean is the worst outcome this skill can produce, because it buys false confidence. Empty only if every applicable check actually ran.
 Be honest about what was NOT checked (e.g. runtime behavior needing the user's env). Don't pad — evidence-based only.
 
 # STEP 4 — CONFIRM SCOPE via AskUserQuestion (REQUIRED)
@@ -70,7 +70,7 @@ Apply only approved findings, per the composed skills:
 - Fix reveals the scope was wrong → update the plan/spec first, then continue.
 
 # STEP 7 — VERIFY & REPORT
-- Run the project's typecheck/build (+ tests, if present) to confirm no stale references/regressions.
+- Run the project's typecheck/build (+ tests, if present) to confirm no stale references/regressions. A full build or suite qualifies under LOCAL RESOURCE RUNS (`skills/_shared/blocks.md`) — one audit is one task, so ask once before the first one.
 - Report faithfully: fixed / deferred / remaining, and any check that failed or couldn't run (say why). Don't claim a fix works if you couldn't verify it.
 
 # STEP 8 — SELF-IMPROVE
@@ -88,4 +88,4 @@ Non-obvious, high-severity only. The dimension list (STEP 2) and the workflow (S
 - Significant structural changes need explicit approval (`coding-standards` REFACTOR RULES owns the threshold).
 - Verify with the project's build/tests before declaring done; report honestly.
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS.
