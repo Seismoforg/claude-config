@@ -143,7 +143,7 @@ Invoke the matching skill — don't bypass it and hand-roll:
 - Ad-hoc bug hunt outside a feature ("why is this crashing", "this is broken") → `debugging`
 - Sensitive code (auth, input validation) / pre-release security check → `security-review`
 - Architecture, modules, APIs, AGENTS.md, ADRs, tech-debt → `documentation`
-- Commit/push → `git-commit`
+- Commit/push, or land a branch (merge into the default branch + clean up) → `git-commit`
 - Whole-codebase audit/health check → `audit-solution`
 - Wild brainstorming, "think differently", no-filter creative ideation → `drunken-genius`
 - End of any skill workflow → `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule)

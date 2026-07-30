@@ -85,9 +85,10 @@ its workflow — the crew only assigns the work.
    fast-path and a later resume:
    - Resolve the DEFAULT branch name first; never assume main/master (`git-commit` STEP 1 owns the
      procedure — follow it, don't hand-roll). Already on a non-default branch for this feature → keep it.
-   - Otherwise `git switch -c <feature-slug>`; the branch already exists (a resumed feature) →
-     `git switch <feature-slug>`. `switch -c` errors on an existing branch, so try plain `switch` first
-     when resuming.
+   - Otherwise `git switch -c feature/<feature-slug>`; the branch already exists (a resumed feature) →
+     `git switch feature/<feature-slug>`. `switch -c` errors on an existing branch, so try plain
+     `switch` first when resuming. The `feature/` prefix is the scheme EVERY branch this config
+     creates follows; `git-commit` STEP 4 owns it.
    - The tree must be CLEAN before the first dispatch — merges land here, and a dirty tree turns an
      integration into a conflict you did not plan. Commit or stash first, or tell the user.
    The crew never builds on the default branch, and every merge below lands on this branch.
@@ -168,6 +169,10 @@ its workflow — the crew only assigns the work.
   applied all three, while `git checkout <branch> -- <paths>` aborted on the deleted pathspec
   (`did not match any file(s) known to git`) and landed NOTHING. Only after the merge: remove the worktree
   and delete its branch — until then that branch is the sole copy.
+  Worker branches are EXEMPT from the `feature/` scheme, deliberately: the harness names them when
+  `isolation: worktree` is set and that flag takes no name, so you never choose it — you read it back
+  from `git worktree list`. They are deleted minutes later and no human ever reads the name. Renaming
+  one before the merge buys nothing and adds a failure mode between the worktree and the merge.
 - **Give each worker only its slice** — the PM the brief, each dev its disjoint task-set, the tester the
   spec. A worker widening its own scope is a defect, not initiative.
 - **Model is a lever.** Workers default to the session model; downgrade a cheap mechanical task-set to a

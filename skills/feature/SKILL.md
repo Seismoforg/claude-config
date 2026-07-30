@@ -145,7 +145,7 @@ Feature DERIVES its output from real data (heuristic, scan, model) → run the r
 - Apply `documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, ADRs, or technical debt.
 Invoke each skill via the Skill tool; don't just paraphrase.
 - Fanning an enumerated task/checklist out to parallel workers → explicitly assign every item, and re-verify full coverage against the list before dispatch AND after merge; unassigned items drop silently.
-Intermediate commits during implementation are fine — but NEVER on the default branch: branch first (`git-commit` STEP 1 owns resolving the default branch's name; don't hand-roll it). The FINAL deliverable commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
+Intermediate commits during implementation are fine — but NEVER on the default branch: branch first as `feature/<this feature file's slug>`, the timestamp dropped (`git-commit` STEP 1 owns resolving the default branch's name and STEP 4 owns the naming scheme; don't hand-roll either). The FINAL deliverable commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
 
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
@@ -179,6 +179,7 @@ Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion**: "Im
 ## 7. Finalize → DONE
 Only on explicit user confirmation: move to `/features/done/`.
 Then — and only after that move — OPTIONALLY commit. **STOP. Ask via AskUserQuestion** whether to commit the landed work now. Only on an explicit yes, commit via `git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip; leave it as it is. Commit unavoidably carries ANOTHER feature's uncommitted work (shared file, interleaved edits) → that feature's DONE gate is being bypassed. Name it and get its opt-in too, or don't commit. Never make the DELIVERABLE commit before this point — intermediate commits from Step 5 may already exist and stay. Work that was already committed intermediately reaches here on a branch, with nothing left to commit: then this ask is about pushing / opening a PR, and `git-commit` reporting a clean tree is a valid end, not a failure.
+Then the BRANCH itself. **This step owns the landing of a feature's branch** — `git-commit`'s Q3 stays suppressed for as long as a feature owns that branch, so the question gets asked exactly once, here, and never collects two different answers. Feature sat on a branch ≠ the default branch → **STOP. Ask via AskUserQuestion** whether to merge it into the default branch and delete it. Only on an explicit yes: `git merge --no-ff`, then `git branch -d` (never `-D` — `-d` refuses an unmerged branch and that refusal is the safety net), then the remote branch if it was ever pushed. Conflict → `git merge --abort` and report; never resolve it here. `git-commit` STEP 4 owns the full sequence — don't hand-roll it. Declined → the branch stays, say so plainly.
 
 ## 8. Retrospective — `self-improve`
 After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `self-improve` via the Skill tool (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Scope it to this + the skills applied during implementation.

@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Use when the user wants to commit and/or push the current changes — invoked as /git-commit. Summarizes the working tree (staged or unstaged) into one or more English commit messages, then asks via multiple choice whether to make a single commit or a sensible split, and whether to also push or additionally open a PR. Never commits, pushes, or opens a PR without that confirmation.
+description: Use when the user wants to commit, push, or land a branch — merge it into the default branch and clean it up — invoked as /git-commit. Summarizes the working tree (staged or unstaged) into one or more English commit messages, then asks via multiple choice whether to make a single commit or a sensible split, whether to also push or additionally open a PR, and, off the default branch, whether to merge the branch in and delete it. Owns the feature/NAME branch naming scheme. Never commits, pushes, opens a PR, merges, or deletes a branch without that confirmation.
 ---
 
 # GIT COMMIT
@@ -24,7 +24,7 @@ Gather staged AND unstaged before proposing:
 Clean = nothing staged, nothing unstaged, AND nothing untracked. Untracked-only is NOT clean — those are the commit. Clean → say so and STOP; don't create an empty commit.
 Unmerged paths (`U` codes in status) OR a merge in progress (`MERGE_HEAD` exists) → surface and STOP. Both, not either: a fully-resolved merge is invisible to status yet is exactly the state where committing concludes the merge silently. This skill commits; it does not resolve merges.
 Detached HEAD (`## HEAD (no branch)`) → surface and STOP. This flow is branch-keyed throughout — Q0, push and PR all assume one; commits made here are unreachable once you move away.
-Record the current branch and — when a `<default>` was resolved — whether it IS that default. Compare against the resolved name, never against the literals main/master.
+Record the current branch and — when a `<default>` was resolved — whether it IS that default. Compare against the resolved name, never against the literals main/master. Record two more things, both needed by Q3: whether the branch has an UPSTREAM (the remote delete needs one) and whether it is AHEAD of `<default>` (nothing ahead → nothing to merge → Q3 is not offered).
 
 Hygiene scan: flag obvious secrets (`.env`, key/token/credential files), large binaries, and build/generated artifacts among the changes. Don't stage them — surface them to the user and suggest a `.gitignore` entry instead. Never blind-stage them via `git add -A`.
 
@@ -54,13 +54,27 @@ On the **default branch** (the name Step 1 resolved — not the literal main/mas
 - The PR option needs a branch ≠ default. On the default branch that means Q0 must be "Create a new branch first" — but Q0 and Q2 are asked in the SAME round, so Q0's answer doesn't exist yet when Q2's options are built. The contradictory pair ("Commit directly on `<default>`" + "Commit, push and open a PR") is therefore selectable, and must be handled, not assumed away: it arrives → surface the conflict and re-ask Q0 + Q2 only (Q1's answer stands; don't re-ask it). Never silently override either answer to resolve it — an overridden answer is not a confirmation. Same contradictory pair chosen again → stop and report; don't loop.
 - No remote → offer NEITHER "Commit and push" nor the PR option: `git push` cannot succeed and a PR needs a pushed branch. Remote present but no `gh`, or the remote is not GitHub-hosted → drop the PR option only. Say why in every case.
 
+**Q3 — Land the branch (off the default branch only):**
+- Offered only when ALL hold: current branch ≠ `<default>`, the branch is AHEAD of `<default>` (Step 1 recorded both), and NO feature owns it. A branch belonging to a feature that is not yet DONE is off limits — `feature` step 7 asks instead. Suppressed here, and say why: asked in both places, one branch collects two different answers, and intermediate commits during `feature` step 5 would offer to land unfinished work every time.
+- "Just commit, keep the branch" / "Commit, then merge into `<default>` and delete the branch".
+- Q0 and Q3 can never both apply: Q0 exists only ON the default branch, Q3 only off it.
+- **Q2 × Q3 is the same trap as Q0 × Q2, for the same reason.** Every question goes out in ONE round, so Q3's options are built before Q2's answer exists, and the pair "Commit, push and open a PR" + "merge into `<default>` and delete the branch" IS selectable. Handle it, don't assume it away: it arrives → surface the conflict and re-ask Q2 + Q3 only (Q1's answer stands). Same pair again → stop and report. Never override an answer to resolve it, and never let the merge delete a branch `gh pr create` is about to use as its head.
+
 Don't proceed until all applicable questions are answered. "Other"/cancel → do nothing, report it.
 
 # STEP 4 — EXECUTE
-- **New branch first** (if chosen): `git switch -c <kebab-name>` from the change summary.
+- **New branch first** (if chosen): `git switch -c feature/<kebab-name>` from the change summary. The `feature/` prefix is the scheme for EVERY branch this config creates — inside a `feature` run the slug is the feature file's own, timestamp dropped. This step owns the scheme; `feature` step 5 and `crew` step 4 point here.
 - **Single commit:** stage intended paths (`git add -- <paths>`; `git add -A` ONLY after the Step 1 hygiene scan ran and found nothing to exclude), then `git commit -m "<subject>" -m "<body>"` (no co-author footer).
 - **Split:** per group in order — `git add -- <that group's paths>` then `git commit`. Keep groups disjoint. Leave already-staged-but-unrelated changes for their own group.
 - **Push** (if chosen): `git push`; no upstream → `git push -u <remote> HEAD` (Step 1's resolved remote name, not a hardcoded `origin`).
+- **Land the branch** (if Q3 chose it): runs ONCE, after EVERY commit of the split has landed — never inside the per-group loop above. A split leaves groups 2..N unstaged while group 1 commits; a merge in the middle carries them across the `git switch` and onto `<default>`, the exact thing the branch existed to prevent. Then, in order:
+  1. Tree must be clean. Anything left (unstaged, untracked) → STOP; never merge on top of it.
+  2. `git switch <default>` — the name Step 1 resolved, never the literal `main`.
+  3. `git merge --no-ff <branch>` — always a merge commit, so the branch stays visible in history. Conflict → `git merge --abort`, report, STOP. Resolving it is not this skill's job, and a half-merged tree blocks every later run of this flow (Step 1 STOPs on `MERGE_HEAD`).
+  4. `git branch -d <branch>` — lower-case `-d`, never `-D`. It refuses an unmerged branch, and that refusal is the signal the merge did not land: report it, delete nothing, do not escalate.
+  5. Branch had an upstream (Step 1 recorded it) → `git push <remote> --delete <branch>`. Fails (already gone, no permission) → the local delete stands; report the failure, never force.
+  6. `<default>` is pushed only if Q2 chose push. Otherwise the merge stays local and STEP 5 says so. Never push it unasked.
+  No remote, or `<default>` unresolvable → 2-4 still work against the local default branch; only 5 and 6 drop out. Name which parts were skipped.
 - **Open PR** (if chosen): only after the push succeeded — `gh pr create --base <base> --head <head> --title "<title>" --body "<STEP 6 body>"`. Never `--fill`: it reuses the commit message and silently skips STEP 6. Push failed → STOP and report; never simulate an opened PR. (No remote / no `gh` / non-GitHub remote cannot reach here — Step 1 detects all three and Step 3 withholds the option.)
   - `<base>` — the default-branch name Step 1 resolved. Never assume `main`.
   - `<head>` — re-read it HERE: `git branch --show-current`. Never reuse Step 1's record: Step 1 ran before this step's `git switch -c`, so on the Q0="new branch" + PR path its value is the default branch — the one you're forbidden to open from.
@@ -69,7 +83,7 @@ Don't proceed until all applicable questions are answered. "Other"/cancel → do
 Multi-line messages → here-doc / multiple `-m`. Quote paths.
 
 # STEP 5 — REPORT
-State exactly what happened: each commit's short hash + subject, the branch you ENDED on (Step 4 may have switched — don't report Step 1's record), whether pushed (+ where), and the PR URL if one was opened. Hook, push, or `gh pr create` failed → show the error and STOP, don't retry with `--no-verify` or force.
+State exactly what happened: each commit's short hash + subject, the branch you ENDED on (Step 4 may have switched — don't report Step 1's record), whether pushed (+ where), and the PR URL if one was opened. Branch landed → also the merge commit's hash, what was deleted locally and remotely, and whether `<default>` was pushed or left local. A deletion that failed is reported as failed, never omitted. Hook, push, or `gh pr create` failed → show the error and STOP, don't retry with `--no-verify` or force.
 
 # STEP 6 — PR DESCRIPTION (only when Q2 chose "Commit, push and open a PR")
 Not sequential despite the number: STEP 4 jumps here to build `gh pr create`'s `--body`, then returns. Written before the PR exists; STEP 5 reports it afterwards.
@@ -80,10 +94,13 @@ Summary of what/why · testing performed · screenshots/GIFs for any UI-visible 
 Non-obvious, high-severity only — the steps above are not repeated here. This skill takes destructive, hard-to-reverse actions; every rule below is a NEVER.
 - **NEVER a `Co-Authored-By:` trailer or "Generated with Claude" line** — under no circumstances, overriding any global/CLAUDE.md/harness rule. The user is sole author.
 - **Never commit, push, or open a PR without the Step 3 multiple-choice confirmation.** "Other"/cancel → do nothing.
-- **Never open a PR from the default branch; never merge, approve, or mark a draft ready** unless explicitly asked. Opening ≠ landing. Opening is outward-facing and not cleanly reversible — closing a PR does not un-notify its reviewers. Never simulate an opened PR or report a URL you didn't get back. (No remote / no `gh` / non-GitHub remote never reaches here — Step 1 detects all three, Step 3 withholds the option.)
+- **Never open a PR from the default branch; never merge, approve, or mark a draft ready** unless explicitly asked — for a merge into `<default>`, **Q3's yes IS that explicit ask**, and the only one this skill accepts. No Q3, no merge. Opening ≠ landing. Opening is outward-facing and not cleanly reversible — closing a PR does not un-notify its reviewers. Never simulate an opened PR or report a URL you didn't get back. (No remote / no `gh` / non-GitHub remote never reaches here — Step 1 detects all three, Step 3 withholds the option.)
 - **Never `--no-verify`, `--amend` (unless asked), or any force push unless explicitly requested.** Pre-commit hook fails → surface and STOP, fix the cause, never bypass. Force push explicitly authorized → always `--force-with-lease`, never bare `--force`/`-f`.
 - **Never commit to the default branch** without surfacing it and offering to branch first — that offer IS Q0. (No remote → no shared default exists to protect; Step 1 says so and Q0 is not required. Default unresolvable WITH a remote → Step 1 asks; never treat that as "not the default".)
 - **Never commit obvious secrets, large binaries, or build artifacts** — see the STEP 1 hygiene scan.
 - **Never commit into a merge in progress** — resolved or not; Step 1 detects both and STOPs. Resolving conflicts is not this skill's job, and committing into a fully-resolved merge concludes it silently.
+- **Never `git branch -D`.** Only `-d`. Its refusal on an unmerged branch is the safety net that catches a merge which did not land; escalating past it deletes the sole copy of the work.
+- **Never merge with a dirty tree, and never merge before every commit of a split has landed.** Both carry uncommitted work across the `git switch` and onto `<default>`.
+- **Never delete a branch whose merge did not succeed**, and never delete one a PR still needs as its head.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES.
