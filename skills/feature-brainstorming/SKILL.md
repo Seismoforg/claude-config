@@ -13,7 +13,7 @@ keystrokes from the user.
 
 Scope: it performs `feature` workflow step 1 — writes the DRAFT into `/features/draft/` — and
 returns. It runs NO state transition and NO gate. `feature` owns the state machine and every
-approval, and resumes at step 2.
+approval, and resumes at step 1.5.
 
 **Entered directly, not from `feature` step 0?** Then `feature` ON ACTIVATION never ran. Run it IN
 FULL first — the real thing, not this summary. Two of its outcomes stop you here:
@@ -148,7 +148,8 @@ Read the OUTPUT, not just the exit code:
   ACTIVATION owns it: STOP and report, never auto-fix.
 
 ## 7. Return — never gate
-Return to `feature` workflow step 2 and let it run. Hand back two things, not one:
+Return to `feature` workflow step 1.5 and let it run — the premortem, then step 2. Never jump to step
+2: the DRAFT you just wrote is exactly what 1.5 exists to critique. Hand back two things, not one:
 - the DRAFT's path, and that step 1 is done
 - **every `Open assumption:` line, said out loud.** They are the only requirements nobody confirmed.
   Left inside the file they get approved unread — step 2's summary must carry them to the gate,

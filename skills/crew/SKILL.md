@@ -53,7 +53,8 @@ its workflow — the crew only assigns the work.
 1. **Intake (Teamleiter).** Read the task. Vague/exploratory, or named but underspecified → brainstorm
    first (`feature` step 0; its own test picks `drunken-genius` vs `feature-brainstorming`). Concrete →
    go on. `feature-brainstorming` RETURNS WITH THE DRAFT ALREADY WRITTEN, so CREW step 2 below is done —
-   go to CREW step 3, the approval gate. Every number in this list is a crew step unless it says
+   run `feature` step 1.5 (premortem) on that DRAFT, then go to CREW step 3, the approval gate. Every
+   number in this list is a crew step unless it says
    `feature`; reading them as `feature` steps skips the gate. Dispatching the PM anyway writes a second
    spec for the same feature — and so does routing a later "Change spec" answer back to it. Refine that
    DRAFT in place instead, staying in NEEDS_APPROVAL as `feature` step 2 prescribes.
@@ -62,6 +63,8 @@ its workflow — the crew only assigns the work.
    rules, not only built against them. The surface is readable from the brief; you do not need a task-set
    yet. It returns a spec (7 sections) + an OPEN list. Read it. PM is read-only → YOU write the DRAFT into
    /features/draft/ (`feature` step 1). OPEN items that need the user → resolve at the gate, not by guessing.
+   Then run `feature` step 1.5 (premortem) yourself before CREW step 3 — the PM is read-only and holds no
+   gate, so the critique of its plan is the Teamleiter's, and it must land while the spec is still a DRAFT.
 3. **Approval gate (Teamleiter).** `feature` step 2 — move to pending/, **STOP, AskUserQuestion**. A worker
    NEVER runs this. Then honour the choice `feature` offers:
    - **Approve & implement** (fast-path, `feature` step 2/4) → straight to in-progress/, then THROUGH
@@ -71,7 +74,9 @@ its workflow — the crew only assigns the work.
      later re-enters at step 4, not step 5 — the branch may not exist yet in a new session.
    - **Change spec** → REVISE the existing DRAFT in place. It stays NEEDS_APPROVAL in pending/ (`feature`
      step 2); never move it back to draft/. Needs a re-plan → re-dispatch the `pm` agent with the current
-     spec and what must change, and fold its answer into that same file. Sending it back to crew step 2
+     spec and what must change, and fold its answer into that same file — the PM returns 7 sections and
+     knows nothing of `# Premortem`, so preserve that section yourself, and re-run `feature` step 1.5 if
+     the revision newly crosses its threshold. Sending it back to crew step 2
      unread writes a second spec and walks the state backwards. Discard → discarded/.
 4. **Implementation gate (Teamleiter).** Before any dev is dispatched, the file must be IN_PROGRESS in
    in-progress/. The fast-path already landed it there (step 3). Resuming a held feature (still APPROVED

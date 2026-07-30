@@ -29,7 +29,7 @@ One feature per file. Chronological by filename. No index file. One request bund
 
 # STATE MACHINE
 ```
-/features/draft/         → DRAFT          → refine, then request approval
+/features/draft/         → DRAFT          → refine, premortem (step 1.5), then request approval
 /features/pending/       → NEEDS_APPROVAL → wait for user
 /features/approved/      → APPROVED       → move to in-progress, then implement
 /features/in-progress/   → IN_PROGRESS    → implement, then validate
@@ -43,7 +43,7 @@ Rules:
 - No skipped states. Linear, forward-only, EXCEPT rework: delivered work fails its OWN spec (bug found, requirement missed) — from ANY state INCLUDING DONE → move back to IN_PROGRESS, fix + re-validate, then advance again. (A change that CONTRADICTS the spec is a different case → HARD RULES.) Never change a feature's code while its file sits in ready-for-done/ or done/ without first moving it back — the folder must reflect that work resumed.
 - Exception — "Approve & implement" fast-path: user picks that combined option at the approval gate → file may advance NEEDS_APPROVAL → APPROVED → IN_PROGRESS in one move (record approval, land in in-progress/) with no rest in approved/. A collapse of adjacent transitions, not a skipped state.
 - Exception — audit remediation fast-path: an approved `audit-solution` scope may create the feature file DIRECTLY in in-progress/ (its Step-4 approval replaces this gate); the empty draft/pending/approved rests collapse. Same one-move collapse, not a skipped state.
-- A transition = update the `status` field first (edit in place), THEN move the file. After moving, re-read before the next in-place edit — the move invalidates the prior read, so an edit at the new path fails otherwise.
+- A transition = update the `status` field first (edit in place), THEN move the file. After moving, re-read before the next in-place edit — the move invalidates the prior read, so an edit at the new path fails otherwise. Anchor that edit on the FRONTMATTER — include the neighbouring `created:` line. A spec that discusses the lifecycle quotes its own status literals in the body, so a bare `status: X` matches twice and the edit fails.
 - Move via a path anchored to the features dir (absolute or repo-root-relative), never relative to the shell CWD (it may have drifted after build/test commands). Feature files are usually untracked (the features dir is commonly VCS-ignored) → plain `mv`, not `git mv`. Destination state-folder may not exist yet → create it before the move.
 
 # MECHANICAL CHECK
@@ -75,6 +75,10 @@ Body (all required):
 # Impact Analysis  (affected/new/deleted files; breaking changes; overlap with other in-flight features editing the same files)
 # Validation       (filled at the READY_FOR_DONE gate)
 ```
+Conditional 8th section, written by step 1.5 — report + mitigation table when its threshold fires, one line naming the checked criteria when it does not. Absent only where 1.5 never ran (audit fast-path, or a spec predating it). The seven above stay required:
+```
+# Premortem        (failure report + mitigation table, or the one-line skip record)
+```
 **Language + style: feature files follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`) — English + terse/plain across title, all sections, Tasks; every requirement/number/file/constraint kept.
 
 # WORKFLOW
@@ -85,7 +89,7 @@ Every new feature enters here. Not optional, and not a detour — one of its bra
 The test that picks — **to fill the spec, would you have to INVENT a decision the user has an opinion about?** Not "can I write fluent prose for this section": you always can, and that fluency is the failure. Ask instead which concrete choices you would be making FOR them — a limit, a default, a storage location, a scope cut.
 - **None — you would invent nothing** → skip both, straight to step 1.
 - **Several, and the IDEA itself is one of them.** Vague, exploratory, "what could we do", or the user says brainstorm/wild ideas → `drunken-genius`. Let it run its wild-round → sober-look → nightcap process. Its output stays in chat; it is NOT feature state, it never writes a file. Once the user picks an idea (or a merge of several), carry it into step 1 as the DRAFT's Summary/Problem/Solution seed — or into `feature-brainstorming` if the details are still open.
-- **Several, but the idea is settled — the DETAILS or the APPROACH are open.** The feature is named but underspecified → `feature-brainstorming`. Mostly multiple-choice `AskUserQuestion` interview, then it performs step 1 for you: DRAFT written into `/features/draft/` with status `DRAFT`. It returns there. You resume at **step 2** and do NOT redo step 1. That file IS feature state the moment it exists.
+- **Several, but the idea is settled — the DETAILS or the APPROACH are open.** The feature is named but underspecified → `feature-brainstorming`. Mostly multiple-choice `AskUserQuestion` interview, then it performs step 1 for you: DRAFT written into `/features/draft/` with status `DRAFT`. It returns there. You resume at **step 1.5** and do NOT redo step 1. That file IS feature state the moment it exists.
 - **The idea is open AND the details under it are** → `drunken-genius` first, then `feature-brainstorming` on the picked idea.
 
 ## 1. Create → DRAFT
@@ -93,9 +97,30 @@ Write the spec into `/features/draft/`. Fill all sections as far as known.
 Change mirrors an existing one (same layer, sibling module) → read that precedent FIRST and mirror its structure. A plan drafted from the file tree alone puts constants and wiring in plausible-but-wrong places, and the correction lands mid-implementation.
 Spec fixes a defect CLASS (a rule missing from several files, one pattern wrong in several places) → grep every instance BEFORE writing Tasks; count from the grep, not from the report you are working off. A spec naming 4 of 6 instances looks complete, passes its own review, and ships the other 2 unfixed.
 Plan changes an exported SIGNATURE → count call sites by grepping the SYMBOL, not the feature's surface description; the two sets differ. Sizing Impact Analysis from the wrong set understates it, and the missed callers surface as build errors mid-implementation.
+Spec written → step 1.5, never straight to step 2.
+
+## 1.5 Premortem — self-critique before the gate
+Runs on the spec before it is approved — in `draft/`, or in `pending/` after a Change-spec revision that newly crosses the threshold. No folder move, no status change, no user stop of its own.
+
+Threshold — run it when ANY of these holds:
+- more than 2 files or modules touched
+- a new dependency introduced
+- existing skills, agents, or their interfaces changed
+- more than ~1h of work, or work spanning several sessions
+
+None holds → skip it, and record the skip BOTH ways: a one-line `# Premortem` section naming the criteria you checked, and that same line in the step-2 summary. File only and the gate hides it; chat only and it is not feature state at all (authoritative rule, top of this skill). A silent skip reads identical to a forgotten one.
+Features created by the audit-remediation fast-path (STATE MACHINE) never run this step, whichever folder they are created in — the audit findings ARE their failure analysis.
+Spec already carries a `# Premortem` section → it ran; go to step 2, unless a Change-spec revision has since crossed the threshold. That section is the ONLY record that it ran.
+
+Then:
+1. Read the spec, and `reference/premortem.md` — join that pointer onto this skill's announced base directory; a bare relative path resolves against the CWD, which is the user's project.
+2. Write the failure report.
+3. Edit the spec. Then write the mitigation table, recording the edits you MADE — never intentions. `reference/premortem.md` owns both forms, and the two outcomes that legitimately change no plan: every cause accepted as a named risk, or a premortem that found nothing real.
+4. Append report + table to the feature file as a new `# Premortem` section, after `# Validation`.
+5. Go to step 2.
 
 ## 2. Request approval → NEEDS_APPROVAL
-Move to `/features/pending/`. Summarize for the user. **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file). Offer at least:
+Move to `/features/pending/`. Summarize for the user. Premortem ran → the summary carries its mitigation table, not the report; skipped → carry the one-line skip reason. Neither is optional: the table is the part that changed the plan the user is about to approve. **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file). Offer at least:
 - **Approve & implement** — explicit approval: → APPROVED (step 3) → implementation gate (step 4) → implement (step 5) without asking again.
 - **Approve, don't implement yet** — → APPROVED then stop.
 - **Change spec** — stay in NEEDS_APPROVAL, refine.
@@ -111,6 +136,8 @@ Before ANY code change: verify file exists AND status = APPROVED. Then move to `
 
 ## 5. Implement
 Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks current.
+A fact found while building that INVALIDATES the premise of a decision the user already made at a gate → re-open it via AskUserQuestion, stating the new fact. Keeping it silently ships a choice made on a false premise; overriding it silently takes the user's call away.
+Feature DERIVES its output from real data (heuristic, scan, model) → run the real pipeline on real input as soon as ONE slice works, before building the rest. Tests written first encode your assumption about the data and all go green while the derivation is wrong; Step 6's sample read then costs a rebuild, not a fix.
 - Apply `coding-standards` to every code change.
 - Apply `security-review` when the feature touches auth, sessions, input handling, or external payloads.
 - Apply `web-standards` to any web/UI change (responsive, a11y, perf, motion).
@@ -128,18 +155,21 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 - build succeeds (if applicable)
 - tests pass (if available)
 - every changed code path actually exercised. A path needing an unavailable dep (model, GPU, paid API) is NOT "outside your control" — drive it with a stub/mock before declaring done; an unrun changed branch is unverified, not "structurally verified". An INSTALLABLE dep (CLI, tool, package) is NOT unavailable — install it and run the REAL path; "it parses" / "external, not validated" on something installable ships latent bugs (a cross-platform spawn, a shell quirk) that only a real run catches
+- an excuse is sized to the SUB-STEP it applies to. One step needing real hardware or a human (a keystroke, a physical device) does not make the surrounding branch uncoverable — drive the branch you own with a stub and name only the irreducible step as uncovered. An excuse that grows to cover the whole path hides the part that was testable all along
 - changed path SPAWNS an external command → put the stub ON THE PATH under that command's name, so the real spawn runs and the real argv is observed. Mocking the calling function instead proves nothing about the command line actually built — which is usually the thing that was wrong
+- changed path CONSUMES events/payloads from an external producer (framework, library, service) → at least one run must take the payload from the REAL producer. The mirror of the rule above: there you own what goes out, here you do NOT own what comes in. A stub you authored encodes your ASSUMPTION about what it sends, so every check passes while the feature does nothing in real use
+- a check on a QUANTITATIVE claim (faster, earlier, smaller) asserts a MARGIN sized from the claim, never a bare direction. `A < B` goes green on noise — and on a feature doing nothing at all. Read the raw number, not the PASS line
 - data/config entries consumed by existing code (catalog/registry/list) count as a changed path — "it parses" is NOT validation. Exercise ≥1 representative entry through the real consuming path; entries vary in format and only the live path reveals a break
 - changed path is harness-registered config (agent/skill/hook definition) → apply the harness-registration rule in `self-improve` SKILL LIFECYCLE before you judge it; a not-found error right after writing proves neither broken nor working
-- validating a RULE you wrote by RUNNING it yourself tests your hand-operation, not the rule. Whatever the text tells its executor to derive (a path, a command, a value) must be derived FROM THE TEXT during the test — supply it by hand and a green run proves nothing about the step you skipped, which is exactly where the rule can be wrong
-- changed path is PROSE a model executes (skill, workflow, rule file, prompt) → "it reads fine" is NOT validation. You cannot audit your own prose — you know what you meant. Hand it to a FRESH model with no context; demand a reachability/coherence trace naming every dead or offered-but-unexecutable path. Expect it to find defects the change itself introduced
+- validating a RULE you wrote by RUNNING it yourself tests your hand-operation, not the rule. Whatever the text tells its executor to derive (a path, a command, a value) must be derived FROM THE TEXT during the test — supply it by hand and a green run proves nothing about the step you skipped, which is exactly where the rule can be wrong. Same for a value the SYSTEM resolves (config, default, env): pass it explicitly and you test the consumer, never the resolution — and a stored value that defeats your new default lives exactly there
+- changed path is PROSE a model executes (skill, workflow, rule file, prompt) → "it reads fine" is NOT validation. You cannot audit your own prose — you know what you meant. Hand it to a FRESH model with no context; demand a reachability/coherence trace naming every dead or offered-but-unexecutable path. Expect it to find defects the change itself introduced. Delegation unavailable (harness or policy forbids unrequested agents) → say so and ask the user to authorize one pass. Never substitute your own re-read and report it validated — that is the one thing this bullet exists to forbid
 - exercising a changed path that MUTATES persisted/user state (settings store, DB, on-disk files) → find the store's REAL path first (don't assume it), snapshot it, restore it after; never leave test data in the user's state. This binds any TEST/verify you RUN as validation too, not just a path you changed: a script that writes to a REAL config/DB/store (not an isolated temp) corrupts the user's environment when run — check it isolates or snapshot+restores first; never assume a verify script is side-effect-free
 - exercising a streaming/real-time/async changed path → size the test so the observed window outlasts connect/setup latency; a run that finishes before the observer attaches proves nothing — observe events arriving over time, not just a final snapshot
 - a path that EMITS events/metrics/callbacks → assert the payload VALUES, not just that events fire; a fired-but-null/empty event (e.g. metric present but its value None) passes a count check yet violates intent
 - feature OUTPUT is DATA it DERIVES (from user content, a heuristic, a model) → read a real SAMPLE of the values and judge each against EVERY invariant that constrains them (language, format, allowed-set, no-secrets), not just that values appeared. Derived output carries values no test anticipated; one that violates an invariant sits VISIBLE in the sample yet passes every count/mechanism check. Seeing a value is not checking it
-- feature OUTPUT is DATA it DERIVES (from user content, a heuristic, a model) → read a real SAMPLE of the values and judge each against EVERY invariant that constrains them (language, format, allowed-set, no-secrets), not just that values appeared. Derived output carries values no test anticipated; one that violates an invariant sits VISIBLE in the sample yet passes every count/mechanism check. Seeing a value is not checking it
 - full validation needs a genuinely external action (deploy, service restart, third-party run) → record what you DID verify vs what remains under `# Validation`, surface the pending step to the user — never report it as fully validated
 - changed a rule/value that can exist in MORE THAN ONE place (shared constant, config default, duplicated doc/rule text) → grep repo-wide for other copies before ready-for-done. A spec scoped to one file does not stop a stale copy elsewhere from silently defeating the change. **Grep finds literal COPIES, not DEPENDENTS** — a rule stated in OTHER words whose truth your change just broke shares no string with it, so every literal grep passes while an absolute rule elsewhere now contradicts you. Also re-read each invariant section (HARD RULES, "always/never") end to end and ask of every rule: still true?
+- proving an ABSENCE by search (no override, no other caller, no stale copy) → the search's own filters decide the answer. Ignore-aware tools skip exactly where runtime and local state live, so "nothing found" can mean "nowhere it looked". Re-run with ignores disabled before recording an absence, or establish it through the running system instead
 - do NOT make the DELIVERABLE commit here. It waits until after DONE (Step 7), and is user-opt-in. Intermediate commits already made during Step 5 are fine and stay.
 Verification fails (build/tests red) → fix the root cause, re-run. Same check fails again after a fix attempt → stop, report the failure and your diagnosis to the user, do NOT weaken the check, skip it, or keep guessing at patches. Ask before a third attempt at the same failing check. Same stop when each fix round CLOSES its named defects but opens new ones in its own blast radius: two such rounds = not converging → report the pattern and ask, don't start a third.
 Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion**: "Implementation complete and validation passed. Move to DONE?" Offer at least **Move to DONE** / **Leave open for now**. Only DONE counts as the explicit confirmation for step 7.
