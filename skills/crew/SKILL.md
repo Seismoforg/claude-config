@@ -111,7 +111,12 @@ its workflow — the crew only assigns the work.
    **Transcribe that dev's `DEBT:` line into the feature file's `# Debt Found` section immediately
    after ITS merge** — the same moment as the after-merge coverage re-check, never "later". A worker's
    report is a chat message, and only `/features` files are feature state; untranscribed, the debt is
-   gone the moment the round ends. `DEBT: none` needs nothing. Then run a
+   gone the moment the round ends. `DEBT: none` needs nothing.
+   **Tick that dev's finished tasks in `# Tasks` at the same moment, for the same reason.** A dev
+   reports per task (`agents/dev.md` OUTPUT) and cannot write feature state at all — `features/` is in
+   no worktree. Untranscribed, its per-task result dies with the round exactly as an untranscribed
+   `DEBT:` line does, and the checklist then says nothing was built. A task the dev reported blocked
+   stays unchecked and gets its reason on the line (`feature` step 6 owns that form). Then run a
    cross-cutting pass over the merged result with the applicable skills — the devs wrote WITH them, you
    confirm the whole holds together — plus the shell-bound checks for whichever skills ACTUALLY applied:
    `taste`'s pre-flight if this was a design surface (a worker that only READ the file could not run it),

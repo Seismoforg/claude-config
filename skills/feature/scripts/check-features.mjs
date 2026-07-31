@@ -45,6 +45,47 @@ const status = (src) => {
   return s ? (str(s[1]) ?? '') : '';
 };
 
+// An unchecked box is deliberate only if it SAYS so. These three markers are the vocabulary: the two
+// in live use plus a feature id for work that moved into its own spec.
+const ANNOTATED = /\bBLOCKED\b|\bNOT DONE\b|\b\d{8}-\d{4}\b/;
+
+// Walk `# Tasks` and return violation strings. Three things a naive regex gets wrong, all of them
+// measured against real files in this repo:
+//  1. The annotation may sit on a CONTINUATION line, not the `- [ ]` line (see the ask-before-local-
+//     resource-runs spec, whose "**NOT DONE:**" is on the line below). A task item is its first line
+//     plus every following indented line.
+//  2. A fence inside `# Tasks` would make its contents read as tasks. Skip fenced regions.
+//  3. A fence left UNCLOSED must not silently swallow the rest of the section — a single flag that
+//     never flips back turns "inspected 0 items" into a clean pass indistinguishable from a real one.
+const tasksNotCurrent = (src) => {
+  const lines = src.split(/\r?\n/);
+  const start = lines.findIndex((l) => /^# Tasks\s*$/i.test(l));
+  if (start === -1) return [];
+  const out = [];
+  let fenced = false, fenceLine = 0, item = null, itemLine = 0, items = 0;
+  const flush = () => {
+    if (item !== null && !ANNOTATED.test(item)) {
+      out.push(`tasks-not-current  line ${itemLine}: unchecked task with no reason — tick it if the work landed, else say why on the line (BLOCKED / NOT DONE / a feature id). Fix in place; this one is not a STOP`);
+    }
+    item = null;
+  };
+  for (let i = start + 1; i < lines.length; i++) {
+    const line = lines[i];
+    if (/^# /.test(line)) break;                       // next section ends # Tasks
+    if (/^\s*```/.test(line)) { if (!fenced) fenceLine = i + 1; fenced = !fenced; continue; }
+    if (fenced) continue;
+    if (/^- \[ \]/.test(line)) { flush(); item = line; itemLine = i + 1; items++; continue; }
+    if (/^- \[[xX]\]/.test(line)) { flush(); items++; continue; }
+    if (item !== null && /^\s+\S/.test(line)) { item += '\n' + line; continue; }  // continuation
+    if (line.trim() === '') continue;                  // blank keeps the item open
+    flush();
+  }
+  flush();
+  if (fenced) out.push(`unterminated-fence  line ${fenceLine}: code fence opened inside # Tasks and never closed — every task after it went uninspected`);
+  if (!items) out.push(`tasks-not-current  # Tasks section has no checklist items — a spec that reached this state built something`);
+  return out;
+};
+
 // A bad root must be a named error, never a quiet "nothing to check" — a typo'd path and a
 // project without a feature lifecycle printed the same line and the same exit 0. isDirectory()
 // as well: a FILE passed as root has no features/ under it either, and would read as clean.
@@ -105,6 +146,14 @@ for (const entry of readdirSync(featuresDir)) {
         && /^# Open Questions/im.test(body) && /^# Premortem/im.test(body)
         && !/no debt taken|# Debt Found/i.test(body)) {
       violations.push(`${rel(path)}  debt-not-recorded  # Validation must state the filed debt ids or "no debt taken" — silence is not proof`);
+    }
+    // `# Tasks` is a live work-list (feature step 5). By ready-for-done/done every box is ticked, or
+    // says WHY it is not. Scoped to specs carrying `# Premortem`: MEASURED at build time, 0 of 26
+    // done/ specs carried `# Open Questions` while 5 carried `# Premortem`, so the section-PAIR that
+    // scopes debt-not-recorded matches nothing at all. A check nothing can reach is worse than one
+    // nobody can drive to zero. Deliberately NOT reusing that pair — this scope selects real files.
+    if ((entry === 'ready-for-done' || entry === 'done') && /^# Premortem/im.test(body)) {
+      for (const v of tasksNotCurrent(body)) violations.push(`${rel(path)}  ${v}`);
     }
     const found = status(body);
     if (found === null) {
