@@ -66,6 +66,19 @@ that `skills:` preloads. **A new or edited agent may not be dispatchable immedia
 harness-registration rule in `self-improve`'s SKILL LIFECYCLE before you call an agent broken or
 clean; a not-found error right after writing proves neither.
 
+## Mechanical checks
+Run all four after editing anything they cover. Each exits 1 on a violation, printing `file  rule  detail`.
+```
+node agents/scripts/check-agents.mjs
+node skills/feature/scripts/check-features.mjs
+node skills/documentation/scripts/check-docs.mjs
+node scripts/build-copilot.mjs . --check
+```
+The last one is drift, not style: `github_build/` is the GitHub Copilot translation of this config,
+committed so a diff shows what changed. Edit any skill, agent or `CLAUDE.md` and it goes stale —
+re-run `node scripts/build-copilot.mjs .` to regenerate. A `--check` nobody runs is a build that
+silently serves a config which no longer exists.
+
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
 - `~/.claude/agents` → **junction** to `agents/` here.
