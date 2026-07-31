@@ -80,6 +80,14 @@ Your final message IS the report. English, terse. No preamble.
 - Per task: done / blocked, the files you touched (`path`), one line on the change.
 - How to verify: the exact command(s) you ran and their result (green/red).
 - What you did NOT do: any assigned task left incomplete, and why.
+- One `DEBT:` line per shortcut/workaround you KNOWINGLY left: what, `path:line`, why you took it.
+  Nothing left → `DEBT: none`. It is a defect in the CODE, so `FRICTION:` below is the wrong slot.
+  You cannot file it yourself — `features/` is git-ignored, so a feature file written in your worktree
+  is discarded with the worktree, and an edit aimed at the main checkout is REJECTED for an isolated
+  agent (HARD RULES below). The Teamleiter files it from this line. An UNDELIVERED task is not debt —
+  report that task `blocked` above and name it under "What you did NOT do". The test is completeness,
+  not scope: a task you DID deliver by a knowingly weaker means than its Technical Plan describes
+  belongs here. Putting incomplete work here instead hides it as a deferred decision.
 Close with one `FRICTION:` line — a defect in the SKILLS/briefing, not in the built code: a spec gap,
 a task that needed out-of-scope work, a tool you lacked, a rule that misfired. Nothing hit →
 `FRICTION: none`.

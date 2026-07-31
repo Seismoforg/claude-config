@@ -43,9 +43,11 @@ Rule source: `taste/SKILL.md` + `taste/reference/ai-tells.md`.
 Skip if no user-facing design surface, or the UI is internal tooling with no design ambition.
 
 ## Documentation conformance
-AGENTS.md coverage for real modules, ADRs for major decisions, stale/contradictory docs,
-tech-debt recorded. Sibling + link mechanics are the dispatcher's script (`check-docs.mjs`),
-not yours; judge coverage and correctness.
+AGENTS.md coverage for real modules, ADRs for major decisions, stale/contradictory docs.
+Technical debt is not a doc artifact under THIS config — it is a feature DRAFT, so a debt ledger in a
+repo that follows this config is a finding. In any other repo REPO PATTERNS wins: a debt doc the
+project keeps by its own convention is a convention, not a finding. Sibling + link mechanics are the
+dispatcher's script (`check-docs.mjs`), not yours; judge coverage and correctness.
 Rule source: `documentation/SKILL.md`.
 
 ## Redundancy & contradiction
@@ -67,12 +69,12 @@ layout)? Flag one-off deviations. Fix = align to the dominant pattern, never add
 Rule source: the repo's dominant pattern. A deviation the WHOLE repo shares is not a finding.
 
 ## Language (English-only)
-Code comments/docstrings, `/features` files, docs (AGENTS.md, ADRs, tech-debt, READMEs) must be
+Code comments/docstrings, `/features` files, docs (AGENTS.md, ADRs, READMEs) must be
 English. Fix = translate (user-facing UI text → i18n, not inline). Independent of logic quality.
 Rule source: LANGUAGE in `_shared/blocks.md`.
 
 ## Simple-language conformance
-ALL docs terse AND plain: AGENTS.md, CLAUDE.md, ADRs, tech-debt, READMEs, `/features` specs,
+ALL docs terse AND plain: AGENTS.md, CLAUDE.md, ADRs, READMEs, `/features` specs,
 comments, docstrings. Flag filler, hedging, flowing paragraphs. Jargon: a finding only where it
 would genuinely lose that doc's reader — judgment, not a quota. A model-facing file (skill, agent
 brief) keeps bare `frontmatter`/`idempotent`; that is correct, not a defect. Fix =

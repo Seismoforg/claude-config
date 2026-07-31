@@ -24,7 +24,12 @@ Ad-hoc bug hunt not tied to a `feature` draft. Composes with `coding-standards`
   clears it is the cause. Tuning without that measurement is a guess that passes
   review and repeats for rounds.
 - **Step 3 — Fix the root cause, not the symptom.** If the fix is a workaround rather
-  than a root-cause fix, say so explicitly and explain why (upstream bug, time constraint).
+  than a root-cause fix, say so explicitly and explain why (upstream bug, time constraint) —
+  AND file it as a feature DRAFT in `/features/draft/` before the hunt ends. A hunt has no
+  feature file to note it in, so the two-step deferral does not apply here: write the DRAFT
+  straight away or it is gone. TECHNICAL DEBT in `skills/_shared/blocks.md` owns the rule.
+  Already handed off as a feature draft (see the hand-off line below, when the user chose to keep
+  a structural fix ad-hoc) → that draft IS the record. One shortcut, one file; never two.
 - **Step 4 — Verify.** Same failure-loop rule as `feature` step 6: fails again after a
   fix attempt → stop, report the failure and diagnosis, don't weaken/skip the check or
   keep guessing; ask before a third attempt.
@@ -36,4 +41,4 @@ threshold), stop the ad-hoc hunt and capture it as a `feature` draft instead —
 the user, told it's structural, explicitly chose to keep it an ad-hoc fix; then continue
 but stay surgical.
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / LOCAL RESOURCE RUNS.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / LOCAL RESOURCE RUNS / TECHNICAL DEBT.

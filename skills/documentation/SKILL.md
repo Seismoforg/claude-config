@@ -1,6 +1,6 @@
 ---
 name: documentation
-description: Use when architecture, modules, responsibilities, public APIs, AGENTS.md files, ADRs, or technical-debt documentation must be created or updated. Enforces the project documentation workflow.
+description: Use when architecture, modules, responsibilities, public APIs, AGENTS.md files, or ADRs must be created or updated. Enforces the project documentation workflow.
 ---
 
 # DOCUMENTATION SYSTEM
@@ -8,11 +8,11 @@ description: Use when architecture, modules, responsibilities, public APIs, AGEN
 Keeps architecture, module, API, decision docs correct and in sync. Satisfies the
 `feature` workflow's "documentation updated if required" step.
 
-**Language + style: all docs follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`) — covers AGENTS.md, CLAUDE.md, ADRs, technical-debt, READMEs, code comments/docstrings. (READMEs may stay a touch more prose-y for human onboarding.)
+**Language + style: all docs follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`) — covers AGENTS.md, CLAUDE.md, ADRs, READMEs, code comments/docstrings. (READMEs may stay a touch more prose-y for human onboarding.)
 
 # ON ACTIVATION — DECISION GATE
 1. Matches a **required** trigger (below)? No → say "no docs required" and stop. Don't document trivial changes.
-2. Yes → which artifacts: AGENTS.md (which folders?), ADR, technical-debt, or several.
+2. Yes → which artifacts: AGENTS.md (which folders?), ADR, or several.
 3. Update, then run the Completion Checklist.
 
 Bias: under-document the trivial, never under-document architecture.
@@ -21,7 +21,7 @@ Bias: under-document the trivial, never under-document architecture.
 Required when: architecture changes · responsibilities change · a public API changes (signature/contract/behavior) · a new module · a new feature · a module/API is **removed** · setup/run/usage steps change (→ README).
 NOT required for: small bug fixes · internal refactors with no contract change · styling-only · small localized edits.
 
-Removal is a doc change too: a deleted module/API → remove or update its docs (AGENTS.md sections, links, README, tech-debt) in the SAME change. Never leave docs describing code that no longer exists.
+Removal is a doc change too: a deleted module/API → remove or update its docs (AGENTS.md sections, links, README) in the SAME change. Never leave docs describing code that no longer exists.
 
 # CODE COMMENTS & DOCSTRINGS
 In-code docs are documentation too (invoked from `coding-standards`).
@@ -32,7 +32,7 @@ In-code docs are documentation too (invoked from `coding-standards`).
 # AGENTS.md
 
 ## Editing an existing doc
-Before an in-place edit (AGENTS.md/ADR/debt), confirm exact current text on disk by reading/grepping the target lines — a snapshot/recalled copy drifts in whitespace/wording, and an inexact match fails the edit.
+Before an in-place edit (AGENTS.md/ADR), confirm exact current text on disk by reading/grepping the target lines — a snapshot/recalled copy drifts in whitespace/wording, and an inexact match fails the edit.
 
 Documenting a control byte or an escape sequence → the write may insert the CHARACTER instead of the text describing it. Re-read the saved bytes; a doc about a NUL can contain one.
 
@@ -79,17 +79,13 @@ date: YYYY-MM-DD
 # Consequences
 ```
 Write an ADR for any major/hard-to-reverse architectural decision. Application repos: framework, data store, auth model, API style, build pipeline. Those are EXAMPLES, not the test — other repo shapes have their own hard-to-reverse decisions. The test is "hard to reverse AND shapes everything after it", never whether it matches an example. Supersede — never silently edit — an accepted ADR: add a new one, set the old to `superseded`. Only PART of an accepted ADR went stale (one bullet, a renamed symbol) while its decision still holds → don't supersede the whole record. Append `**Amended by NNNN:**` at that point, naming what changed and what still stands. Superseding a live decision loses it; leaving the stale line documents code that no longer exists.
-Dates (ADR `date:` and tech-debt `added`) are ALWAYS today's date from context — never guessed or fabricated.
+Dates (ADR `date:`) are ALWAYS today's date from context — never guessed or fabricated.
 
 # TECHNICAL DEBT
-Track in `/docs/technical-debt.md`:
-```md
-## <short title>  (added YYYY-MM-DD)
-- Problem:
-- Impact:
-- Proposed Resolution:
-```
-Add an entry whenever a change knowingly leaves a shortcut/workaround/deferred fix.
+Not a doc artifact — this skill does not own it. Debt you knowingly leave becomes its own FEATURE
+DRAFT; TECHNICAL DEBT in `skills/_shared/blocks.md` owns the rule.
+`/docs/technical-debt.md` is retired. Never re-create it, and never file a shortcut into any doc
+instead: a doc entry is a record nothing revisits, which is exactly why it was replaced.
 
 # MECHANICAL CHECK
 Sibling + linking rules are deterministic. Run the script; never eyeball them:
@@ -100,6 +96,10 @@ Exit 1 = violations as `file  rule  detail` (missing/bad CLAUDE.md sibling, one-
 link). Fix, re-run to exit 0. Structure only — coverage, prose style and "is this the right doc"
 stay judgment calls below. Exit 0 on a repo with NO AGENTS.md says "nothing checked", not "clean" —
 an empty set is not a pass, and whether a module needs one is your call, not the script's.
+**Same for an empty EDGE set: read the counts it prints, not just the exit code.** Link checking sees
+markdown links only, so a repo writing bare paths under `# Related Modules` yields zero edges and a
+green run that verified nothing about the link graph. Zero links checked = the link half is UNCHECKED;
+say so, and verify the parent/child ends by hand.
 
 # COMPLETION CHECKLIST
 - [ ] Required docs updated (or explicit "no docs required")
@@ -107,7 +107,7 @@ an empty set is not a pass, and whether a module needs one is your call, not the
 - [ ] `check-docs.mjs` exits 0 (covers sibling + bidirectional/unbroken links)
 - [ ] ADR added for any major decision; superseded ones marked
 - [ ] Architecture docs internally consistent — a doc that states the same fact twice drifts in one copy. Re-read COUNTS and ORDINALS ("three things", "starts at the third") against the code: nothing greps for them, and the change that invalidates one shares no string with it
-- [ ] New/known shortcuts recorded in technical-debt.md
+- [ ] Shortcuts knowingly left are filed as feature DRAFTs, never written into a doc (TECHNICAL DEBT in `skills/_shared/blocks.md`)
 - [ ] Prose is terse + plain (`simple-language` style) — no filler/hedging/wind-down; lists over paragraphs (READMEs excepted, see above); a term the doc's reader may not know is glossed in a clause (a model-facing doc needs none)
 
 # HARD RULES
@@ -117,4 +117,4 @@ Non-obvious, high-severity only — the sections above are not repeated here.
 - **ALWAYS invoke the `simple-language` skill** when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose prose is a defect to condense.
 - This skill's checklist gates the `feature` workflow's documentation validation.
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN (never document a guess) / AFTER THE TASK / LANGUAGE.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN (never document a guess) / AFTER THE TASK / LANGUAGE / TECHNICAL DEBT.

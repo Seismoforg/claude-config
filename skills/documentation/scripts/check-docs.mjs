@@ -129,7 +129,15 @@ if (!violations.length) {
   if (agents.length === 0) {
     console.log(`check-docs: no AGENTS.md found under ${where} — nothing checked. Coverage is a judgment call, not a script's.`);
   } else {
-    console.log(`check-docs: clean — ${agents.length} AGENTS.md file(s) under ${where}`);
+    // Report the EDGE count, not just the file count. `links()` reads markdown-link syntax only, so a
+    // repo whose Related Modules are bare paths yields zero edges and the bidirectional + broken-link
+    // checks validate nothing — while still printing "clean". Observed: every file in a repo listed,
+    // zero edges checked, green run. A count the reader can see makes that impossible to miss.
+    const edgeCount = [...edges.values()].reduce((n, s) => n + s.size, 0);
+    const linkNote = edgeCount === 0
+      ? " — 0 links checked: no `# Related Modules` entry is a markdown link, so NOTHING about the link graph was verified"
+      : `, ${edgeCount} link(s) checked`;
+    console.log(`check-docs: clean — ${agents.length} AGENTS.md file(s) under ${where}${linkNote}`);
   }
   process.exit(0);
 }

@@ -32,8 +32,9 @@ ask the user. Never invent scope; never pick silently between interpretations.
 2. Change mirrors an existing one (sibling module, same layer) → read that precedent FIRST and mirror it.
 3. Apply your preloaded `coding-standards` when you shape the Technical Plan — layering, file placement,
    minimal-diff, file-size seams. The plan must fit how this repo already builds. `documentation` is
-   preloaded too: the change touches architecture, modules, public APIs, AGENTS.md, ADRs or tech debt →
-   the plan carries a doc task for it. A plan that leaves docs stale is incomplete.
+   preloaded too: the change touches architecture, modules, public APIs, AGENTS.md or ADRs →
+   the plan carries a doc task for it. A plan that leaves docs stale is incomplete. Technical debt is
+   NOT a doc task — it is a feature of its own, and filing it is the main loop's job, never yours.
 4. RULE SOURCES — the Teamleiter names the ABSOLUTE paths of surface skills that apply to the brief
    (`web-standards`, `taste`, `security-review`). Named → read them and let them shape the Technical Plan
    and Tasks. Applies but not named, or given a RELATIVE path → plan without it AND note it in OPEN, so
