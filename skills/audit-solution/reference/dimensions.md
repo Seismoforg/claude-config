@@ -50,18 +50,69 @@ project keeps by its own convention is a convention, not a finding. Sibling + li
 dispatcher's script (`check-docs.mjs`), not yours; judge coverage and correctness.
 Rule source: `documentation/SKILL.md`.
 
-## Redundancy & contradiction
-Two failures of the same root: one rule living in more than one place.
+## Redundancy, contradiction & paradox
+Three failures of one root: a rule that does not hold in one consistent place.
 - **Redundancy** — the same rule/logic stated twice or more. Name EVERY copy, say which one should own
   it, and which become pointers. Duplication the text itself declares AND justifies is not a finding —
   look for a stated reason first, then only check the copies still match.
+  **Fix side — unify or extract, and they are different fixes.** UNIFY when one site is the natural
+  owner: it keeps the rule, every other copy becomes a pointer to it. EXTRACT when no site owns it —
+  it moves to a shared home (this repo's is `_shared/blocks.md`) and all sites point there. Extraction
+  moves a module boundary, so `coding-standards` REFACTOR RULES makes it SIGNIFICANT: it needs explicit
+  approval at `audit-solution` STEP 4, and "Fix everything" alone does not authorize it.
 - **Contradiction** — two statements that cannot both hold for the same reader in the same situation.
   Cite `file:line` for BOTH sides; never pick a winner without saying why.
-Method: a contradiction worded differently shares no search string with its counterpart, so grep cannot
-find it. Read invariant sections (HARD RULES, "always/never", ownership claims) end to end and hold them
-against each other.
+- **Paradox** — the self-referential case, and NOT the same as a contradiction: one rule that defeats
+  itself. A requires B while B forbids A · a step ordered before its own precondition · a rule whose
+  satisfaction violates it · a gate that can never be passed. There is no second statement to hold it
+  against; the defect is the cycle.
+Method, per kind — a contradiction worded differently shares no search string with its counterpart, so
+grep cannot find it: read invariant sections (HARD RULES, "always/never", ownership claims) end to end
+and hold them against each other. A paradox is not found that way at all. TRACE it: start at one rule,
+follow each thing it requires to the rule that governs THAT, and record the hops. Evidence is the traced
+cycle with a `file:line` at every hop, and the hop that closes it back on the start. Without the trace
+written out it is an assertion, not a finding.
 Rule source: the repo's own anti-duplication mechanism (a shared/common rule file), if one exists. None
 exists while duplication is widespread → that absence IS the finding.
+
+## Effectiveness
+Does a rule ACHIEVE anything? Every other dimension checks conformance against a stated rule; this one
+checks the rule itself, so it is the most speculation-prone entry in this catalog and carries the
+hardest bar.
+
+**A finding REQUIRES a count.** State the rule's own trigger condition, then N of M: how many candidates
+it matches out of how many exist. N at or near zero is the finding. "This seems weak", "this could be
+stronger", "nobody follows this" without a number → NOT a finding, drop it.
+
+Shapes that qualify: a check whose scope excludes all of its own targets · an escape hatch broad enough
+to admit every case · a gate whose approval an earlier step already implies · a rule restated in several
+places and followed in none.
+
+Two guards, because the bar is only as good as the number behind it:
+- **The count must be UNBOUNDED.** Your search tool caps results by default, and a capped result reads
+  exactly like a real denominator — "250 of 250, so it is effective" for a rule matching 250 of 40,000.
+  Use a counting mode, and SAY where the denominator came from. A count you cannot source is not one.
+- **A rule whose own text declares it FORWARD-LOOKING is not a finding.** A scope deliberately written
+  to bind files that do not exist yet matches nothing on the day it ships and is working as designed.
+  Same shape as the "duplication the text itself declares AND justifies" carve-out above, and the
+  intentional-convention guard at the top of this file. Check for a stated reason before counting.
+Rule source: the repo's own stated intent — what the rule SAYS it does, held against what it matches.
+There is no external rule file for this dimension; do not invent one.
+
+## Gaps
+What is MISSING. Bounded by the repo's OWN text, or it becomes a wishlist.
+
+**A gap is a finding ONLY where something in the repo implies the missing thing should exist**, and the
+finding cites the `file:line` that implies it. No citation, no finding. Qualifying shapes: a pointer to
+a section/file that does not exist · an enumerated list with a member never defined · a required-section
+list where one section has no producer · a named mechanism with no home · a documented step whose tool
+or script is absent.
+
+NOT findings: a missing test suite, CI config, CONTRIBUTING.md, or any other thing that would be nice to
+have but that nothing in the repo asks for. Each is defensible, each reads as thoroughness, and adding
+them one at a time is exactly how this dimension turns into noise that buries the real must-fixes.
+Rule source: the repo's own stated intent — its pointers, lists and required-section declarations.
+No external rule file; do not invent one.
 
 ## Consistency
 Is a chosen pattern applied uniformly (imports, config, error handling, i18n, styling, naming,
