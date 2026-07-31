@@ -70,3 +70,5 @@ personality — a caller that mandates wit, energy or a persona keeps them.
 
 Called as sub-routine by another skill (condense/write text)? → return to caller. No self-improve.
 Simple-language is a default output mode, not a workflow — no self-improve trigger of its own.
+
+See `skills/_shared/blocks.md` for LANGUAGE / ENGLISH + SIMPLE ARTIFACTS.

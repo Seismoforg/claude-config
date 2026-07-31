@@ -133,7 +133,13 @@ for (const entry of readdirSync(featuresDir)) {
       const id = file.slice(0, 13); // YYYYMMDD-HHMM — shape already guaranteed by FILENAME_RE
       byId.set(id, [...(byId.get(id) ?? []), rel(path)]);
     }
-    const body = readFileSync(path, 'utf8');
+    // readFileSync throws the same ENOENT as the statSync above on a dangling junction. Same answer:
+    // report the entry and keep walking, or one bad spec stops every later one being checked.
+    let body;
+    try { body = readFileSync(path, 'utf8'); } catch (e) {
+      violations.push(`${rel(path)}  unreadable-path  ${e.code ?? e.message} — dangling symlink/junction or unreadable entry`);
+      continue;
+    }
     // A spec that reached a terminal-ish state must SAY what it did about debt: the filed DRAFT ids, or
     // that none was taken. The skill records that an absent `# Debt Found` "far more often means you
     // forgot than that you were clean" — so absence is exactly what cannot be trusted, and it was the

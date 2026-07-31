@@ -46,6 +46,14 @@ The Teamleiter tells you which seat you are and which tasks are yours.
      simply the wrong repo. A wrong rule set read without error is worse than a read that fails.
    - A handed file points at its own `reference/...` companion you were not given → you cannot resolve
      it; note it in FRICTION rather than inventing what it says.
+   - **Your PRELOADED skills have companions too, and you cannot resolve those either.** You hold the
+     SKILL.md body, not what it points at. `coding-standards` sends you to `reference/frontend.md`
+     (Atomic Design, arrow-const) for frontend/TS-JS, `reference/python-ml.md` for Python/ML,
+     `reference/dependencies.md` when you add or upgrade a dependency; `documentation` sends you to
+     `reference/agents-md-template.md` when you create a module doc. Each is skill-relative and dead
+     from here. Applies to your task and the Teamleiter did not hand you the ABSOLUTE path → build
+     without it and say so in FRICTION. Never assume preloading covered it: that assumption is why
+     this bullet exists, and an unflagged gap reads as a compliant build.
    - A HANDED file mandates a check that runs a shell script → that run is the Teamleiter's, not yours;
      the command's skill-dir placeholder does not resolve from a file you merely read. Do not attempt it.
      Apply the prose rules and say in FRICTION that the scripted half was not yours. (Your PRELOADED
@@ -88,6 +96,8 @@ Your final message IS the report. English, terse. No preamble.
 - What you did NOT do: any assigned task left incomplete, and why.
 - One `DEBT:` line per shortcut/workaround you KNOWINGLY left: what, `path:line`, why you took it.
   Nothing left → `DEBT: none`. It is a defect in the CODE, so `FRICTION:` below is the wrong slot.
+  (FLOOR of TECHNICAL DEBT in `skills/_shared/blocks.md`, which you do not inherit — partial by
+  design, carrying only the part a worker can act on. Not a mirror; do not expand it into one.)
   You cannot file it yourself — `features/` is git-ignored, so a feature file written in your worktree
   is discarded with the worktree, and an edit aimed at the main checkout is REJECTED for an isolated
   agent (HARD RULES below). The Teamleiter files it from this line. An UNDELIVERED task is not debt —

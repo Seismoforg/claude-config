@@ -85,13 +85,24 @@ if (!existsSync(agentsDir)) {
   process.exit(2);
 }
 
-const files = readdirSync(agentsDir).filter((f) => f.endsWith('.md'));
+// AGENTS.md/CLAUDE.md are the folder's own docs, not agent definitions. Without this they parse as
+// agents and report no-frontmatter/name-mismatch — a doc file failing the roster check.
+const DOC_FILES = new Set(['AGENTS.md', 'CLAUDE.md']);
+const files = readdirSync(agentsDir).filter((f) => f.endsWith('.md') && !DOC_FILES.has(f));
 const violations = [];
 
 // An agent nothing names is dead on arrival — a description alone does not route work to it.
-// Text of every .md that could dispatch one. agents/ is the definition itself; README.md only
-// documents the roster; features/ records past work — none of the three wires anything, so none
-// counts as being wired.
+// Corpus = the SKILLS, and nothing else. An ALLOWLIST on purpose, not a list of exclusions: skills
+// are the only thing that dispatches, which is what the violation message below already demands
+// ("name it in the skill that owns its job, in the step that fans out"). Everything else merely
+// MENTIONS an agent — agents/ is the definition itself, README documents the roster, features/
+// records past work, docs/ records decisions, github_build/ is this config TRANSLATED for Copilot
+// and so mirrors agents/ rather than wiring it.
+// MEASURED, twice, which is why this is no longer a denylist: github_build/UNMAPPED.md sits ABOVE
+// the dot-prefixed .github/ the walker skips and lists every agent by source path (`agents/dev.md`),
+// matching the boundary regex below — all 6 agents wired themselves and the rule could never fire.
+// Excluding that one directory then let the very next file added, docs/adr/0001-tester-...md, do the
+// same for `tester`. A denylist is one new top-level directory away from a false clean, every time.
 // statSync, never Dirent.isDirectory(): a Windows junction reports false as a Dirent, so a
 // junctioned skills/ would vanish and every agent would read as orphaned. This repo is reached
 // via exactly such a junction. Same SKIP_DIRS + statSync shape as check-docs.mjs.
@@ -104,6 +115,14 @@ const statOr = (p) => {
     return null;
   }
 };
+// readFileSync throws the same ENOENT on a dangling junction, and the agent files below are the
+// PRIMARY targets — one bad entry there killed the run before every later agent was checked.
+const readOr = (p) => {
+  try { return readFileSync(p, 'utf8'); } catch (e) {
+    violations.push(`${rel(p)}  unreadable-path  ${e.code ?? e.message} — dangling symlink/junction or unreadable entry`);
+    return null;
+  }
+};
 const walk = (dir) => readdirSync(dir).flatMap((e) => {
   if (SKIP_DIRS.has(e) || e.startsWith('.')) return [];
   const p = join(dir, e);
@@ -112,18 +131,17 @@ const walk = (dir) => readdirSync(dir).flatMap((e) => {
   return st.isDirectory() ? walk(p) : (e.endsWith('.md') ? [p] : []);
 });
 const dispatchText = walk(root)
-  .filter((p) => {
-    const r = rel(p);
-    return !r.startsWith('agents/') && !r.startsWith('features/') && r !== 'README.md';
-  })
-  .map((p) => readFileSync(p, 'utf8'))
+  .filter((p) => rel(p).startsWith('skills/'))
+  .map((p) => readOr(p) ?? '')
   .join('\n');
 
 for (const file of files) {
   const path = join(agentsDir, file);
   // Strip a leading BOM once, here: an editor-added U+FEFF sits in front of the opening --- and
   // makes every ^--- match below miss, so the file reads as having no frontmatter at all.
-  const src = readFileSync(path, 'utf8').replace(/^\uFEFF/, '');
+  const raw = readOr(path);
+  if (raw === null) continue;
+  const src = raw.replace(/^\uFEFF/, '');
   const fm = frontmatter(src);
 
   if (!fm) { violations.push(`${rel(path)}  no-frontmatter  agent definition needs a --- block`); continue; }
@@ -154,7 +172,7 @@ for (const file of files) {
   // SyntaxError instead of printing a violation.
   // Proves the name APPEARS in a skill, never that the dispatch works.
   if (name && /^[a-z0-9-]+$/.test(name) && !new RegExp(`(?<![\\w-])${name}(?![\\w-])`).test(dispatchText)) {
-    violations.push(`${rel(path)}  orphaned  no skill names "${name}" — nothing dispatches it; name it in the skill that owns its job, in the step that fans out (README/features do not count as wiring)`);
+    violations.push(`${rel(path)}  orphaned  no skill names "${name}" — nothing dispatches it; name it in the skill that owns its job, in the step that fans out. Only skills/ counts as wiring — README, docs/, features/ and the generated build merely mention it`);
   }
 
   // Class gates the write rules below. Absent = analysis, so untagged agents stay read-only.
@@ -176,14 +194,14 @@ for (const file of files) {
         violations.push(`${rel(path)}  unknown-tool  "${t}" not in this checker's known-tool list — verify against the harness; a name it does not accept prevents launch`);
       }
     }
-    // No agent nests — a subagent cannot dispatch another subagent (README). Both classes.
+    // No agent nests — a subagent cannot dispatch another subagent (agents/AGENTS.md). Both classes.
     if (tools.includes('Agent')) {
       violations.push(`${rel(path)}  no-nesting  holds Agent; a subagent cannot dispatch another — dispatch stays in the main loop`);
     }
     // Write tools: analysis agents are read-only; executors write by design, so skip them.
     if (!isExecutor) {
       for (const w of WRITE_TOOLS) {
-        if (tools.includes(w)) violations.push(`${rel(path)}  not-read-only  holds ${w}; analysis agents are read-only. An agent that must write declares class: executor (see README)`);
+        if (tools.includes(w)) violations.push(`${rel(path)}  not-read-only  holds ${w}; analysis agents are read-only. An agent that must write declares class: executor (see agents/AGENTS.md)`);
       }
     }
     // A shell is allowed but not free. Analysis: the body must spell out the read-only limit

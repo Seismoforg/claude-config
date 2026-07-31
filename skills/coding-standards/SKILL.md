@@ -36,6 +36,12 @@ Building or editing frontend/TS-JS code → also read `reference/frontend.md` (A
 ## Python / ML specifics
 Python / ML work (training scripts, notebooks, model configs) → also read `reference/python-ml.md`. Not applicable to frontend/TS-JS work.
 
+**Dispatching a WORKER these govern → hand it the ABSOLUTE path.** Both pointers above, and
+`reference/dependencies.md` below, are skill-relative: they resolve for the main loop, which is told
+this skill's base directory, and are dead for a subagent, which is not — including every subagent
+that preloads this skill, which is all of them. `crew` DISPATCH RULES owns the hand-off. Stated here,
+where the addenda are introduced, so the reader who must act on it meets it at the pointer itself.
+
 # BACKEND ARCHITECTURE
 Layer: Controllers → Services → Repositories → Domain Models. No business logic in controllers or UI — it belongs in services/domain models.
 API conventions (if building anything consumed externally): consistent error response shape · pick one versioning strategy (URL vs. header) and one pagination pattern (cursor vs. offset), stay consistent · idempotent mutating endpoints.

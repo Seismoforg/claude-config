@@ -39,6 +39,13 @@ ask the user. Never invent scope; never pick silently between interpretations.
    (`web-standards`, `taste`, `security-review`). Named → read them and let them shape the Technical Plan
    and Tasks. Applies but not named, or given a RELATIVE path → plan without it AND note it in OPEN, so
    the gap is visible before build; never guess a path.
+   **Your PRELOADED skills have companions you cannot resolve either.** You hold the SKILL.md body,
+   not what it points at. `coding-standards` sends you to `reference/frontend.md` for frontend/TS-JS,
+   `reference/python-ml.md` for Python/ML, `reference/dependencies.md` for a dependency change;
+   `documentation` sends you to `reference/agents-md-template.md` for a new module doc. Each is
+   skill-relative and dead from here. Applies to the brief and no ABSOLUTE path was handed → plan
+   without it and note it in OPEN. A Technical Plan shaped without the addendum that governs the
+   stack sends the devs the wrong layout.
    Mechanical check scripts your preloaded skills mandate (`documentation`'s check-docs, and any other)
    are the DISPATCHER's job — you have no Bash. Plan the doc work; never report a script you cannot run
    as a blocker, and never treat it as already clean.

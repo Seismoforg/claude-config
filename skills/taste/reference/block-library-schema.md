@@ -56,7 +56,7 @@ stack: ["react", "next", "tailwind", "motion"]
 8. **References** - links to real examples in production.
 
 ## Block-Library Discipline
-* One block per file. No multi-block files.
-* Every block must work standalone (drop it into a page, it renders).
-* Every block must pass the Pre-Flight Check (SKILL.md Section 14).
-* Blocks that depend on a design system from Section 2.A live under `blocks/<category>/<name>--<system>.md` (e.g. `feature/bento-grid--material.md`).
+- One block per file. No multi-block files.
+- Every block must work standalone (drop it into a page, it renders).
+- Every block must pass the Pre-Flight Check (SKILL.md Section 14).
+- Blocks that depend on a design system from Section 2.A live under `blocks/<category>/<name>--<system>.md` (e.g. `feature/bento-grid--material.md`).

@@ -5,20 +5,20 @@ Greenfield never needs this file.
 
 ## 11.B Audit Before Touching
 Document the current state before proposing anything:
-* **brand tokens** — primary/accent colours, type stack, logo treatment, radii.
-* **IA** — page tree, primary nav, key conversion paths.
-* **content blocks** — what exists, what works, what's filler.
-* **patterns to preserve** — signature interactions, recognisable hero, copy voice.
-* **patterns to retire** — AI-slop tells, broken layouts, dead links, generic stock, perf traps.
-* **dial reading of the existing site** — its current VARIANCE/MOTION/DENSITY is your starting point, not the baseline.
-* **SEO baseline** — ranking pages, meta titles, structured data, OG cards. **SEO migration is the #1 redesign risk.**
+- **brand tokens** — primary/accent colours, type stack, logo treatment, radii.
+- **IA** — page tree, primary nav, key conversion paths.
+- **content blocks** — what exists, what works, what's filler.
+- **patterns to preserve** — signature interactions, recognisable hero, copy voice.
+- **patterns to retire** — AI-slop tells, broken layouts, dead links, generic stock, perf traps.
+- **dial reading of the existing site** — its current VARIANCE/MOTION/DENSITY is your starting point, not the baseline.
+- **SEO baseline** — ranking pages, meta titles, structured data, OG cards. **SEO migration is the #1 redesign risk.**
 
 ## 11.C Preservation Rules
-* **Don't change IA** unless asked — page slugs, anchor IDs, primary nav labels stay stable for SEO and muscle memory.
-* **Extract brand colours BEFORE applying §4.2.** Already-purple brand stays purple — that's the AI-PURPLE DEFAULT RULE's override.
-* **Preserve copy voice** unless a rewrite was asked for. Visual modernisation ≠ content rewrite.
-* **Honour existing a11y wins** — never regress focus states, alt text, keyboard nav, contrast.
-* **Respect analytics events** — don't rename buttons, form fields or section IDs that downstream tracking depends on.
+- **Don't change IA** unless asked — page slugs, anchor IDs, primary nav labels stay stable for SEO and muscle memory.
+- **Extract brand colours BEFORE applying §4.2.** Already-purple brand stays purple — that's the AI-PURPLE DEFAULT RULE's override.
+- **Preserve copy voice** unless a rewrite was asked for. Visual modernisation ≠ content rewrite.
+- **Honour existing a11y wins** — never regress focus states, alt text, keyboard nav, contrast.
+- **Respect analytics events** — don't rename buttons, form fields or section IDs that downstream tracking depends on.
 
 ## 11.D Modernisation Levers (priority order — stop when the brief is satisfied)
 1. **Typography refresh** — biggest visual lift per unit of risk.
@@ -33,8 +33,8 @@ IA + content + SEO sound → **targeted evolution** (levers 1-4): ~70% of the va
 
 ## 11.F What Never Changes Silently
 Never without explicit user approval:
-* URL structure / route slugs.
-* primary nav labels.
-* form field names or order (breaks analytics + autofill).
-* brand logo or wordmark.
-* existing legal / consent / cookie copy.
+- URL structure / route slugs.
+- primary nav labels.
+- form field names or order (breaks analytics + autofill).
+- brand logo or wordmark.
+- existing legal / consent / cookie copy.
