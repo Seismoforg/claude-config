@@ -92,7 +92,21 @@ for (const entry of readdirSync(featuresDir)) {
       const id = file.slice(0, 13); // YYYYMMDD-HHMM — shape already guaranteed by FILENAME_RE
       byId.set(id, [...(byId.get(id) ?? []), rel(path)]);
     }
-    const found = status(readFileSync(path, 'utf8'));
+    const body = readFileSync(path, 'utf8');
+    // A spec that reached a terminal-ish state must SAY what it did about debt: the filed DRAFT ids, or
+    // that none was taken. The skill records that an absent `# Debt Found` "far more often means you
+    // forgot than that you were clean" — so absence is exactly what cannot be trusted, and it was the
+    // one required element with no mechanical check while folder/status had one.
+    // Scoped to specs carrying BOTH gate sections — that pair is the current skill's signature, so its
+    // presence marks a spec the debt rule actually applied to. Without a scope every older spec fails,
+    // and a check nobody can drive to zero is a check everybody ignores. `# Open Questions` alone is NOT
+    // the marker: it was in use as an ad-hoc heading long before the gate that now owns the name.
+    if ((entry === 'ready-for-done' || entry === 'done')
+        && /^# Open Questions/im.test(body) && /^# Premortem/im.test(body)
+        && !/no debt taken|# Debt Found/i.test(body)) {
+      violations.push(`${rel(path)}  debt-not-recorded  # Validation must state the filed debt ids or "no debt taken" — silence is not proof`);
+    }
+    const found = status(body);
     if (found === null) {
       violations.push(`${rel(path)}  no-frontmatter  feature file needs a --- block; status is the source of truth`);
     } else if (!found) {

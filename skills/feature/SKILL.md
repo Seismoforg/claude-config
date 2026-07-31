@@ -44,7 +44,7 @@ Rules:
 - No skipped states. Linear, forward-only, EXCEPT rework: delivered work fails its OWN spec (bug found, requirement missed) — from ANY state INCLUDING DONE → move back to IN_PROGRESS, fix + re-validate, then advance again. (A change that CONTRADICTS the spec is a different case → HARD RULES.) Never change a feature's code while its file sits in ready-for-done/ or done/ without first moving it back — the folder must reflect that work resumed. Repeat reports of ONE symptom are where this slips: the first move back gets made, the second and third do not.
 - Exception — "Approve & implement" fast-path: user picks that combined option at the approval gate → file may advance NEEDS_APPROVAL → APPROVED → IN_PROGRESS in one move (record approval, land in in-progress/) with no rest in approved/. A collapse of adjacent transitions, not a skipped state. Several features approved at once and built one after another → only the one you START now takes the fast-path; the rest wait in approved/ and pass step 4 when their work actually begins. IN_PROGRESS with nobody building is a folder that lies.
 - Exception — audit remediation fast-path: an approved `audit-solution` scope may create the feature file DIRECTLY in in-progress/ (its Step-4 approval replaces this gate); the empty draft/pending/approved rests collapse. Same one-move collapse, not a skipped state.
-- A transition = update the `status` field first (edit in place), THEN move the file. After moving, re-read before the next in-place edit — the move invalidates the prior read, so an edit at the new path fails otherwise. Anchor that edit on the FRONTMATTER — include the neighbouring `created:` line. A spec that discusses the lifecycle quotes its own status literals in the body, so a bare `status: X` matches twice and the edit fails.
+- A transition = update the `status` field first (edit in place), THEN move the file. After moving, re-read before the next in-place edit — the move invalidates the prior read, so an edit at the new path fails otherwise. Anchor that edit on the FRONTMATTER — include the neighbouring `created:` line. A spec that discusses the lifecycle quotes its own status literals in the body, so a bare `status: X` matches twice and the edit fails. Use the file-editing tool, never a stream editor: a `$`-anchored `sed`/`perl` pattern matches nothing on a CRLF file, so the transition silently no-ops at exit 0 and only the MECHANICAL CHECK catches it.
 - Move via a path anchored to the features dir (absolute or repo-root-relative), never relative to the shell CWD (it may have drifted after build/test commands). Feature files are usually untracked (the features dir is commonly VCS-ignored) → plain `mv`, not `git mv`. Destination state-folder may not exist yet → create it before the move.
 
 # MECHANICAL CHECK
@@ -53,7 +53,8 @@ Folder↔status and filename shape are deterministic. Run the script; never eyeb
 node ${CLAUDE_SKILL_DIR}/scripts/check-features.mjs [root]
 ```
 Exit 1 = violations as `file  rule  detail` (folder-status-mismatch, bad-filename, unknown-folder,
-missing-status, no-frontmatter, duplicate-id). Consistency only — that a status was EARNED (work done, validation
+missing-status, no-frontmatter, duplicate-id, debt-not-recorded — the last only on a spec carrying BOTH
+gate sections, so older specs are exempt rather than permanently red). Consistency only — that a status was EARNED (work done, validation
 run) stays a judgment call, and a mismatch is never auto-fixed: ON ACTIVATION says STOP and report.
 
 # FEATURE FILE FORMAT
@@ -174,6 +175,7 @@ Feature DERIVES its output from real data (heuristic, scan, model) → run the r
 Invoke each skill via the Skill tool; don't just paraphrase.
 - Fanning an enumerated task/checklist out to parallel workers → explicitly assign every item, and re-verify full coverage against the list before dispatch AND after merge; unassigned items drop silently.
 Intermediate commits during implementation are fine — but NEVER on the default branch: branch first as `feature/<this feature file's slug>`, the timestamp dropped (`git-commit` STEP 1 owns resolving the default branch's name and STEP 4 owns the naming scheme; don't hand-roll either). The FINAL deliverable commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
+The branch rule binds EVERY commit this workflow makes, not just the ones during implementation: a commit carrying only feature FILES is still a commit. That case is the one that slips, because it reads as bookkeeping rather than work — and hand-rolling `git commit` for it skips `git-commit`'s default-branch gate outright.
 
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
