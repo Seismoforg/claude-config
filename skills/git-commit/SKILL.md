@@ -106,7 +106,8 @@ Multi-line messages → here-doc / multiple `-m`. Quote paths.
 
 # STEP 5 — REPORT
 State exactly what happened: each commit's short hash + subject, the branch you ENDED on (Step 4 may have switched — don't report Step 1's record), whether pushed (+ where), and the PR URL if one was opened. Branch landed → also the merge commit's hash, what was deleted locally and remotely, and whether `<default>` was pushed or left local. A deletion that failed is reported as failed, never omitted. Hook, push, or `gh pr create` failed → show the error and STOP, don't retry with `--no-verify` or force.
-Ended on a non-default branch that was PUSHED, and no PR was asked for → close with one line that a PR can be opened on request. An affordance, not an offer: it puts no irreversible action in a question, and it stops the PR path being invisible to someone who wanted it. Say it once; never repeat it in the same session.
+Ended on a non-default branch that was PUSHED, and no PR was asked for → close with one line that a PR can be REQUESTED. An affordance, not an offer: it puts no irreversible action in a question, and it stops the PR path being invisible to someone who wanted it. Say it once; never repeat it in the same session.
+Word it as "requested", never as "can be opened" — the `gh`/remote-host probe is PR-path-only and did NOT run on this untriggered run, so you do not know whether a PR is possible here. Promising one you cannot open is worse than staying quiet; the probe runs if the user takes it up, and STEP 3 withholds the option honestly at that point.
 
 # STEP 6 — PR DESCRIPTION *(PR path only)*
 Reached only when the PR trigger fired AND Q2's PR option was chosen. Untriggered runs skip this step entirely.
