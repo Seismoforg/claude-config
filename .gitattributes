@@ -1,0 +1,8 @@
+# The generated Copilot build is byte-compared by `node scripts/build-copilot.mjs . --check`.
+# This machine runs core.autocrlf=true, so without this rule git stores and restores CRLF while the
+# build script emits LF, and --check reports drift on every file of a fresh clone. Measured: 22
+# drifts on a clean checkout before this existed.
+github_build/** text eol=lf
+
+# The check scripts are compared the same way once copied into the build.
+scripts/*.mjs text eol=lf

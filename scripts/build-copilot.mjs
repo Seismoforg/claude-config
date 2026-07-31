@@ -145,7 +145,15 @@ const rewritePointers = (text, skill) => text
 const files = new Map();               // build-relative path -> contents
 const unmapped = [];                   // {file, key, note}
 const fail = [];                       // hard violations
-const put = (p, c) => files.set(p, c);
+
+// Every output file is normalised to LF. Sources on Windows carry CRLF while this script's own
+// templates emit LF, so without this the build mixes both and its bytes depend on the checkout that
+// produced them — which is the one thing a deterministic converter must not do.
+// MEASURED, not anticipated: with core.autocrlf=true and no .gitattributes, a fresh checkout of the
+// committed build produced 22 drifts against a re-derive. `--check` would have failed forever for
+// anyone who cloned the repo. The paired half of this fix is the `github_build/** text eol=lf` rule
+// in .gitattributes — normalising here alone is not enough, because git rewrites on checkout.
+const put = (p, c) => files.set(p, c.replace(/\r\n/g, '\n'));
 
 const skillsDir = join(root, 'skills');
 const agentsDir = join(root, 'agents');
