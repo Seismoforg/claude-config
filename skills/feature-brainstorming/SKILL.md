@@ -157,8 +157,10 @@ Read the OUTPUT, not just the exit code:
   matter which path the line prints: the script reports the pair under whichever file it walked
   first, and that is usually the older one.
 - **exit 1 naming the file you just wrote** → your own typo. Fix it, re-run.
-- **exit 1 naming any other file** → a pre-existing mismatch you did not cause. `feature` ON
-  ACTIVATION owns it: STOP and report, never auto-fix.
+- **exit 1 naming any other file** → pre-existing, and not yours to touch mid-interview. STOP and
+  report; `feature` ON ACTIVATION owns what happens next. Not because every violation is unfixable —
+  `tasks-not-current` is fixed in place — but because another feature's file is outside the DRAFT you
+  were asked to write.
 
 ## 7. Return — never gate
 Return to `feature` workflow **step 1.4, the implementation-questions gate**, and let the workflow run

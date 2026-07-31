@@ -62,7 +62,10 @@ Turn the approved remediation into a tracked feature — the audit report is the
 - The Step 4 selection (any option but "Report only") IS the approval to implement — create the feature file DIRECTLY in `/features/in-progress/` (status IN_PROGRESS), collapsing the empty draft/approved rests (feature fast-path); don't physically pass through each folder and don't re-ask a separate feature approval gate for the same scope. Remediation = that feature's implementation phase; its validation gate (READY_FOR_DONE → DONE) replaces this skill's ad-hoc "done" check.
 - Remediation too big for one feature (independent phases/areas) → split into sequential features: first straight to in-progress (fast-path above), rest to `/features/approved/` as a queue; implement in order, each through its own validation gate.
 - **A finding the user DECLINED at Step 4 still gets a file** — one DRAFT in `/features/draft/`, grouping the declined findings. `feature` ON ACTIVATION 0.7 covers it by name as a write-only RECORD: created in `draft/`, no questions gate, no premortem, no approval gate. Running it through the normal workflow would re-ask a decision the user just made. Declining a fix is not declining the record. It is NOT debt and never goes through TECHNICAL DEBT's route: that block hands every audit finding back to this skill, so this line is the home. Left in the Step 3 report only, it lives in chat, and chat is never feature state.
-- Keep the Tasks checklist current as findings are fixed.
+- Keep the Tasks checklist current as findings are fixed — `feature` step 5 owns the rule (tick on
+  landing; a removed or reworded task carries a reason). Its mechanical half does NOT reach here: a
+  feature created by the audit fast-path never runs step 1.5, so it carries no `# Premortem` and
+  `tasks-not-current` cannot fire on it. The prose rule is all that binds an audit remediation.
 
 # STEP 6 — REMEDIATE
 Apply only approved findings, per the composed skills:

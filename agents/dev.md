@@ -77,7 +77,9 @@ Your final message IS the report. English, terse. No preamble.
 - **Your base, always first:** `git branch --show-current` and `git rev-parse HEAD`. The Teamleiter
   needs both to know which branch to merge and whether your base was as fresh as it assumed — a stale
   base is silent otherwise, and turns a correct build into work against a version that moved on.
-- Per task: done / blocked, the files you touched (`path`), one line on the change.
+- Per task: done / blocked, the files you touched (`path`), one line on the change. **Quote the task's
+  text VERBATIM from the spec** — the Teamleiter ticks it off in `# Tasks` from this line and matches by
+  text; a paraphrase makes it guess which box you meant, and a guessed box is the wrong box.
 - How to verify: the exact command(s) you ran and their result (green/red).
 - What you did NOT do: any assigned task left incomplete, and why.
 - One `DEBT:` line per shortcut/workaround you KNOWINGLY left: what, `path:line`, why you took it.

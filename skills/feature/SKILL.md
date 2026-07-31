@@ -53,9 +53,18 @@ Folder↔status and filename shape are deterministic. Run the script; never eyeb
 node ${CLAUDE_SKILL_DIR}/scripts/check-features.mjs [root]
 ```
 Exit 1 = violations as `file  rule  detail` (folder-status-mismatch, bad-filename, unknown-folder,
-missing-status, no-frontmatter, duplicate-id, debt-not-recorded — the last only on a spec carrying BOTH
-gate sections, so older specs are exempt rather than permanently red). Consistency only — that a status was EARNED (work done, validation
-run) stays a judgment call, and a mismatch is never auto-fixed: ON ACTIVATION says STOP and report.
+missing-status, no-frontmatter, duplicate-id, unterminated-fence, debt-not-recorded — the last only on a
+spec carrying BOTH gate sections, so older specs are exempt rather than permanently red — and
+tasks-not-current, only on a spec carrying `# Premortem`). Consistency only — that a status was EARNED
+(work done, validation run) stays a judgment call.
+
+**What a violation means differs by violation, so read the detail string, not this list.**
+- `folder-status-mismatch` and `missing-status`/`no-frontmatter` are never auto-fixed: ON ACTIVATION
+  says STOP and report. Which of the two sides is right is exactly what the script cannot know.
+- `tasks-not-current` IS fixed in place — tick the box if the work landed, annotate it if it did not.
+  There is one correct fix and no ambiguity about which side is right.
+A blanket "never auto-fix" over both would forbid the only sensible response to the commonest and
+least dangerous violation.
 
 # FEATURE FILE FORMAT
 Frontmatter (source of truth for status):
@@ -73,7 +82,8 @@ Body (all required):
 # Problem
 # Solution
 # Technical Plan
-# Tasks            (checklist: - [ ] ...)
+# Tasks            (checklist: - [ ] ...; an unchecked box in ready-for-done/ or done/ must carry
+                  #  BLOCKED, NOT DONE, or a feature id, on its line or a continuation of it)
 # Impact Analysis  (affected/new/deleted files; breaking changes; overlap with other in-flight features editing the same files)
 # Validation       (filled at the READY_FOR_DONE gate)
 ```
@@ -163,7 +173,16 @@ Only on explicit approval: move to `/features/approved/`.
 Before ANY code change: verify file exists AND status = APPROVED. Then move to `/features/in-progress/`. Implementation begins only after this.
 
 ## 5. Implement
-Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks current.
+Build only the spec's tasks. Scope changes → update the spec first.
+**`# Tasks` is a live work-list, not a plan you wrote once.** Tick a box the MOMENT its task lands, not
+in one reconciling pass at step 6. Nothing can verify this — `features/` is git-ignored, so no artifact
+distinguishes ticking-as-you-go from a single sweep at the end, and step 6's check only ever sees the
+final state. It is a rule you keep because the list is worthless to anyone reading it mid-build
+otherwise.
+The LIST itself changes too: a task added mid-build is added silently, but a task REMOVED or REWORDED
+carries a one-line reason. That is where scope shrinks unseen — and a task "removed" after being
+delivered by a knowingly weaker means is DEBT, not a removal, while one never delivered stays an
+unfinished task. The reason line forces that call to be made out loud.
 Knowingly leaving a shortcut → that is DEBT, and debt becomes its own feature. Note it under this file's `# Debt Found` section the MOMENT you take it, then step 6 files it. TECHNICAL DEBT in `skills/_shared/blocks.md` owns the rule — including the three things that look like debt and are not: an UNDELIVERED task (the test is completeness, not scope — a task you DID deliver by a knowingly weaker means is debt, and it is in scope by definition), debt you did not create, and an `audit-solution` finding.
 A fact found while building that INVALIDATES the premise of a decision the user already made at a gate → re-open it via AskUserQuestion, stating the new fact. Keeping it silently ships a choice made on a false premise; overriding it silently takes the user's call away.
 Feature DERIVES its output from real data (heuristic, scan, model) → run the real pipeline on real input as soon as ONE slice works, before building the rest. Tests written first encode your assumption about the data and all go green while the derivation is wrong; Step 6's sample read then costs a rebuild, not a fix. That real run is subject to LOCAL RESOURCE RUNS in `skills/_shared/blocks.md` — a model or GPU pipeline asks the user before it starts.
@@ -179,7 +198,10 @@ The branch rule binds EVERY commit this workflow makes, not just the ones during
 
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
-- all tasks complete, no unfinished work
+- all tasks complete, no unfinished work. A box left unchecked must say WHY on its own line or a
+  continuation of it — `BLOCKED`, `NOT DONE`, or the id of the feature the work moved to. A bare
+  unchecked box in `ready-for-done/` or `done/` is the `tasks-not-current` violation (MECHANICAL
+  CHECK), and it is FIXED IN PLACE: tick it if the work landed, annotate it if it did not
 - every `# Debt Found` line filed as its own DRAFT in `/features/draft/` (write-only, per ON ACTIVATION 0.7; MINIMAL, per the block), its id written back onto the line. An ABSENT section is NOT proof: `# Validation` records either the filed ids or "no debt taken", said out loud. Debt is usually recognised HERE, reading the diff, not at the keystroke that created it — so an empty section far more often means you forgot than that you were clean
 - docs updated if required (via `documentation` when architecture/APIs/AGENTS.md/ADRs touched)
 - code conforms to `coding-standards`
