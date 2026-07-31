@@ -34,7 +34,7 @@ In-code docs are documentation too (invoked from `coding-standards`).
 ## Editing an existing doc
 Before an in-place edit of ANY prose or rule file, confirm exact current text on disk by reading/grepping the target lines — a snapshot/recalled copy drifts in whitespace/wording, and an inexact match fails the edit. A read from earlier in the SAME session is a snapshot once intervening edits have shifted the file.
 
-Documenting a control byte or an escape sequence → the write may insert the CHARACTER instead of the text describing it. Re-read the saved bytes; a doc about a NUL can contain one.
+Documenting a control byte or an escape sequence → the write may insert the CHARACTER instead of the text describing it. Re-read the saved bytes; a doc about a NUL can contain one. Re-typing the escape fails the SAME way — the corruption is in the channel, not the keystroke. Build the text from character codes, or write the bytes with a script, then confirm with a byte-visible read.
 
 ## When to create a local AGENTS.md
 Create one when ANY holds:
@@ -45,8 +45,13 @@ Create one when ANY holds:
 
 Do NOT create one just because a refactor made new files. Extracting a component/helper WITHIN an existing module is not a new module — update the parent's AGENTS.md instead.
 
+A folder whose own convention already mandates an equivalent per-folder doc (a framework's or harness's required file) needs no second one — the test is whether the module's contract is documented, not the filename. The folder HOLDING those files is a different question: it has no doc of itself, and usually needs one.
+
 ## Structure + worked example
 See `reference/agents-md-template.md`. Load it only when creating or restructuring an AGENTS.md file.
+That pointer is skill-relative, so it is dead for a SUBAGENT — this skill is preloaded by workers that
+have no base directory. Dispatching one whose task creates a module doc → hand it the ABSOLUTE path
+(`crew` DISPATCH RULES owns the hand-off).
 
 # CLAUDE.md SIBLING (HARD RULE)
 Every folder with an `AGENTS.md` MUST have a `CLAUDE.md` beside it whose entire content is one line:

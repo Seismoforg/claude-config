@@ -159,6 +159,22 @@ finding.
 Rule source: the repo's own pattern + the language/framework's documented behavior. Uncertain
 whether it IS a smell → drop it.
 
+## External premise — MAIN LOOP ONLY, never a scout
+A load-bearing claim about something OUTSIDE the repo: a third-party product's capabilities, an
+API's shape, a format's fields, a platform limit. Every OTHER dimension checks the repo against
+itself, so a file that is internally perfect and factually out of date passes all of them at once.
+Trigger, both halves: any statement of the form "X does not support Y" · "X has no Z" · "the only
+way is W"; AND any adapter, converter, shim or workaround whose stated REASON is such a claim. The
+second half is the one that pays — a workaround outlives the limitation that justified it, and
+nothing in the repo changes when the outside world does.
+Method: find the claim, note when it was written if the repo says, then CHECK it against current
+official docs. That needs `WebSearch`/`WebFetch`, which a scout does not hold — same reason VCS
+hygiene is the dispatcher's.
+Finding = the claim `file:line`, the current fact with its source, and what the repo BUILDS on the
+stale one (the cost is rarely the sentence; it is the design underneath). No web access → record it
+UNCHECKED. Never pass a premise as verified because it is self-consistent — that is exactly what it
+will look like.
+
 ## VCS hygiene — MAIN LOOP ONLY, never a scout
 Build artifacts / generated files tracked, ignore-file gaps, committed secrets, large binaries
 that don't belong. Every question here is a git-index question (`ls-files`, `check-ignore`, `log`)
