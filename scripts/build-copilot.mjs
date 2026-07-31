@@ -94,7 +94,11 @@ const AGENT_KEYS = {
 // shape used by this repo's skills and agents, verified by enumeration. Anything else is not
 // silently tolerated — the caller fails on keys it does not know.
 const parseFrontmatter = (src) => {
-  const m = src.replace(/^﻿/, '').match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
+  // Strip a leading BOM once, here: an editor-added U+FEFF sits in front of the opening --- and
+  // makes the ^--- match below miss, so the file reads as having no frontmatter at all. Written as
+  // the escape, never the raw codepoint — an invisible character in a regex is deleted by any tool
+  // that normalises zero-width chars on save, and the diff shows nothing.
+  const m = src.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/);
   if (!m) return null;
   const data = {};
   const lines = m[1].split(/\r?\n/);
@@ -194,7 +198,15 @@ for (const s of skillNames) {
 }
 
 // agents
-for (const f of readdirSync(agentsDir).filter((f) => f.endsWith('.md'))) {
+// .sort(): the unmapped[] rows below accumulate in THIS loop's order and are rendered unsorted into
+// UNMAPPED.md, so readdirSync's order becomes output bytes. Node guarantees none, so a different
+// filesystem re-derives the same build with reordered rows and --check reports drift that isn't
+// there. Same reason the hash and the size table sort. Sorting the OUTER loop only, on purpose:
+// within one file the rows follow the source frontmatter, which is already deterministic.
+// AGENTS.md/CLAUDE.md are the folder's own docs, not agent definitions — without the filter they
+// parse as agents and fail the build with no-frontmatter.
+const AGENT_DOC_FILES = new Set(['AGENTS.md', 'CLAUDE.md']);
+for (const f of readdirSync(agentsDir).filter((f) => f.endsWith('.md') && !AGENT_DOC_FILES.has(f)).sort()) {
   const src = readFileSync(join(agentsDir, f), 'utf8');
   const fm = parseFrontmatter(src);
   if (!fm) { fail.push(`agents/${f}  no-frontmatter  needs a --- block`); continue; }

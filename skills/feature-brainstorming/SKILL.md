@@ -8,8 +8,8 @@ description: Structured requirements interview run BEFORE a feature spec is writ
 Requirements interview. Turns an underspecified request into a complete DRAFT spec with the fewest
 keystrokes from the user.
 
-**Main loop only.** It lives on `AskUserQuestion`, and a subagent has no user channel (README,
-"Three harness constraints"). Never run this inside a worker.
+**Main loop only.** It lives on `AskUserQuestion`, and a subagent has no user channel
+(`agents/AGENTS.md`, "Three harness constraints"). Never run this inside a worker.
 
 Scope: it performs `feature` workflow step 1 — writes the DRAFT into `/features/draft/` — and
 returns. It runs NO state transition and NO gate. `feature` owns the state machine and every
@@ -187,7 +187,7 @@ nothing fires by itself.
   offer two options: "Fits" / "Different".
 - One decision per question. A question bundling two decisions gets one answer and loses the other.
 
-# NEVER
+# HARD RULES
 - No spec before the question pass is finished.
 - No free-text INTERVIEW question when it could be an option list. This never touches a GATE:
   `feature` HARD RULES and APPROVAL GATES in `skills/_shared/blocks.md` make `AskUserQuestion`

@@ -38,10 +38,33 @@ const LINE_RULES = [
   ['ai-tell', '§9.D', /\b(Jane Doe|John Doe|Acme|Quietly (?:in use at|trusted by)|Elevate|Seamless|Unleash|Next-Gen|Revolutionize)\b/gi, 'AI-tell string', true],
 ];
 
-// A line that is ONLY a comment: JS/TS line comments, block-comment openers/bodies/closers, and the
-// JSX braced-block-comment form. Written as line comments on purpose — a block comment cannot hold the
-// closing token this regex matches.
-const isCommentLine = (line) => /^\s*(\/\/|\/\*|\*\/|\*|\{\s*\/\*)/.test(line);
+// A line that is ONLY a comment: JS/TS line comments, and block-comment openers/bodies/closers.
+// Written as line comments on purpose — a block comment cannot hold the closing token below.
+// A leading `*` is a continuation ONLY INSIDE an open block, which is why this is a stateful scan
+// and not a per-line regex: `* Trusted by Acme` is a rendered bullet at the top level and a JSDoc
+// body line inside a block, and the two are identical as text. Treating every `*` line as a comment
+// exempted real user-visible prose from the `prose: true` rules — the exact case they exist to catch.
+const isLineComment = (line) => /^\s*(\/\/|\{\s*\/\*)/.test(line);
+// Per FILE, not per line: returns which lines are comment-only, tracking a block across lines.
+// A block counts as OPENING only when its delimiter starts the line. Mid-line is ignored on purpose
+// — there it is far more often a glob or a string (`**/*.tsx`) than a comment, and treating one as
+// an opener latches the scan and silently exempts every later line. MEASURED on this very file: an
+// earlier version compared against a spelled-out delimiter, matched its own source, and turned off
+// the prose rules for the whole rest of the file. A false clean is the worst output a checker has.
+const commentLines = (lines) => {
+  let open = false;
+  return lines.map((line) => {
+    if (open) {
+      if (/\*\//.test(line)) open = false;   // the closing line is still part of the comment
+      return true;
+    }
+    if (/^\s*\/\*/.test(line)) {
+      open = !/\*\//.test(line.replace(/^\s*\/\*/, ''));   // stays open unless it closes on this line
+      return true;
+    }
+    return isLineComment(line) || /^\s*\*\//.test(line);
+  });
+};
 
 // Page-wide counters (§4.7 eyebrow cap, §5 marquee cap) — aggregate, not per-line.
 const EYEBROW = /uppercase[^"'`\n]*tracking|tracking[^"'`\n]*uppercase/;
@@ -78,9 +101,10 @@ for (const file of files) {
   const src = readFileSync(file, 'utf8');
   const rel = relative(process.cwd(), file) || file;
   const lines = src.split(/\r?\n/);
+  const comments = commentLines(lines);
 
   lines.forEach((line, i) => {
-    const comment = isCommentLine(line);
+    const comment = comments[i];
     for (const [id, sec, re, msg, prose] of LINE_RULES) {
       if (prose && comment) continue; // a rule about what the user SEES cannot be violated in a comment
       for (const m of line.matchAll(re)) {

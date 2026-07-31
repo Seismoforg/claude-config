@@ -181,6 +181,15 @@ its workflow — the crew only assigns the work.
   `taste/reference/ai-tells.md` (the banned-pattern catalogue — taste without it is half a rule set).
   A handed file may also point into ANOTHER skill (`<skill>/reference/...`) — that is skills-root-relative
   and equally dead for a worker. Resolve and hand it too, or name it as not handed.
+  **A PRELOADED skill's satellites are dead the same way** — and this is the case that hides, because
+  preloading feels like the worker already has everything. It has the SKILL.md body and nothing it
+  points at. So `coding-standards` (preloaded by every worker) reaches a `dev` without its stack
+  addenda: hand `coding-standards/reference/frontend.md` for frontend/TS-JS work,
+  `coding-standards/reference/python-ml.md` for Python/ML,
+  `coding-standards/reference/dependencies.md` when a dependency is added or upgraded, and
+  `documentation/reference/agents-md-template.md` when the task creates a module doc. Every one
+  spelled from the skills root, never bare — a bare `reference/...` resolves inside THIS skill's
+  directory, and `crew/reference/` does not exist.
   Cannot or will not hand one → say so in the brief, so the worker flags the gap instead of assuming
   coverage.
 - **Merge a worker in; never copy paths out.** `git merge --no-ff <worker-branch>` (`git worktree list`

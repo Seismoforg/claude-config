@@ -54,7 +54,7 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 
 **Debt you knowingly leave becomes a FEATURE, never just a doc line.** Canonical text is TECHNICAL
 DEBT in `skills/_shared/blocks.md`; this is the floor for anyone who cannot load it — subagents
-inherit CLAUDE.md but not blocks.md (README, "Three harness constraints").
+inherit CLAUDE.md but not blocks.md (`agents/AGENTS.md`, "Three harness constraints").
 - Trigger: every knowing shortcut, workaround or deferred fix you leave behind. No size bar.
 - Running feature → note it under that file's `# Debt Found` section the moment you take it; `feature`
   step 6 files each note as its own DRAFT in `/features/draft/`. No running feature → write the DRAFT
@@ -72,7 +72,7 @@ inherit CLAUDE.md but not blocks.md (README, "Three harness constraints").
 
 **A run that spends this machine gets ASKED FIRST — never started on your own.** Canonical text is
 LOCAL RESOURCE RUNS in `skills/_shared/blocks.md`; this is the floor for anyone who cannot load it —
-subagents inherit CLAUDE.md but not blocks.md (README, "Three harness constraints"). Two triggers, either
+subagents inherit CLAUDE.md but not blocks.md (`agents/AGENTS.md`, "Three harness constraints"). Two triggers, either
 one is enough. **GPU or a local model:** local LLM inference, model load, training, fine-tune,
 embedding run — no duration exemption, a 5-second GPU run still asks. **Longer than ~30s:** test
 suite, build, install, migration (same threshold as the visible-window rule below).
