@@ -49,19 +49,19 @@ Do not default to: AI-purple gradients, centered hero over dark mesh, three equa
 
 After the design read, set three dials. Every layout, motion, and density decision below is gated by these. Baseline `8 / 6 / 4` unless the design read overrides. Overrides happen conversationally — never ask the user to edit this file. Use these exact variable names everywhere; never invent aliases (`LAYOUT_VARIANCE`, `ANIM_LEVEL`).
 
-* **`DESIGN_VARIANCE: 8`** - 1 = Perfect Symmetry, 10 = Artsy Chaos
-  * **1-3 Predictable:** symmetrical 12-col grid, equal fr-units, equal paddings, centered.
-  * **4-7 Offset:** `margin-top: -2rem` overlaps, varied aspect ratios (4:3 next to 16:9), left-aligned headers over centered data.
-  * **8-10 Asymmetric:** masonry, fractional grids (`2fr 1fr 1fr`), massive empty zones (`padding-left: 20vw`).
-  * **MOBILE OVERRIDE:** at 4-10, asymmetric layouts above `md:` MUST collapse to strict single-column (`w-full`, `px-4`, `py-8`) below 768px.
-* **`MOTION_INTENSITY: 6`** - 1 = Static, 10 = Cinematic / Physics
-  * **1-3 Static:** no automatic animation. `:hover`/`:active` only.
-  * **4-7 Fluid CSS:** `transition: transform .3s cubic-bezier(0.16,1,0.3,1), opacity .3s cubic-bezier(0.16,1,0.3,1)`. Never `transition: all` — it animates the layout props §6.A bans. `animation-delay` cascades for load-ins.
-  * **8-10 Advanced Choreography:** scroll-triggered reveals, parallax, scroll-driven animation (`animation-timeline` or GSAP ScrollTrigger), Motion hooks. `window.addEventListener('scroll')` is a HARD ban → §5.D.
-* **`VISUAL_DENSITY: 4`** - 1 = Art Gallery / Airy, 10 = Cockpit / Packed Data
-  * **1-3 Art Gallery:** huge section gaps (`py-32`-`py-48`).
-  * **4-7 Daily App:** standard spacing (`py-16`-`py-24`).
-  * **8-10 Cockpit:** tight padding, no card boxes, 1px lines separate data, `font-mono` for all numbers (mandatory).
+- **`DESIGN_VARIANCE: 8`** - 1 = Perfect Symmetry, 10 = Artsy Chaos
+  - **1-3 Predictable:** symmetrical 12-col grid, equal fr-units, equal paddings, centered.
+  - **4-7 Offset:** `margin-top: -2rem` overlaps, varied aspect ratios (4:3 next to 16:9), left-aligned headers over centered data.
+  - **8-10 Asymmetric:** masonry, fractional grids (`2fr 1fr 1fr`), massive empty zones (`padding-left: 20vw`).
+  - **MOBILE OVERRIDE:** at 4-10, asymmetric layouts above `md:` MUST collapse to strict single-column (`w-full`, `px-4`, `py-8`) below 768px.
+- **`MOTION_INTENSITY: 6`** - 1 = Static, 10 = Cinematic / Physics
+  - **1-3 Static:** no automatic animation. `:hover`/`:active` only.
+  - **4-7 Fluid CSS:** `transition: transform .3s cubic-bezier(0.16,1,0.3,1), opacity .3s cubic-bezier(0.16,1,0.3,1)`. Never `transition: all` — it animates the layout props §6.A bans. `animation-delay` cascades for load-ins.
+  - **8-10 Advanced Choreography:** scroll-triggered reveals, parallax, scroll-driven animation (`animation-timeline` or GSAP ScrollTrigger), Motion hooks. `window.addEventListener('scroll')` is a HARD ban → §5.D.
+- **`VISUAL_DENSITY: 4`** - 1 = Art Gallery / Airy, 10 = Cockpit / Packed Data
+  - **1-3 Art Gallery:** huge section gaps (`py-32`-`py-48`).
+  - **4-7 Daily App:** standard spacing (`py-16`-`py-24`).
+  - **8-10 Cockpit:** tight padding, no card boxes, 1px lines separate data, `font-mono` for all numbers (mandatory).
 
 ## 1.A Brief → Dials
 Design read (§0) picks the row. Presets are the same table read from the use-case side.
@@ -128,28 +128,28 @@ For these directions, there is **no single official package**. Build with native
 Unless the design read picks a real design system (Section 2.A), these are the defaults:
 
 ## 3.A Stack
-* **Framework:** React / Next.js, default Server Components (RSC). **RSC SAFETY:** global state works ONLY in Client Components — in Next.js wrap providers in a `"use client"` component. **INTERACTIVITY ISOLATION:** anything using Motion, scroll listeners or pointer physics MUST be an isolated `'use client'` leaf; Server Components render static layouts only.
-* **Styling:** **Tailwind v4** default (v3 only if the project demands it). v4: do NOT use the `tailwindcss` plugin in `postcss.config.js` — use `@tailwindcss/postcss` or the Vite plugin.
-* **Animation:** **Motion** (formerly Framer Motion) — import from `motion/react`. `framer-motion` still works as a legacy alias; prefer `motion/react` in new code.
-* **Fonts:** `next/font` (Next.js) or self-host `@font-face` + `font-display: swap`. Never `<link>` Google Fonts in production.
+- **Framework:** React / Next.js, default Server Components (RSC). **RSC SAFETY:** global state works ONLY in Client Components — in Next.js wrap providers in a `"use client"` component. **INTERACTIVITY ISOLATION:** anything using Motion, scroll listeners or pointer physics MUST be an isolated `'use client'` leaf; Server Components render static layouts only.
+- **Styling:** **Tailwind v4** default (v3 only if the project demands it). v4: do NOT use the `tailwindcss` plugin in `postcss.config.js` — use `@tailwindcss/postcss` or the Vite plugin.
+- **Animation:** **Motion** (formerly Framer Motion) — import from `motion/react`. `framer-motion` still works as a legacy alias; prefer `motion/react` in new code.
+- **Fonts:** `next/font` (Next.js) or self-host `@font-face` + `font-display: swap`. Never `<link>` Google Fonts in production.
 
 ## 3.B State
-* Local `useState`/`useReducer` for isolated UI. Global state ONLY to avoid deep prop-drilling — Zustand, Jotai, or context.
-* **NEVER `useState` for continuous user-driven values** (mouse position, scroll progress, pointer physics, magnetic hover) → Motion's `useMotionValue`/`useTransform`/`useScroll`. `useState` re-renders the tree every change and collapses on mobile.
+- Local `useState`/`useReducer` for isolated UI. Global state ONLY to avoid deep prop-drilling — Zustand, Jotai, or context.
+- **NEVER `useState` for continuous user-driven values** (mouse position, scroll progress, pointer physics, magnetic hover) → Motion's `useMotionValue`/`useTransform`/`useScroll`. `useState` re-renders the tree every change and collapses on mobile.
 
 ## 3.C Icons
-* **Allowed (priority order):** `@phosphor-icons/react` · `hugeicons-react` · `@radix-ui/react-icons` · `@tabler/icons-react`. **`lucide-react` discouraged** — only on explicit request or existing dependency (`preflight.mjs` greps it).
-* **NEVER hand-roll SVG icons** — missing glyph → install a second library or compose from primitives, never draw paths from scratch.
-* **One family per project.** Standardise `strokeWidth` globally (e.g. `1.5` or `2.0`).
+- **Allowed (priority order):** `@phosphor-icons/react` · `hugeicons-react` · `@radix-ui/react-icons` · `@tabler/icons-react`. **`lucide-react` discouraged** — only on explicit request or existing dependency (`preflight.mjs` greps it).
+- **NEVER hand-roll SVG icons** — missing glyph → install a second library or compose from primitives, never draw paths from scratch.
+- **One family per project.** Standardise `strokeWidth` globally (e.g. `1.5` or `2.0`).
 
 ## 3.D Emoji Policy
 Discouraged by default in code, markup, and visible text. Replace symbols with icon-library glyphs. **Override:** allow emojis only when the user explicitly asks for a playful / chat-style / social-native vibe - and even then use them sparingly with intent.
 
 ## 3.E Responsiveness & Layout Mechanics
-* Standardize breakpoints (`sm 640`, `md 768`, `lg 1024`, `xl 1280`, `2xl 1536`).
-* Contain page layouts using `max-w-[1400px] mx-auto` or `max-w-7xl`.
-* **Viewport Stability:** NEVER use `h-screen` for full-height Hero sections. ALWAYS use `min-h-[100dvh]` to prevent layout jumping on mobile (iOS Safari address bar).
-* **Grid over Flex-Math:** NEVER use complex flexbox percentage math (`w-[calc(33%-1rem)]`). ALWAYS use CSS Grid (`grid grid-cols-1 md:grid-cols-3 gap-6`).
+- Standardize breakpoints (`sm 640`, `md 768`, `lg 1024`, `xl 1280`, `2xl 1536`).
+- Contain page layouts using `max-w-[1400px] mx-auto` or `max-w-7xl`.
+- **Viewport Stability:** NEVER use `h-screen` for full-height Hero sections. ALWAYS use `min-h-[100dvh]` to prevent layout jumping on mobile (iOS Safari address bar).
+- **Grid over Flex-Math:** NEVER use complex flexbox percentage math (`w-[calc(33%-1rem)]`). ALWAYS use CSS Grid (`grid grid-cols-1 md:grid-cols-3 gap-6`).
 
 ## 3.F Dependency Verification (mandatory)
 Before importing ANY 3rd-party library, check `package.json`. If the package is missing, output the install command first. **Never** assume a library exists.
@@ -164,61 +164,61 @@ LLMs default to clichés. Override these defaults proactively. Each rule has a c
 > Load it when choosing type or colour. Rules stay here.
 
 ## 4.1 Typography
-* **Display / Headlines:** default `text-4xl md:text-6xl tracking-tighter leading-none`.
-* **Body / Paragraphs:** default `text-base text-gray-600 leading-relaxed max-w-[65ch]`.
-* **`Inter` discouraged as default** — pick Geist / Outfit / Cabinet Grotesk / Satoshi first. **Override:** fine when the user asks for neutral / standard / Linear-style, or the brief is public-sector / accessibility-first.
-* **SERIF DISCIPLINE (very discouraged as default).** "Creative brief = serif" is the single most-tested AI tell in production rounds. "It feels creative / premium / editorial" is NOT a reason. Serif is acceptable ONLY when the brand brief literally names a serif, OR the aesthetic family is genuinely editorial / luxury / publication / manuscript / heritage / vintage AND you can articulate why THIS serif fits THIS brand. Everything else → sans display (pool → reference). `Fraunces` and `Instrument_Serif` BANNED as defaults. Justified serif → rotate from the pool; never reuse across consecutive projects.
-* **EMPHASIS RULE:** emphasise a word inside a headline with italic or bold of the SAME font. Never inject a serif word into a sans headline (or vice versa) for visual interest — mixed-family emphasis is amateur.
-* **ITALIC DESCENDER CLEARANCE (mandatory):** italic display type containing `y g j p q` → `leading-[1]`/`leading-none` clips the descender. Use `leading-[1.1]` minimum + `pb-1`/`mb-1` reserve on the wrapper. Audit every italic word in display headlines before shipping.
+- **Display / Headlines:** default `text-4xl md:text-6xl tracking-tighter leading-none`.
+- **Body / Paragraphs:** default `text-base text-gray-600 leading-relaxed max-w-[65ch]`.
+- **`Inter` discouraged as default** — pick Geist / Outfit / Cabinet Grotesk / Satoshi first. **Override:** fine when the user asks for neutral / standard / Linear-style, or the brief is public-sector / accessibility-first.
+- **SERIF DISCIPLINE (very discouraged as default).** "Creative brief = serif" is the single most-tested AI tell in production rounds. "It feels creative / premium / editorial" is NOT a reason. Serif is acceptable ONLY when the brand brief literally names a serif, OR the aesthetic family is genuinely editorial / luxury / publication / manuscript / heritage / vintage AND you can articulate why THIS serif fits THIS brand. Everything else → sans display (pool → reference). `Fraunces` and `Instrument_Serif` BANNED as defaults. Justified serif → rotate from the pool; never reuse across consecutive projects.
+- **EMPHASIS RULE:** emphasise a word inside a headline with italic or bold of the SAME font. Never inject a serif word into a sans headline (or vice versa) for visual interest — mixed-family emphasis is amateur.
+- **ITALIC DESCENDER CLEARANCE (mandatory):** italic display type containing `y g j p q` → `leading-[1]`/`leading-none` clips the descender. Use `leading-[1.1]` minimum + `pb-1`/`mb-1` reserve on the wrapper. Audit every italic word in display headlines before shipping.
 
 ## 4.2 Color Calibration
-* Max 1 accent colour. Saturation < 80% by default. **One palette per project** — never fluctuate between warm and cool greys.
-* **THE AI-PURPLE DEFAULT RULE:** "AI Purple / Blue glow" discouraged as default. No automatic purple button glows, no random neon gradients. Neutral bases (Zinc / Slate / Stone) + one high-contrast accent (Emerald, Electric Blue, Deep Rose, Burnt Orange). **Override:** brand explicitly asks for purple/violet → embrace it, but execute with intent (consistent palette, harmonised neutrals, restrained gradients), not AI gradient slop.
-* **COLOR CONSISTENCY LOCK (mandatory):** one accent, locked, across the WHOLE page. No blue CTA in section 7 of a warm-grey site; no teal badge in a rose site's footer. Audit every component before shipping.
-* **PREMIUM-CONSUMER PALETTE BAN (mandatory, second-most-recurring AI-tell):** for premium-consumer briefs (cookware, wellness, artisan, luxury, heritage craft, DTC home goods) the LLM default is warm beige/cream + brass/clay/oxblood/ochre + espresso text. BANNED as the default reach — the brand becomes invisible. Exact hexes + 7 rotation alternatives → `reference/design-directives.md`; `preflight.mjs` greps the hexes. **Rotation rule:** never ship the same warm-craft palette twice in a row. **Override:** only when the brief names those colours, or the identity is genuinely vintage/artisan/warm-craft AND you can articulate why it fits THIS brand.
+- Max 1 accent colour. Saturation < 80% by default. **One palette per project** — never fluctuate between warm and cool greys.
+- **THE AI-PURPLE DEFAULT RULE:** "AI Purple / Blue glow" discouraged as default. No automatic purple button glows, no random neon gradients. Neutral bases (Zinc / Slate / Stone) + one high-contrast accent (Emerald, Electric Blue, Deep Rose, Burnt Orange). **Override:** brand explicitly asks for purple/violet → embrace it, but execute with intent (consistent palette, harmonised neutrals, restrained gradients), not AI gradient slop.
+- **COLOR CONSISTENCY LOCK (mandatory):** one accent, locked, across the WHOLE page. No blue CTA in section 7 of a warm-grey site; no teal badge in a rose site's footer. Audit every component before shipping.
+- **PREMIUM-CONSUMER PALETTE BAN (mandatory, second-most-recurring AI-tell):** for premium-consumer briefs (cookware, wellness, artisan, luxury, heritage craft, DTC home goods) the LLM default is warm beige/cream + brass/clay/oxblood/ochre + espresso text. BANNED as the default reach — the brand becomes invisible. Exact hexes + 7 rotation alternatives → `reference/design-directives.md`; `preflight.mjs` greps the hexes. **Rotation rule:** never ship the same warm-craft palette twice in a row. **Override:** only when the brief names those colours, or the identity is genuinely vintage/artisan/warm-craft AND you can articulate why it fits THIS brand.
 
 ## 4.3 Layout Diversification
-* **ANTI-CENTER BIAS:** Centered Hero / H1 sections are avoided when `DESIGN_VARIANCE > 4`. Force "Split Screen" (50/50), "Left-aligned content / right-aligned asset", "Asymmetric white-space", or scroll-pinned structures.
-* **Override:** centered hero is OK for editorial / manifesto / launch-announcement briefs where the message itself is the design.
+- **ANTI-CENTER BIAS:** Centered Hero / H1 sections are avoided when `DESIGN_VARIANCE > 4`. Force "Split Screen" (50/50), "Left-aligned content / right-aligned asset", "Asymmetric white-space", or scroll-pinned structures.
+- **Override:** centered hero is OK for editorial / manifesto / launch-announcement briefs where the message itself is the design.
 
 ## 4.4 Materiality, Shadows, Cards
-* Use cards ONLY when elevation communicates real hierarchy. Otherwise group with `border-t`, `divide-y`, or negative space.
-* When a shadow is used, tint it to the background hue. No pure-black drop shadows on light backgrounds.
-* For `VISUAL_DENSITY > 7`: generic card containers are banned. Data metrics breathe in plain layout.
-* **SHAPE CONSISTENCY LOCK (mandatory):** Pick ONE corner-radius scale for the page and stick to it. Options: all-sharp (radius 0), all-soft (radius 12-16px), all-pill (full radius for interactive). Mixed systems are allowed only when there is a documented rule (e.g. "buttons are full-pill, cards are 16px, inputs are 8px") and that rule is followed everywhere. Round buttons in a square layout, or square cards on a pill-button page, is broken design.
+- Use cards ONLY when elevation communicates real hierarchy. Otherwise group with `border-t`, `divide-y`, or negative space.
+- When a shadow is used, tint it to the background hue. No pure-black drop shadows on light backgrounds.
+- For `VISUAL_DENSITY > 7`: generic card containers are banned. Data metrics breathe in plain layout.
+- **SHAPE CONSISTENCY LOCK (mandatory):** Pick ONE corner-radius scale for the page and stick to it. Options: all-sharp (radius 0), all-soft (radius 12-16px), all-pill (full radius for interactive). Mixed systems are allowed only when there is a documented rule (e.g. "buttons are full-pill, cards are 16px, inputs are 8px") and that rule is followed everywhere. Round buttons in a square layout, or square cards on a pill-button page, is broken design.
 
 ## 4.5 Interactive UI States
 LLMs default to "static successful state only." `web-standards` §6 owns loading/empty/error/success — never ship the happy path alone. Taste-specific riders:
-* **Empty States:** beautifully composed, not a blank box; indicate how to populate.
-* **Error States:** inline (forms) or contextual (toasts only for transient).
-* **Tactile Feedback:** on `:active`, `-translate-y-[1px]` or `scale-[0.98]` to simulate a physical push.
-* **BUTTON CONTRAST CHECK (mandatory, a11y):** Before shipping any button, verify the button text is readable against the button background. White button + white text, `bg-white` CTA with `text-white` label, transparent button against the page background with no border → all banned. Audit every CTA against `web-standards` §2 — it owns the contrast thresholds; never restate them here (18px is NOT "large" under WCAG). Same rule applies to ghost buttons over photographic backgrounds (use a backdrop, scrim, or stroke).
-* **CTA BUTTON WRAP BAN (mandatory):** Button text MUST fit on one line at desktop. If a label like "VIEW SELECTED WORK" wraps to 2 or 3 lines, the button is broken. Fix by EITHER shortening the label (3 words max for primary CTAs, ideally 1-2) OR widening the button (do not artificially constrain `max-width` on CTAs). Wrapped CTAs at desktop are a Pre-Flight Fail.
-* **NO DUPLICATE CTA INTENT (mandatory):** Two CTAs with the same intent on one page is a Pre-Flight Fail. Examples of same intent: "Get in touch" + "Contact us" + "Let's talk" + "Start a project" + "Start something" + "Reach out" = all "contact" intent → pick ONE label and use it everywhere on the page (nav, hero, footer). Same for "Try free" + "Get started" + "Sign up free" (all "signup" intent) and "View work" + "See selected work" + "Browse projects" (all "portfolio" intent). One label per intent.
-* **FORM CONTRAST CHECK (mandatory, a11y):** Form inputs, placeholder text, focus rings, helper text, and error text all pass WCAG AA contrast against the section background. Light placeholders on a near-white form, white form on white page section, form labels below the AA floor → all banned. Thresholds: `web-standards` §2. Audit every form before shipping.
+- **Empty States:** beautifully composed, not a blank box; indicate how to populate.
+- **Error States:** inline (forms) or contextual (toasts only for transient).
+- **Tactile Feedback:** on `:active`, `-translate-y-[1px]` or `scale-[0.98]` to simulate a physical push.
+- **BUTTON CONTRAST CHECK (mandatory, a11y):** Before shipping any button, verify the button text is readable against the button background. White button + white text, `bg-white` CTA with `text-white` label, transparent button against the page background with no border → all banned. Audit every CTA against `web-standards` §2 — it owns the contrast thresholds; never restate them here (18px is NOT "large" under WCAG). Same rule applies to ghost buttons over photographic backgrounds (use a backdrop, scrim, or stroke).
+- **CTA BUTTON WRAP BAN (mandatory):** Button text MUST fit on one line at desktop. If a label like "VIEW SELECTED WORK" wraps to 2 or 3 lines, the button is broken. Fix by EITHER shortening the label (3 words max for primary CTAs, ideally 1-2) OR widening the button (do not artificially constrain `max-width` on CTAs). Wrapped CTAs at desktop are a Pre-Flight Fail.
+- **NO DUPLICATE CTA INTENT (mandatory):** Two CTAs with the same intent on one page is a Pre-Flight Fail. Examples of same intent: "Get in touch" + "Contact us" + "Let's talk" + "Start a project" + "Start something" + "Reach out" = all "contact" intent → pick ONE label and use it everywhere on the page (nav, hero, footer). Same for "Try free" + "Get started" + "Sign up free" (all "signup" intent) and "View work" + "See selected work" + "Browse projects" (all "portfolio" intent). One label per intent.
+- **FORM CONTRAST CHECK (mandatory, a11y):** Form inputs, placeholder text, focus rings, helper text, and error text all pass WCAG AA contrast against the section background. Light placeholders on a near-white form, white form on white page section, form labels below the AA floor → all banned. Thresholds: `web-standards` §2. Audit every form before shipping.
 
 ## 4.6 Data & Form Patterns
-* Label ABOVE input. Helper text optional but present in markup. Error text BELOW input. Standard `gap-2` for input blocks.
-* No placeholder-as-label. Ever.
+- Label ABOVE input. Helper text optional but present in markup. Error text BELOW input. Standard `gap-2` for input blocks.
+- No placeholder-as-label. Ever.
 
 ## 4.7 Layout Discipline (Hard Rules. Failing any of these is shipping broken work)
 
-* **Hero MUST fit in the initial viewport.** Headline max 2 lines on desktop, subtext max **20 words** AND max 3-4 lines, CTAs visible without scroll. If the copy is too long: reduce font scale OR cut copy. If you cannot describe the value-prop in 20 words of subtext, the value-prop is unclear, not the rule too tight. Never let the hero overflow and force scroll to find the CTA.
-* **Hero font-scale discipline.** Plan font size and image size *together*. If the hero asset is large and the headline is more than 6 words, do not start at `text-7xl/text-8xl`. Default sensible range: `text-4xl md:text-5xl lg:text-6xl` for most heroes; `text-6xl md:text-7xl` only when the headline is 3-5 words. A 4-line hero headline is always a font-size error, never a copy-length error.
-* **HERO TOP PADDING CAP (mandatory):** Hero top padding max `pt-24` (≈6rem) at desktop. More than that means the hero content floats halfway down the viewport and reads as a layout bug, not as intentional space. If your hero needs more breathing room, increase font scale or asset size, not top padding.
-* **HERO STACK DISCIPLINE — max 4 text elements.** The hero is a single moment, not a feature list. Allowed, max 4 total: (1) eyebrow OR brand strip OR neither — pick zero or one · (2) headline, max 2 lines · (3) subtext, max 20 words AND max 4 lines · (4) CTAs, 1 primary + max 1 secondary.
+- **Hero MUST fit in the initial viewport.** Headline max 2 lines on desktop, subtext max **20 words** AND max 3-4 lines, CTAs visible without scroll. If the copy is too long: reduce font scale OR cut copy. If you cannot describe the value-prop in 20 words of subtext, the value-prop is unclear, not the rule too tight. Never let the hero overflow and force scroll to find the CTA.
+- **Hero font-scale discipline.** Plan font size and image size *together*. If the hero asset is large and the headline is more than 6 words, do not start at `text-7xl/text-8xl`. Default sensible range: `text-4xl md:text-5xl lg:text-6xl` for most heroes; `text-6xl md:text-7xl` only when the headline is 3-5 words. A 4-line hero headline is always a font-size error, never a copy-length error.
+- **HERO TOP PADDING CAP (mandatory):** Hero top padding max `pt-24` (≈6rem) at desktop. More than that means the hero content floats halfway down the viewport and reads as a layout bug, not as intentional space. If your hero needs more breathing room, increase font scale or asset size, not top padding.
+- **HERO STACK DISCIPLINE — max 4 text elements.** The hero is a single moment, not a feature list. Allowed, max 4 total: (1) eyebrow OR brand strip OR neither — pick zero or one · (2) headline, max 2 lines · (3) subtext, max 20 words AND max 4 lines · (4) CTAs, 1 primary + max 1 secondary.
   - **BANNED in the hero:** tagline below CTAs ("Works with GitHub, GitLab, self-hosted Git") · trust micro-strip ("Used by engineering teams at…") · pricing teaser ("Free for solo, 10 USD/user") · feature bullet list · social-proof avatar row. All move to dedicated sections directly below.
   - Eyebrow AND tagline in one hero → drop the tagline. Brand strip AND tagline → drop the tagline. ONE small text element per hero, max.
-* **"Used by" / "Trusted by" logo wall belongs UNDER the hero, never inside it.** Hero = value prop + primary CTA. Never stuff trust logos into the hero's flex row.
-* **Navigation: single line at desktop, height ≤ 80px (default 64-72px).** Items don't fit at `lg` (1024px) → condense labels, drop secondary items, or hamburger. A two-line nav at desktop is broken. No agency nav bars eating 15% of the viewport.
-* **Bento grids MUST have rhythm.** Never 6 stacked left-image/right-text rows. Vary: full-width feature rows, asymmetric tile sizes, vertical breaks.
-* **BENTO CELL COUNT (mandatory):** exactly as many cells as you have content for. 3 items → 3 cells (1+2, 2+1, asymmetric trio); 5 items → 5 cells (2+3, 3+2, hero+4). An empty cell mid-grid or at the end means you planned wrong — re-shape it, never paste a blank tile.
-* **Section-Layout-Repetition Ban.** A layout family (3-col-image-cards, full-width-quote, split-text-image) appears at most ONCE per page. "Selected commissions" must not look like "What we do." 8 sections → ≥ 4 different layout families.
-* **ZIGZAG ALTERNATION CAP (mandatory).** Max 2 consecutive image+text-split sections. The 3rd is a Pre-Flight Fail. Break with a full-width section, vertical stack, bento grid, marquee, or a different family.
-* **EYEBROW RESTRAINT (mandatory — the #1 violated rule in production tests).** An eyebrow = the small uppercase wide-tracking label above a section headline (`FOUR COLORWAYS`, `SELECTED WORK`); CSS signature `text-[11px] uppercase tracking-[0.18em]` or `font-mono text-[10.5px] uppercase tracking-[0.22em]`. Every AI-built site puts one above EVERY header → same templated rhythm. **Max 1 eyebrow per 3 sections** (hero counts as 1; 9 sections → at most 3). Section A has one → the next 2 cannot. `preflight.mjs` counts `uppercase tracking` and fails when count > ceil(sections/3). **Instead of an eyebrow: drop it.** The headline alone is enough; the section's position already categorises it.
-* **SPLIT-HEADER BAN (mandatory).** "Left big headline + right small explainer paragraph" as a section header (left col-span-7/8, right col-span-4/5 holding a floating body paragraph) is banned as default. One focused message per section. Genuinely need both → stack vertically (headline, body below, max-width 65ch). Split-header only when the right column carries a real visual/interactive element, not filler text.
-* **Bento Background Diversity (mandatory).** Never 6 white-on-white cards with text inside. ≥ 2-3 cells in any multi-cell grid need real visual variation: a real image, a brand-appropriate gradient (not AI-purple), a pattern, a tinted background. Cream-on-cream bento with only typography reads as AI default even when the rest of the page is good.
-* **Mobile collapse explicit per section.** Every multi-column layout declares its `< 768px` fallback in the same component. No "Tailwind handles it" assumptions.
+- **"Used by" / "Trusted by" logo wall belongs UNDER the hero, never inside it.** Hero = value prop + primary CTA. Never stuff trust logos into the hero's flex row.
+- **Navigation: single line at desktop, height ≤ 80px (default 64-72px).** Items don't fit at `lg` (1024px) → condense labels, drop secondary items, or hamburger. A two-line nav at desktop is broken. No agency nav bars eating 15% of the viewport.
+- **Bento grids MUST have rhythm.** Never 6 stacked left-image/right-text rows. Vary: full-width feature rows, asymmetric tile sizes, vertical breaks.
+- **BENTO CELL COUNT (mandatory):** exactly as many cells as you have content for. 3 items → 3 cells (1+2, 2+1, asymmetric trio); 5 items → 5 cells (2+3, 3+2, hero+4). An empty cell mid-grid or at the end means you planned wrong — re-shape it, never paste a blank tile.
+- **Section-Layout-Repetition Ban.** A layout family (3-col-image-cards, full-width-quote, split-text-image) appears at most ONCE per page. "Selected commissions" must not look like "What we do." 8 sections → ≥ 4 different layout families.
+- **ZIGZAG ALTERNATION CAP (mandatory).** Max 2 consecutive image+text-split sections. The 3rd is a Pre-Flight Fail. Break with a full-width section, vertical stack, bento grid, marquee, or a different family.
+- **EYEBROW RESTRAINT (mandatory — the #1 violated rule in production tests).** An eyebrow = the small uppercase wide-tracking label above a section headline (`FOUR COLORWAYS`, `SELECTED WORK`); CSS signature `text-[11px] uppercase tracking-[0.18em]` or `font-mono text-[10.5px] uppercase tracking-[0.22em]`. Every AI-built site puts one above EVERY header → same templated rhythm. **Max 1 eyebrow per 3 sections** (hero counts as 1; 9 sections → at most 3). Section A has one → the next 2 cannot. `preflight.mjs` counts `uppercase tracking` and fails when count > ceil(sections/3). **Instead of an eyebrow: drop it.** The headline alone is enough; the section's position already categorises it.
+- **SPLIT-HEADER BAN (mandatory).** "Left big headline + right small explainer paragraph" as a section header (left col-span-7/8, right col-span-4/5 holding a floating body paragraph) is banned as default. One focused message per section. Genuinely need both → stack vertically (headline, body below, max-width 65ch). Split-header only when the right column carries a real visual/interactive element, not filler text.
+- **Bento Background Diversity (mandatory).** Never 6 white-on-white cards with text inside. ≥ 2-3 cells in any multi-cell grid need real visual variation: a real image, a brand-appropriate gradient (not AI-purple), a pattern, a tinted background. Cream-on-cream bento with only typography reads as AI default even when the rest of the page is good.
+- **Mobile collapse explicit per section.** Every multi-column layout declares its `< 768px` fallback in the same component. No "Tailwind handles it" assumptions.
 
 ## 4.8 Image & Visual Asset Strategy
 
@@ -227,15 +227,15 @@ Landing pages and portfolios are **visual products**. Text-only pages with fake-
 **Priority order for visual assets:**
 1. **Image-generation tool first.** If ANY image-gen tool is available in the environment (`generate_image`, MCP image tool, IDE-integrated gen, OpenAI image tools, etc.) you MUST use it to create section-specific assets: hero photography, product shots, texture backgrounds, mood images. Generate at the right aspect ratio for the section. Do not skip this step because hand-rolled CSS feels faster.
 2. **Real web images second.** When no gen tool is available, use real photography sources. Acceptable defaults:
-   * `https://picsum.photos/seed/{descriptive-seed}/{w}/{h}` for placeholder photography (seed should describe the section, e.g. `marrow-cookware-kitchen`)
-   * Actual stock or brand URLs when the brief provides them
-   * Open-license sources (Unsplash via direct URL, Pexels) if explicitly allowed
+   - `https://picsum.photos/seed/{descriptive-seed}/{w}/{h}` for placeholder photography (seed should describe the section, e.g. `marrow-cookware-kitchen`)
+   - Actual stock or brand URLs when the brief provides them
+   - Open-license sources (Unsplash via direct URL, Pexels) if explicitly allowed
 3. **Last resort: tell the user.** If neither is possible, do NOT fill the page with hand-rolled SVG illustrations or div-based "fake screenshots." Instead, leave clearly-labeled placeholder slots (`<!-- TODO: hero product photo, 1600x1200 -->`) and at the end of the response say: *"This page needs real images at: \[list of placements\]. Please generate or provide them."*
 
 **Even minimalist sites need real images.** A pure-text page is not minimalism. It is incomplete work. Even an editorial Linear-style site needs at least 2-3 real images (hero, one product/lifestyle shot, one supporting image). Generate B&W minimalist photography if the brief is restrained; do not skip images entirely because the dial is low.
 
 **Real company logos for social proof.** "Trusted by / Used by / Customers" wall → real SVG logos, never plain text wordmarks (`<span>Acme Co</span>` in a row). Sources: Simple Icons (`https://cdn.simpleicons.org/{slug}/ffffff`, or the `simple-icons` package) · devicon for tech-stack logos. Invented brand name → invent an SVG mark too (monogram in a circle, two-letter ligature, abstract glyph, inline `<svg>` matching the page); a text wordmark for a made-up brand looks generic. Logos MUST render in both modes (white-on-dark / black-on-light / single-colour token).
-* **LOGO-ONLY rule (mandatory):** logo wall = logos, nothing else. No industry/category labels under each logo (no `Vercel`+`hosting`, `Stripe`+`payments`, `Cloudflare`+`infra`). The logo IS the credibility. Optional: brand name as alt-text, link to the brand. That is it.
+- **LOGO-ONLY rule (mandatory):** logo wall = logos, nothing else. No industry/category labels under each logo (no `Vercel`+`hosting`, `Stripe`+`payments`, `Cloudflare`+`infra`). The logo IS the credibility. Optional: brand name as alt-text, link to the brand. That is it.
 
 **Hand-rolled decorative SVGs** (illustrations, logos, marks): strongly discouraged, never default. Acceptable only when the brief explicitly asks ("draw me an SVG logo"), OR it's a single simple geometric mark, AND you're confident in the quality. Library icons are fine (§3.C).
 
@@ -247,33 +247,33 @@ Landing pages and portfolios are **visual products**. Text-only pages with fake-
 
 Landing pages live on the **first impression**, not the full read. Cut ruthlessly.
 
-* **Default content shape per section:** short headline (≤ 8 words) + short sub-paragraph (≤ 25 words) + one visual asset OR one CTA. Anything more must be justified by the section's job.
-* **No data-dump sections.** A 20-row publication table, a 30-row award list, a giant pricing matrix on a marketing page = wrong layout. Use:
+- **Default content shape per section:** short headline (≤ 8 words) + short sub-paragraph (≤ 25 words) + one visual asset OR one CTA. Anything more must be justified by the section's job.
+- **No data-dump sections.** A 20-row publication table, a 30-row award list, a giant pricing matrix on a marketing page = wrong layout. Use:
   - Top 3-5 highlights + "View full list" link
   - Marquee / carousel for breadth
   - Different page entirely if the data is the product
-* **Long lists need a different UI component, not a longer list.** `<ul>` with bullets / `divide-y` rows is the lazy choice. > 5 items → 2-col split with grouped items · card grid (image + label) · tabs/accordion if categorisable · horizontal scroll-snap pills · carousel for breadth (testimonials, logos, capabilities) · marquee for things that don't need individual attention. A 10-row spec sheet with a hairline under every row is the WORST default.
-* **Spec sheets (the cookware/hardware/apparel pattern):** a long spec table with `border-b` on every row is BANNED. Alternatives → `reference/design-directives.md` §4.9 (2-col card grid · scroll-snap pills · grouped chunks · featured-vs-rest disclosure).
-* **COPY SELF-AUDIT (mandatory before ship):** re-read EVERY visible string (headlines, subheads, eyebrows, button labels, body, captions, alt text, footer, errors). Rewrite any that is grammatically broken, has unclear referents, sounds like AI hallucination (cute-but-wrong wordplay, forced metaphors), or reads like an LLM trying to sound thoughtful (passive-aggressive humility, fake-craftsman labels, mock-poetic micro-meta). Unsure a string makes sense → replace with a plain functional sentence. AI-cute copy is worse than boring copy. Examples → reference.
-* **Fake-precise numbers are BANNED.** `92%`, `4.1×`, `48k`, `5.8 mm`, `13.4 lb` are fine ONLY if from real data (brief, brand guidelines, public metrics) or explicitly labelled mock (`<!-- mock -->`, "example"). AI-invented spec aesthetics → banned. Don't fake engineering precision the brand doesn't claim.
-* **One copy register per page.** Don't mix technical mono ("47 tasks · 0.6 ctx-switches/day"), editorial prose and marketing punch in one composition unless the brand voice calls for it.
+- **Long lists need a different UI component, not a longer list.** `<ul>` with bullets / `divide-y` rows is the lazy choice. > 5 items → 2-col split with grouped items · card grid (image + label) · tabs/accordion if categorisable · horizontal scroll-snap pills · carousel for breadth (testimonials, logos, capabilities) · marquee for things that don't need individual attention. A 10-row spec sheet with a hairline under every row is the WORST default.
+- **Spec sheets (the cookware/hardware/apparel pattern):** a long spec table with `border-b` on every row is BANNED. Alternatives → `reference/design-directives.md` §4.9 (2-col card grid · scroll-snap pills · grouped chunks · featured-vs-rest disclosure).
+- **COPY SELF-AUDIT (mandatory before ship):** re-read EVERY visible string (headlines, subheads, eyebrows, button labels, body, captions, alt text, footer, errors). Rewrite any that is grammatically broken, has unclear referents, sounds like AI hallucination (cute-but-wrong wordplay, forced metaphors), or reads like an LLM trying to sound thoughtful (passive-aggressive humility, fake-craftsman labels, mock-poetic micro-meta). Unsure a string makes sense → replace with a plain functional sentence. AI-cute copy is worse than boring copy. Examples → reference.
+- **Fake-precise numbers are BANNED.** `92%`, `4.1×`, `48k`, `5.8 mm`, `13.4 lb` are fine ONLY if from real data (brief, brand guidelines, public metrics) or explicitly labelled mock (`<!-- mock -->`, "example"). AI-invented spec aesthetics → banned. Don't fake engineering precision the brand doesn't claim.
+- **One copy register per page.** Don't mix technical mono ("47 tasks · 0.6 ctx-switches/day"), editorial prose and marketing punch in one composition unless the brand voice calls for it.
 
 ## 4.10 Quotes & Testimonials
 
-* **Max 3 lines** of quote body. Never 6. If the original quote is longer → cut it. A landing-page quote is a snippet, not the full review.
-* For very small font sizes (e.g. footer-style testimonials), the line cap can stretch slightly. Spirit: "fits in a glance."
-* **No em-dashes inside the quote text** as design flourish (long pauses, kinetic em-dashes, em-dash-bullets). See Section 9.G - em-dash is completely banned.
-* Attribution: name + role + (optionally) company. Never name only ("- Sarah").
-* Quote marks: use real typographic quotes ( " " ) or none at all. Not straight ASCII ( " ).
+- **Max 3 lines** of quote body. Never 6. If the original quote is longer → cut it. A landing-page quote is a snippet, not the full review.
+- For very small font sizes (e.g. footer-style testimonials), the line cap can stretch slightly. Spirit: "fits in a glance."
+- **No em-dashes inside the quote text** as design flourish (long pauses, kinetic em-dashes, em-dash-bullets). See Section 9.G - em-dash is completely banned.
+- Attribution: name + role + (optionally) company. Never name only ("- Sarah").
+- Quote marks: use real typographic quotes ( " " ) or none at all. Not straight ASCII ( " ).
 
 ## 4.11 Page Theme Lock (Light / Dark Mode Consistency)
 
 The page has ONE theme. Sections do not invert.
 
-* If the page is dark mode, ALL sections are dark mode. No light-mode-warm-paper section sandwiched between dark sections (or vice versa). The user must not feel they walked into a different website mid-scroll.
-* The exception: if the brief explicitly calls for a "Color Block Story" or "Theme Switch on Scroll" device AND that is a deliberate composition (one full theme switch with a strong transition, not random alternation), it is allowed once per page.
-* Default behaviour: pick light, dark, or auto (`prefers-color-scheme`) at the page level and lock it. Section-level background tints within the same theme family are fine (`bg-zinc-950` next to `bg-zinc-900`); flipping to `bg-amber-50` in the middle of a `bg-zinc-950` page is broken.
-* When using a design system with built-in theming (Radix Themes, shadcn/ui with `<Theme>`), set the theme ONCE in `layout.tsx` or the page root. Do not let individual sections override.
+- If the page is dark mode, ALL sections are dark mode. No light-mode-warm-paper section sandwiched between dark sections (or vice versa). The user must not feel they walked into a different website mid-scroll.
+- The exception: if the brief explicitly calls for a "Color Block Story" or "Theme Switch on Scroll" device AND that is a deliberate composition (one full theme switch with a strong transition, not random alternation), it is allowed once per page.
+- Default behaviour: pick light, dark, or auto (`prefers-color-scheme`) at the page level and lock it. Section-level background tints within the same theme family are fine (`bg-zinc-950` next to `bg-zinc-900`); flipping to `bg-amber-50` in the middle of a `bg-zinc-950` page is broken.
+- When using a design system with built-in theming (Radix Themes, shadcn/ui with `<Theme>`), set the theme ONCE in `layout.tsx` or the page root. Do not let individual sections override.
 
 ---
 
@@ -281,27 +281,27 @@ The page has ONE theme. Sections do not invert.
 
 These are tools, not defaults. Use them when the design read calls for them. **None of these fire automatically.**
 
-* **Liquid Glass / Glassmorphism:** for premium consumer, Apple-adjacent, luxury, media-overlay. NOT for dashboards, public-sector, boring B2B. Go beyond `backdrop-blur`: 1px inner border (`border-white/10`) + subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for edge refraction. Solid-fill fallback under `prefers-reduced-transparency`. Full approximation recipe → `reference/liquid-glass.md`; load it when the design read calls for glass.
-* **Magnetic Micro-physics:** only at `MOTION_INTENSITY > 5` AND a premium/playful/agency brief. EXCLUSIVELY Motion's `useMotionValue`/`useTransform`, outside the React render cycle. Never `useState` (§3.B).
-* **Perpetual Micro-Interactions** (Pulse, Typewriter, Float, Shimmer, Carousel): only at `MOTION_INTENSITY > 5` AND where the section benefits (status indicators, live feeds, AI-feel). **Not every card needs an infinite loop** — informational section → leave it still. Spring physics (`type: "spring", stiffness: 100, damping: 20`), never linear easing.
-* **"Motion claimed, motion shown."** At `MOTION_INTENSITY > 4` the page MUST actually move: hero entry transitions, scroll-reveal on key sections, hover physics on CTAs, minimum. A static page claiming `MOTION_INTENSITY: 7` is broken. Can't ship working motion in scope → drop the dial to 3 and ship clean static. Never half-build motion that breaks (cut-off ScrollTriggers, jumpy enters, missing cleanups).
-* **MOTION MUST BE MOTIVATED (mandatory).** Every animation answers "what does this communicate?" — valid: hierarchy · storytelling (sequence matching a narrative) · feedback · state transition. Invalid: "it looked cool". GSAP everywhere because GSAP exists is amateur. Can't articulate the reason in one sentence → drop the animation.
-* **MARQUEE MAX-ONE-PER-PAGE (mandatory).** Horizontal scrolling text marquees (endless logos, sideways manifesto, kinetic word strip) at most ONCE per page — two+ reads as lazy filler. `preflight.mjs` counts them. Pick the one section the marquee actually serves; the rest get a different layout.
-* **GSAP Sticky-Stack / Horizontal-Pan:** a scroll card-stack must be a REAL sticky-stack, not a sequential reveal list. Canonical skeletons → `reference/motion-skeletons.md` (load only when implementing). Common failure for both: the trigger fires before the section pins, so the user sees half a slide. Fix: `start: "top top"` (never `"top center"`/`"top 80%"`), pin the wrapper, scrub the inner track.
+- **Liquid Glass / Glassmorphism:** for premium consumer, Apple-adjacent, luxury, media-overlay. NOT for dashboards, public-sector, boring B2B. Go beyond `backdrop-blur`: 1px inner border (`border-white/10`) + subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for edge refraction. Solid-fill fallback under `prefers-reduced-transparency`. Full approximation recipe → `reference/liquid-glass.md`; load it when the design read calls for glass.
+- **Magnetic Micro-physics:** only at `MOTION_INTENSITY > 5` AND a premium/playful/agency brief. EXCLUSIVELY Motion's `useMotionValue`/`useTransform`, outside the React render cycle. Never `useState` (§3.B).
+- **Perpetual Micro-Interactions** (Pulse, Typewriter, Float, Shimmer, Carousel): only at `MOTION_INTENSITY > 5` AND where the section benefits (status indicators, live feeds, AI-feel). **Not every card needs an infinite loop** — informational section → leave it still. Spring physics (`type: "spring", stiffness: 100, damping: 20`), never linear easing.
+- **"Motion claimed, motion shown."** At `MOTION_INTENSITY > 4` the page MUST actually move: hero entry transitions, scroll-reveal on key sections, hover physics on CTAs, minimum. A static page claiming `MOTION_INTENSITY: 7` is broken. Can't ship working motion in scope → drop the dial to 3 and ship clean static. Never half-build motion that breaks (cut-off ScrollTriggers, jumpy enters, missing cleanups).
+- **MOTION MUST BE MOTIVATED (mandatory).** Every animation answers "what does this communicate?" — valid: hierarchy · storytelling (sequence matching a narrative) · feedback · state transition. Invalid: "it looked cool". GSAP everywhere because GSAP exists is amateur. Can't articulate the reason in one sentence → drop the animation.
+- **MARQUEE MAX-ONE-PER-PAGE (mandatory).** Horizontal scrolling text marquees (endless logos, sideways manifesto, kinetic word strip) at most ONCE per page — two+ reads as lazy filler. `preflight.mjs` counts them. Pick the one section the marquee actually serves; the rest get a different layout.
+- **GSAP Sticky-Stack / Horizontal-Pan:** a scroll card-stack must be a REAL sticky-stack, not a sequential reveal list. Canonical skeletons → `reference/motion-skeletons.md` (load only when implementing). Common failure for both: the trigger fires before the section pins, so the user sees half a slide. Fix: `start: "top top"` (never `"top center"`/`"top 80%"`), pin the wrapper, scrub the inner track.
 
 ## 5.D Forbidden Animation Patterns
 
-* **`window.addEventListener("scroll", ...)` is BANNED** — every scroll frame, jank-prone, no batching. Use Motion's `useScroll()`, GSAP `ScrollTrigger`, IntersectionObserver, or CSS `animation-timeline: view()`. `preflight.mjs` greps for it. Same ban on custom `window.scrollY` progress in React state, and on `requestAnimationFrame` loops touching React state — use motion values (`useMotionValue` + `useTransform`).
-* **Layout Transitions:** Motion's `layout`/`layoutId` for visible state changes (re-ordering lists, expanding modals, shared elements across routes). Never wrap static content in `layout` "for safety" — it costs measurement work.
-* **Staggered Orchestration:** `staggerChildren` (Motion) or CSS cascade (`animation-delay: calc(var(--index) * 100ms)`) where sequence matters. For `staggerChildren`, parent (`variants`) and children MUST share the same Client Component tree.
+- **`window.addEventListener("scroll", ...)` is BANNED** — every scroll frame, jank-prone, no batching. Use Motion's `useScroll()`, GSAP `ScrollTrigger`, IntersectionObserver, or CSS `animation-timeline: view()`. `preflight.mjs` greps for it. Same ban on custom `window.scrollY` progress in React state, and on `requestAnimationFrame` loops touching React state — use motion values (`useMotionValue` + `useTransform`).
+- **Layout Transitions:** Motion's `layout`/`layoutId` for visible state changes (re-ordering lists, expanding modals, shared elements across routes). Never wrap static content in `layout` "for safety" — it costs measurement work.
+- **Staggered Orchestration:** `staggerChildren` (Motion) or CSS cascade (`animation-delay: calc(var(--index) * 100ms)`) where sequence matters. For `staggerChildren`, parent (`variants`) and children MUST share the same Client Component tree.
 
 ---
 
 # 6. PERFORMANCE & ACCESSIBILITY GUARDRAILS
 
 ## 6.A Hardware Acceleration
-* Animate ONLY `transform` and `opacity`. Never animate `top`, `left`, `width`, `height`.
-* Use `will-change: transform` sparingly - only on elements that will actually animate.
+- Animate ONLY `transform` and `opacity`. Never animate `top`, `left`, `width`, `height`.
+- Use `will-change: transform` sparingly - only on elements that will actually animate.
 
 ## 6.B Reduced Motion (mandatory)
 `web-standards` §4 owns the rule; it composes on every web surface. Taste-specific rider: at
@@ -318,8 +318,8 @@ dark-only without explicit instruction. Tokens + thresholds → §8.
 is the LCP element — `next/image priority` or preloaded.
 
 ## 6.E DOM Cost
-* Apply grain / noise filters EXCLUSIVELY to fixed, `pointer-events-none` pseudo-elements (e.g., `fixed inset-0 z-[60] pointer-events-none`). NEVER on scrolling containers - continuous GPU repaints destroy mobile FPS.
-* Be aware of bundle size. Motion is not tiny. Three.js is large. Lazy-load anything that's not above-the-fold.
+- Apply grain / noise filters EXCLUSIVELY to fixed, `pointer-events-none` pseudo-elements (e.g., `fixed inset-0 z-[60] pointer-events-none`). NEVER on scrolling containers - continuous GPU repaints destroy mobile FPS.
+- Be aware of bundle size. Motion is not tiny. Three.js is large. Lazy-load anything that's not above-the-fold.
 
 ## 6.F Z-Index Restraint
 NEVER spam arbitrary `z-50` or `z-10`. Use z-index strictly for systemic layer contexts (sticky navbars, modals, overlays, grain). Document the z-index scale in a project constants file.
@@ -331,15 +331,15 @@ NEVER spam arbitrary `z-50` or `z-10`. Use z-index strictly for systemic layer c
 Dual-mode by default. Never assume light-only unless the brief is print-emulating editorial.
 
 ## 8.A Token Strategy (pick one, stick to it)
-* **Tailwind `dark:` variant** (default for utility-first projects): every color utility paired with its dark variant (`bg-white dark:bg-zinc-950`, `text-gray-900 dark:text-gray-100`).
-* **CSS variables** (for shadcn/ui, Radix Themes, or component libraries with theming): define semantic tokens (`--surface`, `--surface-elevated`, `--text-primary`, `--accent`) and swap values under `[data-theme="dark"]` or `@media (prefers-color-scheme: dark)`.
+- **Tailwind `dark:` variant** (default for utility-first projects): every color utility paired with its dark variant (`bg-white dark:bg-zinc-950`, `text-gray-900 dark:text-gray-100`).
+- **CSS variables** (for shadcn/ui, Radix Themes, or component libraries with theming): define semantic tokens (`--surface`, `--surface-elevated`, `--text-primary`, `--accent`) and swap values under `[data-theme="dark"]` or `@media (prefers-color-scheme: dark)`.
 
 ## 8.B Do Not Prescribe Specific Colors Here
 The brief and brand decide. This skill enforces only:
-* **Contrast** - WCAG AA minimum for body text, AAA target for hero copy.
-* **Hierarchy parity** - visual hierarchy that works in light must work in dark. If a CTA pops in light, it pops in dark.
-* **Brand fidelity** - primary brand color stays recognisable. Don't desaturate the brand into a dark mode.
-* **No pure `#000000` and no pure `#ffffff`** - use off-black (zinc-950, near-black warm gray) and off-white. Pure values kill depth.
+- **Contrast** - WCAG AA minimum for body text, AAA target for hero copy.
+- **Hierarchy parity** - visual hierarchy that works in light must work in dark. If a CTA pops in light, it pops in dark.
+- **Brand fidelity** - primary brand color stays recognisable. Don't desaturate the brand into a dark mode.
+- **No pure `#000000` and no pure `#ffffff`** - use off-black (zinc-950, near-black warm gray) and off-white. Pure values kill depth.
 
 ## 8.C Default Mode
 Respect `prefers-color-scheme` unless the brand insists. Add a manual toggle if either mode would lose key brand expression.
@@ -361,15 +361,15 @@ item there is also condensed into a §14 checkbox.
 
 **Em-dash (`—`) is COMPLETELY banned.** It is the LLM's signature stylistic crutch and it is the #1 visual Tell in production tests. There is no "limited use" allowance, no "natural language frequency" allowance, no "in body copy is fine" allowance. None.
 
-* **Banned in headlines.** Use a period or a comma.
-* **Banned in eyebrows / labels / pills / button text / image captions / nav items.** Replace with line breaks, columns, or hairlines.
-* **Banned in body copy.** Restructure the sentence: two sentences with a period, OR a comma, OR parentheses, OR a colon.
-* **Banned in quote attribution.** Use a normal hyphen with spaces (` - `) or a line break + smaller-weight name.
-* **Banned in en-dash form too (`–`) when used as a separator.** Date ranges (`2018-2026`) use a hyphen. Number ranges (`€40-80k`) use a hyphen.
+- **Banned in headlines.** Use a period or a comma.
+- **Banned in eyebrows / labels / pills / button text / image captions / nav items.** Replace with line breaks, columns, or hairlines.
+- **Banned in body copy.** Restructure the sentence: two sentences with a period, OR a comma, OR parentheses, OR a colon.
+- **Banned in quote attribution.** Use a normal hyphen with spaces (` - `) or a line break + smaller-weight name.
+- **Banned in en-dash form too (`–`) when used as a separator.** Date ranges (`2018-2026`) use a hyphen. Number ranges (`€40-80k`) use a hyphen.
 
 The ONLY permitted dash characters on the page are:
-* Regular hyphen `-` (for compound words, ranges, line dividers in markup)
-* Minus sign in math (`-5°C`)
+- Regular hyphen `-` (for compound words, ranges, line dividers in markup)
+- Minus sign in math (`-5°C`)
 
 If your output contains a single `—` or `–` anywhere visible to the user, the output fails the Pre-Flight Check and must be rewritten.
 
@@ -390,9 +390,9 @@ Pattern names (heroes, nav, grids, cards, scroll, galleries, typography, micro-i
 Greenfield AND redesigns. **Misclassifying the mode is the single biggest source of bad redesign output.**
 
 ## 11.A Detect the Mode (first action)
-* **Greenfield** — no existing site, or full overhaul approved. Dial baseline from §1.
-* **Redesign - Preserve** — modernise without breaking the brand. Audit first, extract brand tokens, evolve gradually.
-* **Redesign - Overhaul** — new visual language over existing content. Greenfield for visuals; preserve content + IA.
+- **Greenfield** — no existing site, or full overhaul approved. Dial baseline from §1.
+- **Redesign - Preserve** — modernise without breaking the brand. Audit first, extract brand tokens, evolve gradually.
+- **Redesign - Overhaul** — new visual language over existing content. Greenfield for visuals; preserve content + IA.
 
 Ambiguous → ask **once**: *"Should this redesign preserve the existing brand, or are we starting visually from scratch?"*
 
