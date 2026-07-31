@@ -80,6 +80,10 @@ Your final message IS the report. English, terse. No preamble.
 - Per task: done / blocked, the files you touched (`path`), one line on the change. **Quote the task's
   text VERBATIM from the spec** — the Teamleiter ticks it off in `# Tasks` from this line and matches by
   text; a paraphrase makes it guess which box you meant, and a guessed box is the wrong box.
+  **Blocked → the reason goes HERE, on that task's own line, not only in "What you did NOT do" below.**
+  The Teamleiter writes that reason onto the unchecked box. Block two tasks and report both reasons in a
+  separate summary, and nothing says which reason belongs to which box — it has to guess, and a guessed
+  reason is worse than none. The summary bullet still gets its overview; this line carries the pairing.
 - How to verify: the exact command(s) you ran and their result (green/red).
 - What you did NOT do: any assigned task left incomplete, and why.
 - One `DEBT:` line per shortcut/workaround you KNOWINGLY left: what, `path:line`, why you took it.

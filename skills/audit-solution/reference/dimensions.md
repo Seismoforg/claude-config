@@ -96,6 +96,10 @@ Two guards, because the bar is only as good as the number behind it:
   to bind files that do not exist yet matches nothing on the day it ships and is working as designed.
   Same shape as the "duplication the text itself declares AND justifies" carve-out above, and the
   intentional-convention guard at the top of this file. Check for a stated reason before counting.
+Denominators come from your OWN unbounded search, or from a 2a mechanical-check result the dispatcher
+handed you — a check script's violation list and the file count it ran over are measurements, and using
+one is cheaper and more reliable than re-deriving it. Handed no 2a results at all → say so rather than
+counting blind; this dimension is the one that cannot work without a measurement.
 Rule source: the repo's own stated intent — what the rule SAYS it does, held against what it matches.
 There is no external rule file for this dimension; do not invent one.
 

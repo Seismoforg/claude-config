@@ -73,7 +73,7 @@ Apply only approved findings, per the composed skills:
 - `coding-standards`: minimal diffs, match existing patterns, no scope creep; moving/renaming/splitting → VCS move to preserve history, rewrite references in one pass.
 - `documentation`: update AGENTS.md/links/ADRs affected; don't over-document. Debt is not a doc — a finding you defer stays this audit's own feature (STEP 5), never a doc entry.
 - **Duplicates: UNIFY or EXTRACT, and say which.** Unify when one site is the natural owner — it keeps the rule, the others become pointers. Extract when none owns it — the rule moves to a shared home and every site points there. Never leave two copies "aligned"; that is the state that drifts. `reference/dimensions.md` (redundancy entry) owns the distinction.
-  **Extraction moves a module boundary, so it is SIGNIFICANT under `coding-standards` REFACTOR RULES and needs explicit STEP 4 approval of its own.** Choosing "Fix everything" does NOT authorize it — that option approves fixing the findings, not restructuring where the rules live.
+  **Extraction moves a module boundary → SIGNIFICANT under `coding-standards` REFACTOR RULES. STOP. Ask via AskUserQuestion, in STEP 4's format, BEFORE touching the shared home.** STEP 4 has already run by the time remediation discovers this, so its answer cannot cover it: "Fix everything" approved fixing the findings, not restructuring where the rules live. Written as a STOP on purpose — a passive "needs approval" clause mid-step reads as background rationale already satisfied, and gets walked straight past.
 - Fix reveals the scope was wrong → update the plan/spec first, then continue.
 
 # STEP 7 — VERIFY & REPORT
