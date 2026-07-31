@@ -13,7 +13,7 @@ keystrokes from the user.
 
 Scope: it performs `feature` workflow step 1 — writes the DRAFT into `/features/draft/` — and
 returns. It runs NO state transition and NO gate. `feature` owns the state machine and every
-approval, and resumes at step 1.5.
+approval, and resumes at step 1.4, the implementation-questions gate.
 
 **Entered directly, not from `feature` step 0?** Then `feature` ON ACTIVATION never ran. Run it IN
 FULL first — the real thing, not this summary. Two of its outcomes stop you here:
@@ -85,6 +85,11 @@ in the next batch, the correction in its options. Never reinterpret the old answ
 given against different facts.
 Still unclear → it becomes `Open assumption: <what you assumed, and why>` in the spec. Never another
 question.
+**`feature` step 1.4 is NOT a second pass.** Its implementation-questions gate runs on the DRAFT you
+are about to write and may put more questions to the user minutes after you stopped. Different
+question, different moment: you ask what it should DO, 1.4 asks what is missing to BUILD it. Your
+`Open assumption:` lines ARE its candidate list — which is why they must be written honestly here
+rather than smoothed away.
 
 ## 5. Write the DRAFT
 This IS `feature` step 1 — read that step and obey ALL of it, never a summary of it. Frontmatter and
@@ -156,12 +161,14 @@ Read the OUTPUT, not just the exit code:
   ACTIVATION owns it: STOP and report, never auto-fix.
 
 ## 7. Return — never gate
-Return to `feature` workflow step 1.5 and let it run — the premortem, then step 2. Never jump to step
-2: the DRAFT you just wrote is exactly what 1.5 exists to critique. Hand back two things, not one:
+Return to `feature` workflow **step 1.4, the implementation-questions gate**, and let the workflow run
+on from there — 1.4, then the premortem at 1.5, then step 2. Never jump to step 2: the DRAFT you just
+wrote is exactly what those two gates exist to question and to critique. Hand back two things, not one:
 - the DRAFT's path, and that step 1 is done
-- **every `Open assumption:` line, said out loud.** They are the only requirements nobody confirmed.
-  Left inside the file they get approved unread — step 2's summary must carry them to the gate,
-  where the user can still say no.
+- **every `Open assumption:` line, said out loud.** They are the only requirements nobody confirmed,
+  and they are step 1.4's candidate list. Left inside the file they get approved unread — 1.4 works
+  through them, and step 2's summary carries whatever survives to the gate, where the user can still
+  say no.
 
 Do NOT run step 2 yourself. It moves the file to `pending/`, sets `NEEDS_APPROVAL`, summarises and
 asks the four-option approval question — that is `feature`'s job, and it acts on the answer

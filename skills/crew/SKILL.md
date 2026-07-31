@@ -53,7 +53,8 @@ its workflow — the crew only assigns the work.
 1. **Intake (Teamleiter).** Read the task. Vague/exploratory, or named but underspecified → brainstorm
    first (`feature` step 0; its own test picks `drunken-genius` vs `feature-brainstorming`). Concrete →
    go on. `feature-brainstorming` RETURNS WITH THE DRAFT ALREADY WRITTEN, so CREW step 2 below is done —
-   run `feature` step 1.5 (premortem) on that DRAFT, then go to CREW step 3, the approval gate. Every
+   run `feature` step 1.4 (the implementation-questions gate) and then 1.5 (premortem) on that DRAFT,
+   then go to CREW step 3, the approval gate. Every
    number in this list is a crew step unless it says
    `feature`; reading them as `feature` steps skips the gate. Dispatching the PM anyway writes a second
    spec for the same feature — and so does routing a later "Change spec" answer back to it. Refine that
@@ -62,9 +63,15 @@ its workflow — the crew only assigns the work.
    the BRIEF's surface implies (see DISPATCH RULES) — a web or auth feature must be PLANNED against those
    rules, not only built against them. The surface is readable from the brief; you do not need a task-set
    yet. It returns a spec (7 sections) + an OPEN list. Read it. PM is read-only → YOU write the DRAFT into
-   /features/draft/ (`feature` step 1). OPEN items that need the user → resolve at the gate, not by guessing.
-   Then run `feature` step 1.5 (premortem) yourself before CREW step 3 — the PM is read-only and holds no
-   gate, so the critique of its plan is the Teamleiter's, and it must land while the spec is still a DRAFT.
+   /features/draft/ (`feature` step 1). **Transcribe the OPEN items that need the user into that DRAFT as
+   `Open assumption:` lines** — the list arrives as a chat message, and this skill's own authoritative rule
+   says chat is never a spec source; untranscribed it dies exactly as an untranscribed `DEBT:` line does
+   (CREW step 5). Split off any genuine skill defect first, as this step already tells you to. Those lines
+   ARE step 1.4's candidate list, which is how an OPEN item reaches the user instead of being guessed.
+   Then run `feature` step 1.4 (the implementation-questions gate) and 1.5 (premortem) yourself before
+   CREW step 3 — the PM is read-only and holds neither a user channel nor a gate, so BOTH questioning the
+   user about its plan and critiquing it are the Teamleiter's, and both must land while the spec is still
+   a DRAFT.
 3. **Approval gate (Teamleiter).** `feature` step 2 — move to pending/, **STOP, AskUserQuestion**. A worker
    NEVER runs this. Then honour the choice `feature` offers:
    - **Approve & implement** (fast-path, `feature` step 2/4) → straight to in-progress/, then THROUGH
@@ -75,8 +82,9 @@ its workflow — the crew only assigns the work.
    - **Change spec** → REVISE the existing DRAFT in place. It stays NEEDS_APPROVAL in pending/ (`feature`
      step 2); never move it back to draft/. Needs a re-plan → re-dispatch the `pm` agent with the current
      spec and what must change, and fold its answer into that same file — the PM returns 7 sections and
-     knows nothing of `# Premortem`, so preserve that section yourself, and re-run `feature` step 1.5 if
-     the revision newly crosses its threshold. Sending it back to crew step 2
+     knows nothing of `# Open Questions` or `# Premortem`, so preserve BOTH sections yourself, re-run
+     `feature` step 1.4 (the implementation-questions gate) if the revision opens a new question, and
+     re-run 1.5 if it newly crosses that step's threshold. Sending it back to crew step 2
      unread writes a second spec and walks the state backwards. Discard → discarded/.
 4. **Implementation gate (Teamleiter).** Before any dev is dispatched, the file must be IN_PROGRESS in
    in-progress/. The fast-path already landed it there (step 3). Resuming a held feature (still APPROVED
@@ -230,8 +238,9 @@ Every worker dispatch carries all of it. A missing item is YOUR miss, not the wo
   `git branch --show-current` and `git rev-parse HEAD`; that names the branch you will merge.
 
 # HARD RULES
-- **Every gate stays in the main loop.** Subagents have no AskUserQuestion channel — approval,
-  ready-for-done, done, and commit are the Teamleiter's, always. A worker that "approves" is a bug.
+- **Every gate stays in the main loop.** Subagents have no AskUserQuestion channel — the
+  implementation-questions gate (`feature` step 1.4), approval, ready-for-done, done, and commit are
+  the Teamleiter's, always. A worker that "approves" is a bug.
 - **No worker dispatches another worker.** Subagents cannot nest. All dispatch is the Teamleiter's.
 - **The PM plans; it never writes feature state.** Only the main loop files specs and moves them between
   folders — chat and worker output are not feature state (`feature`: only /features files define state).
