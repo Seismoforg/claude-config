@@ -33,7 +33,7 @@ A check cannot run (script missing, wrong stack, no shell) → say so in Step 3 
 **2b. Judgment sweeps — fan out `audit-scout`.** ONE per applicable dimension, all in a single message so they run in parallel. It is read-only by tool config (Read/Grep/Glob — no Bash, no Edit/Write) and keeps N sweeps out of main context. Trivial scope (one file, one question) → inline is fine. Cannot dispatch AT ALL (harness or policy forbids
 unrequested agents) → run every sweep INLINE and say so in Step 3. Never let an undispatchable sweep
 silently not happen; the dimension is unswept either way, and only one of those is honest.
-Brief each scout with: the dimension name, the module map from Step 1, the rule-source path from the catalog **resolved to absolute** (per Step 2's base), and any 2a script output relevant to it. Scouts return findings + a FRICTION line; they never fix, never gate.
+Brief each scout with: the dimension name, the module map from Step 1, the rule-source path from the catalog **resolved to absolute** (per Step 2's base), and **EVERY 2a result — all of them, to every scout**, not the ones you judge relevant. You cannot predict which check a dimension leans on: a scout decides that from its own preloaded rule source, and one that expected an output and got none either eyeballs what a script already settled or stands down, leaving the dimension unswept while it reads as swept. A few extra lines of brief is the whole cost. Scouts return findings + a FRICTION line; they never fix, never gate.
 Main loop dedupes, ranks, and owns Steps 3-8: **subagents cannot call AskUserQuestion, so every gate stays in the main loop.**
 Scout reports FRICTION (missing tool, rule it could not apply) → carry it to Step 8, it is self-improve evidence.
 
@@ -61,16 +61,18 @@ Turn the approved remediation into a tracked feature — the audit report is the
 - Invoke `feature`, create a DRAFT under `/features/draft/` whose Summary/Problem/Solution/Technical-Plan restate the approved findings, Tasks = one item per finding to fix (grouped by area), Impact Analysis lists affected/new/deleted files.
 - The Step 4 selection (any option but "Report only") IS the approval to implement — create the feature file DIRECTLY in `/features/in-progress/` (status IN_PROGRESS), collapsing the empty draft/approved rests (feature fast-path); don't physically pass through each folder and don't re-ask a separate feature approval gate for the same scope. Remediation = that feature's implementation phase; its validation gate (READY_FOR_DONE → DONE) replaces this skill's ad-hoc "done" check.
 - Remediation too big for one feature (independent phases/areas) → split into sequential features: first straight to in-progress (fast-path above), rest to `/features/approved/` as a queue; implement in order, each through its own validation gate.
+- **A finding the user DECLINED at Step 4 still gets a file** — one DRAFT in `/features/draft/`, write-only (`feature` ON ACTIVATION 0.7), grouping the declined findings. Declining a fix is not declining the record. It is NOT debt and never goes through TECHNICAL DEBT's route: that block hands every audit finding back to this skill, so this line is the home. Left in the Step 3 report only, it lives in chat, and chat is never feature state.
 - Keep the Tasks checklist current as findings are fixed.
 
 # STEP 6 — REMEDIATE
 Apply only approved findings, per the composed skills:
 - `coding-standards`: minimal diffs, match existing patterns, no scope creep; moving/renaming/splitting → VCS move to preserve history, rewrite references in one pass.
-- `documentation`: update AGENTS.md/links/ADRs/tech-debt affected; don't over-document.
+- `documentation`: update AGENTS.md/links/ADRs affected; don't over-document. Debt is not a doc — a finding you defer stays this audit's own feature (STEP 5), never a doc entry.
 - Fix reveals the scope was wrong → update the plan/spec first, then continue.
 
 # STEP 7 — VERIFY & REPORT
 - Run the project's typecheck/build (+ tests, if present) to confirm no stale references/regressions. A full build or suite qualifies under LOCAL RESOURCE RUNS (`skills/_shared/blocks.md`) — one audit is one task, so ask once before the first one.
+- **ENUMERATE the runnable checks from the manifest, never from memory** — same rule as STEP 1's map, same failure. Read the project's own list of test/verify entry points and run all of them; a hand-listed subset silently skips whatever it forgot, and a regression in the skipped one survives every later "all green" until something else trips over it.
 - Report faithfully: fixed / deferred / remaining, and any check that failed or couldn't run (say why). Don't claim a fix works if you couldn't verify it.
 
 # STEP 8 — SELF-IMPROVE
@@ -81,11 +83,11 @@ Non-obvious, high-severity only. The dimension list (STEP 2) and the workflow (S
 - Investigation is read-only; no edits before the Step 4 approval gate.
 - Stack-agnostic — detect language/framework/layout, never assume.
 - Evidence-based findings only (`file:line`); rank by severity; don't pad.
-- **A scout whose dimension defers to a mechanical check gets that check's OUTPUT in its brief.** Omit it and the scout must either eyeball what a script already decided or stand down — both leave the dimension unverified while it reads as swept. STEP 2b states this; it belongs here too because omitting it is invisible in the result.
+- **EVERY scout gets EVERY 2a result**, not the ones you judge its dimension needs. Omit one and the scout must either eyeball what a script already decided or stand down — both leave the dimension unverified while it reads as swept, and which check a dimension leans on is the scout's call, not yours. STEP 2b states this; it belongs here too because omitting it is invisible in the result.
 - Before proposing a fix, confirm the current state isn't an intentional convention (typed sentinel, documented default, deliberate tier, a term or rule placed where it is on purpose) — check the local type/model/definition, or the rule that governs it. Contradicts your fix → drop or downgrade the finding, don't "fix" it. (Stated here AND in `reference/dimensions.md` on purpose: a scout never loads this file. Keep both copies identical.)
 - Consistency is paramount: any pattern applied unevenly (imports, config, error handling, i18n, styling, naming, layout) is a finding — fix = align to the dominant pattern, never add another variant.
 - Unless "Report only" (or a trivial no-behavior-change fix per the Step 5 carve-out), capture approved remediation as a `feature` draft and remediate through the feature lifecycle — never edit non-trivial code straight from the audit report.
 - Significant structural changes need explicit approval (`coding-standards` REFACTOR RULES owns the threshold).
 - Verify with the project's build/tests before declaring done; report honestly.
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS / TECHNICAL DEBT.

@@ -43,6 +43,43 @@ Dispatching a worker whose brief contains such a run → ask BEFORE dispatch; ap
 carry it. Subagent: your brief is your authorization — a qualifying run it does not name is reported
 back, not started.
 
+# TECHNICAL DEBT
+Debt you knowingly leave is WORK, not a doc entry. It becomes a feature file — never a line in a
+document that nothing revisits.
+Trigger: every knowing shortcut, workaround or deferred fix. No size bar; a one-line TODO counts.
+Three things are NOT this rule, and all three look like it:
+- **An UNFINISHED task is not debt.** The test is COMPLETENESS, not scope. Work you did not deliver
+  stays a task and `feature` step 6 blocks on it. Work you DID deliver, by a knowingly weaker means
+  than its Technical Plan describes, IS debt — and that is the commonest kind, so debt inside the
+  current spec's scope is normal, not a contradiction. Filing an undelivered task as debt turns this
+  rule into an exit from that gate.
+- **Debt you did NOT create** (pre-existing, found while reading) → mention it, per CLAUDE.md §3's
+  dead-code rule. Not yours to file.
+- **An `audit-solution` FINDING is not debt** — that skill owns it end to end: approved → its STEP 5
+  feature, declined → the DRAFT its STEP 5 files. One finding, one home. A shortcut you take WHILE
+  remediating is ordinary debt, noted in the remediation feature's own `# Debt Found`.
+Two steps, so a session break loses nothing:
+1. **Note it the moment you take it.** Running feature → one line under its `# Debt Found` section.
+   `feature` FEATURE FILE FORMAT owns what that line carries — do not restate it elsewhere. Open no
+   other feature file mid-build.
+2. **File it at the gate.** `feature` step 6 turns every `# Debt Found` line into its own feature file
+   in `/features/draft/`, status DRAFT, and writes that file's id back onto the line. Draft, not
+   pending: debt never jumps the approval queue of the work that found it.
+An ABSENT `# Debt Found` section is not proof that no shortcut was taken — step 6 makes you say "no
+debt taken" out loud. Silence is not an answer.
+No running feature (ad-hoc fix, bug hunt) → no host section, so write the DRAFT straight away.
+**Filing debt is a WRITE-ONLY entry into `feature`, wherever you file from.** Create the file in
+`draft/` with status DRAFT and STOP — no premortem, no approval gate, no move. The normal workflow
+drives a new spec to `pending/` and a blocking user question, which is precisely the queue-jump the
+line above forbids. `feature` ON ACTIVATION owns this branch.
+**The filed DRAFT is MINIMAL.** All 7 sections stay required, but Summary/Problem/Solution may be one
+line each and Tasks one item. The trigger has no size bar, so per-item cost decides whether the rule
+survives a real build.
+Subagent: you cannot file feature state AT ALL. A file you write in your worktree is discarded with
+it (`features/` is git-ignored), and an edit aimed at the main checkout is REJECTED for an isolated
+agent — MEASURED, see `crew` DISPATCH BRIEF. So neither a new file nor an append to the spec is open
+to you. Name the debt in your final message; the dispatcher files it.
+
 # APPROVAL GATES
 Any point marked "STOP. Ask" / "CONFIRM ... (REQUIRED)" → `AskUserQuestion`, multiple choice,
 never free text. Don't proceed until answered.

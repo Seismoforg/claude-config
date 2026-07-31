@@ -13,6 +13,7 @@ Authoritative rule: **only files inside `/features` define feature state.** Chat
 Before anything else:
 0. Bare invocation (no feature named/described) → don't guess. Show current non-terminal features (draft, pending, approved, in-progress, ready-for-done) and ask via AskUserQuestion what to do (include a "Brainstorm a new feature" option → Workflow step 0). Proceed only once a feature/intent is chosen.
 0.5. Request reads as another skill's dedicated trigger (e.g. whole-system audit, ad-hoc bug hunt) → surface the mismatch, ask before hand-rolling it inside feature instead of using the purpose-built skill.
+0.7. Request is FILING DEBT (TECHNICAL DEBT in `skills/_shared/blocks.md`) → **write-only entry**. Write the spec into `/features/draft/` with status DRAFT, minimal per that block, and STOP. Skip steps 0, 1.5 and 2 entirely: no brainstorm router, no premortem, no approval gate, no folder move. Running debt through the normal workflow lands it in `pending/` behind a blocking user question — the exact queue-jump the block forbids. It re-enters the workflow later, when the USER picks it up out of `draft/`.
 1. Identify which feature the request refers to (name or timestamp).
 2. Exists → open it, read `status`, confirm folder matches status (MECHANICAL CHECK below — run it, don't eyeball). Folder ≠ status → STOP and report the mismatch, don't guess.
 3. Doesn't exist → new feature, start at Workflow step 0. Not a detour: step 0's first branch sends an already-specified request straight on to step 1. Entering at step 1 directly skips the router and is how step 0 stayed dead.
@@ -79,6 +80,11 @@ Conditional 8th section, written by step 1.5 — report + mitigation table when 
 ```
 # Premortem        (failure report + mitigation table, or the one-line skip record)
 ```
+Conditional 9th section, appended LAST (after `# Premortem` where one exists) — written during step 5, the moment you knowingly leave a shortcut. TECHNICAL DEBT in `skills/_shared/blocks.md` owns WHEN to write it; this is the only definition of what a line in THIS SECTION carries. (`agents/dev.md` OUTPUT separately owns a worker's `DEBT:` REPORT line, which a dispatcher transcribes into this format — two formats on purpose: one written by an actor that can file, one by an actor that cannot.)
+```
+# Debt Found       (one line per shortcut: what · path:line · why you took it · the DRAFT id step 6 files it as)
+```
+Absent = no shortcut was taken. That is a claim step 6 makes you state out loud, never a silence it accepts.
 **Language + style: feature files follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`) — English + terse/plain across title, all sections, Tasks; every requirement/number/file/constraint kept.
 
 # WORKFLOW
@@ -136,13 +142,14 @@ Before ANY code change: verify file exists AND status = APPROVED. Then move to `
 
 ## 5. Implement
 Build only the spec's tasks. Scope changes → update the spec first. Keep Tasks current.
+Knowingly leaving a shortcut → that is DEBT, and debt becomes its own feature. Note it under this file's `# Debt Found` section the MOMENT you take it, then step 6 files it. TECHNICAL DEBT in `skills/_shared/blocks.md` owns the rule — including the three things that look like debt and are not: an UNDELIVERED task (the test is completeness, not scope — a task you DID deliver by a knowingly weaker means is debt, and it is in scope by definition), debt you did not create, and an `audit-solution` finding.
 A fact found while building that INVALIDATES the premise of a decision the user already made at a gate → re-open it via AskUserQuestion, stating the new fact. Keeping it silently ships a choice made on a false premise; overriding it silently takes the user's call away.
 Feature DERIVES its output from real data (heuristic, scan, model) → run the real pipeline on real input as soon as ONE slice works, before building the rest. Tests written first encode your assumption about the data and all go green while the derivation is wrong; Step 6's sample read then costs a rebuild, not a fix. That real run is subject to LOCAL RESOURCE RUNS in `skills/_shared/blocks.md` — a model or GPU pipeline asks the user before it starts.
 - Apply `coding-standards` to every code change.
 - Apply `security-review` when the feature touches auth, sessions, input handling, or external payloads.
 - Apply `web-standards` to any web/UI change (responsive, a11y, perf, motion).
 - Apply `taste` when the feature is frontend design work — landing/marketing/hero/portfolio surfaces, redesigns, visual polish, "make it look good / not templated" (composes with `web-standards`).
-- Apply `documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, ADRs, or technical debt.
+- Apply `documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, or ADRs. Technical debt is NOT on this list any more — it is a feature of its own, see above.
 Invoke each skill via the Skill tool; don't just paraphrase.
 - Fanning an enumerated task/checklist out to parallel workers → explicitly assign every item, and re-verify full coverage against the list before dispatch AND after merge; unassigned items drop silently.
 Intermediate commits during implementation are fine — but NEVER on the default branch: branch first as `feature/<this feature file's slug>`, the timestamp dropped (`git-commit` STEP 1 owns resolving the default branch's name and STEP 4 owns the naming scheme; don't hand-roll either). The FINAL deliverable commit waits until AFTER the user moves the feature to DONE (Step 7), and only if the user opts in there.
@@ -150,7 +157,8 @@ Intermediate commits during implementation are fine — but NEVER on the default
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
 - all tasks complete, no unfinished work
-- docs updated if required (via `documentation` when architecture/APIs/AGENTS.md/ADRs/debt touched)
+- every `# Debt Found` line filed as its own DRAFT in `/features/draft/` (write-only, per ON ACTIVATION 0.7; MINIMAL, per the block), its id written back onto the line. An ABSENT section is NOT proof: `# Validation` records either the filed ids or "no debt taken", said out loud. Debt is usually recognised HERE, reading the diff, not at the keystroke that created it — so an empty section far more often means you forgot than that you were clean
+- docs updated if required (via `documentation` when architecture/APIs/AGENTS.md/ADRs touched)
 - code conforms to `coding-standards`
 - build succeeds (if applicable)
 - tests pass (if available)
@@ -195,4 +203,4 @@ Non-obvious, high-severity only — the state machine and workflow above are not
 - **A follow-up change contradicting an already-DONE spec** → new feature, or a brief amendment note in the DONE file. The terminal spec never drifts from the code.
 - **High-risk features require explicit approval before implementation.**
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS / TECHNICAL DEBT.

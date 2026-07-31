@@ -99,7 +99,11 @@ its workflow — the crew only assigns the work.
    **Dispatch the whole round before you merge anything.** Every worktree in a round is cut from the same
    base; commits you make mid-round are invisible to workers already dispatched, so a late dispatch would
    silently build on a different state than its peers.
-   Each dev commits inside its worktree; you merge each branch in (see DISPATCH RULES). Then run a
+   Each dev commits inside its worktree; you merge each branch in (see DISPATCH RULES).
+   **Transcribe that dev's `DEBT:` line into the feature file's `# Debt Found` section immediately
+   after ITS merge** — the same moment as the after-merge coverage re-check, never "later". A worker's
+   report is a chat message, and only `/features` files are feature state; untranscribed, the debt is
+   gone the moment the round ends. `DEBT: none` needs nothing. Then run a
    cross-cutting pass over the merged result with the applicable skills — the devs wrote WITH them, you
    confirm the whole holds together — plus the shell-bound checks for whichever skills ACTUALLY applied:
    `taste`'s pre-flight if this was a design surface (a worker that only READ the file could not run it),
@@ -134,7 +138,10 @@ its workflow — the crew only assigns the work.
    new ones = not converging → report the pattern and ask. `feature` step 6 owns both rules; they apply
    here too, and grinding on without them is the exact failure this skill has already lived through.
 7. **Validation + finish (Teamleiter).** `feature` step 6 — fill # Validation, move to ready-for-done/,
-   **STOP, AskUserQuestion**. Then `feature` step 7 (DONE) and `feature` step 8 (`self-improve`), both main-loop.
+   **STOP, AskUserQuestion**. Its debt bullet is yours alone: EVERY `# Debt Found` line becomes its own
+   DRAFT in `/features/draft/` — the ones you transcribed from devs in step 5 AND the ones your own
+   main-loop work produced (step 5's cross-cutting pass, step 6's fix rounds; you write code too).
+   No worker can do it — `features/` is not in any worktree. Then `feature` step 7 (DONE) and `feature` step 8 (`self-improve`), both main-loop.
    The devs' work is already on the working branch as merges; the tests you wrote in step 6 and any
    main-loop fixes are still loose in the tree. So step 7's commit ask routes through `git-commit`
    exactly as `feature` step 7 requires — it owns the confirmation, the default-branch gate, and push/PR.
@@ -211,6 +218,9 @@ Every worker dispatch carries all of it. A missing item is YOUR miss, not the wo
   worktree: hand them repo-relative and let the worker join them onto its worktree root. MEASURED:
   edit targets handed as main-checkout absolutes were REJECTED — "this agent is isolated in the
   worktree; edit the worktree copy instead" — and every dev in that round hit it.
+- Executors only: the `DEBT:` line is EXPECTED — say so in the brief, so a knowingly-left shortcut
+  comes back as a report instead of being filed (it cannot be) or dropped. `agents/dev.md` OUTPUT owns
+  its format; you own the transcription (step 5) and the filing (step 7).
 - Executors only: the EXPECTED base — branch name AND commit — plus "check `git rev-parse HEAD` first;
   behind it → move onto that base before editing". A worktree is cut from the tip as of SESSION START,
   so every round after a merge starts stale. MEASURED: three dispatches in one feature, each 2-3 commits
@@ -232,4 +242,4 @@ Every worker dispatch carries all of it. A missing item is YOUR miss, not the wo
   are fine"). What waits for DONE is only the FINAL deliverable commit, and only on the user's opt-in via
   `git-commit`. It assigns work inside feature's gates; it does not replace them.
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS.
+See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES / LOCAL RESOURCE RUNS / TECHNICAL DEBT.
