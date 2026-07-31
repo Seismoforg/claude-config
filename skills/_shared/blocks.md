@@ -69,7 +69,7 @@ An ABSENT `# Debt Found` section is not proof that no shortcut was taken — ste
 debt taken" out loud. Silence is not an answer.
 No running feature (ad-hoc fix, bug hunt) → no host section, so write the DRAFT straight away.
 **Filing debt is a WRITE-ONLY entry into `feature`, wherever you file from.** Create the file in
-`draft/` with status DRAFT and STOP — no premortem, no approval gate, no move. The normal workflow
+`draft/` with status DRAFT and STOP — no questions gate, no premortem, no approval gate, no move. The normal workflow
 drives a new spec to `pending/` and a blocking user question, which is precisely the queue-jump the
 line above forbids. `feature` ON ACTIVATION owns this branch.
 **The filed DRAFT is MINIMAL.** All 7 sections stay required, but Summary/Problem/Solution may be one

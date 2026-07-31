@@ -5,6 +5,10 @@ Prospective hindsight on a feature plan. Assert the failure as already happened,
 Loaded by `feature` workflow step 1.5. That step owns the threshold and the carve-outs — this file
 is the prompt, not the trigger.
 
+Step 1.4, the implementation-questions gate, ran first: the spec you critique already carries the
+user's answers under `# Open Questions`. Read them — a plan built on an answer you did not see is one
+you will critique for the wrong reasons.
+
 Why this framing: "what could go wrong" returns hedged lists that change no plan. "It failed — why"
 forces one causal account with a mechanism in it.
 

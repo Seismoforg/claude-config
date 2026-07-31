@@ -13,7 +13,7 @@ Authoritative rule: **only files inside `/features` define feature state.** Chat
 Before anything else:
 0. Bare invocation (no feature named/described) → don't guess. Show current non-terminal features (draft, pending, approved, in-progress, ready-for-done) and ask via AskUserQuestion what to do (include a "Brainstorm a new feature" option → Workflow step 0). Proceed only once a feature/intent is chosen.
 0.5. Request reads as another skill's dedicated trigger (e.g. whole-system audit, ad-hoc bug hunt) → surface the mismatch, ask before hand-rolling it inside feature instead of using the purpose-built skill.
-0.7. Request is FILING DEBT (TECHNICAL DEBT in `skills/_shared/blocks.md`) → **write-only entry**. Write the spec into `/features/draft/` with status DRAFT, minimal per that block, and STOP. Skip steps 0, 1.5 and 2 entirely: no brainstorm router, no premortem, no approval gate, no folder move. Running debt through the normal workflow lands it in `pending/` behind a blocking user question — the exact queue-jump the block forbids. It re-enters the workflow later, when the USER picks it up out of `draft/`.
+0.7. Request is FILING A RECORD rather than proposing work — technical debt (TECHNICAL DEBT in `skills/_shared/blocks.md`), or an audit finding the user DECLINED (`audit-solution` STEP 5) → **write-only entry**. Write the spec into `/features/draft/` with status DRAFT, minimal, and STOP. Skip steps 0, 1.4, 1.5 and 2 entirely: no brainstorm router, no implementation-questions gate, no premortem, no approval gate, no folder move. Running a record through the normal workflow lands it in `pending/` behind a blocking user question — for debt that is the queue-jump the block forbids, and for a declined finding it re-asks a decision the user just made. It re-enters the workflow later, when the USER picks it up out of `draft/`.
 1. Identify which feature the request refers to (name or timestamp).
 2. Exists → open it, read `status`, confirm folder matches status (MECHANICAL CHECK below — run it, don't eyeball). Folder ≠ status → STOP and report the mismatch, don't guess.
 3. Doesn't exist → new feature, start at Workflow step 0. Not a detour: step 0's first branch sends an already-specified request straight on to step 1. Entering at step 1 directly skips the router and is how step 0 stayed dead.
@@ -30,7 +30,7 @@ One feature per file. Chronological by filename. No index file. One request bund
 
 # STATE MACHINE
 ```
-/features/draft/         → DRAFT          → refine, premortem (step 1.5), then request approval
+/features/draft/         → DRAFT          → refine, questions gate (1.4), premortem (1.5), then request approval
 /features/pending/       → NEEDS_APPROVAL → wait for user
 /features/approved/      → APPROVED       → move to in-progress, then implement
 /features/in-progress/   → IN_PROGRESS    → implement, then validate
@@ -76,15 +76,17 @@ Body (all required):
 # Impact Analysis  (affected/new/deleted files; breaking changes; overlap with other in-flight features editing the same files)
 # Validation       (filled at the READY_FOR_DONE gate)
 ```
-Conditional 8th section, written by step 1.5 — report + mitigation table when its threshold fires, one line naming the checked criteria when it does not. Absent only where 1.5 never ran (audit fast-path, or a spec predating it). The seven above stay required:
+Three more sections the GATES add. The seven above stay required and none of these replaces one. They appear in the file in the order their gate runs — deliberately NOT numbered "8th/9th/10th": a count in prose goes stale the moment a gate is added, and nothing greps for an ordinal.
 ```
-# Premortem        (failure report + mitigation table, or the one-line skip record)
+# Open Questions   (added by step 1.4 — one row per category: question or evidence · answer · what changed)
+# Premortem        (added by step 1.5 — failure report + mitigation table, or the one-line skip record)
+# Debt Found       (added during step 5 — one line per shortcut: what · path:line · why you took it · the DRAFT id step 6 files it as)
 ```
-Conditional 9th section, appended LAST (after `# Premortem` where one exists) — written during step 5, the moment you knowingly leave a shortcut. TECHNICAL DEBT in `skills/_shared/blocks.md` owns WHEN to write it; this is the only definition of what a line in THIS SECTION carries. (`agents/dev.md` OUTPUT separately owns a worker's `DEBT:` REPORT line, which a dispatcher transcribes into this format — two formats on purpose: one written by an actor that can file, one by an actor that cannot.)
-```
-# Debt Found       (one line per shortcut: what · path:line · why you took it · the DRAFT id step 6 files it as)
-```
-Absent = no shortcut was taken. That is a claim step 6 makes you state out loud, never a silence it accepts.
+- **`# Open Questions` is present on EVERY spec that reached step 2.** 1.4 has no threshold, so absent there is a defect, not an ambiguity. Absent is CORRECT on any spec that never reaches step 2 — stated as the property, not as a list, because the list has already grown: the audit fast-path, its queued `approved/` siblings, and every ON ACTIVATION 0.7 record. Plus specs predating this gate.
+- **`# Premortem`** is conditional on 1.5's own threshold; absent where 1.5 never ran (audit fast-path, or a spec predating it).
+- **`# Debt Found`** is conditional on a shortcut actually being taken. Absent = none was — a claim step 6 makes you state out loud, never a silence it accepts. TECHNICAL DEBT in `skills/_shared/blocks.md` owns WHEN to write it; the line above is the only definition of what a line in THAT section carries. (`agents/dev.md` OUTPUT separately owns a worker's `DEBT:` REPORT line, which a dispatcher transcribes into this format — two formats on purpose: one written by an actor that can file, one by an actor that cannot.)
+**`Open assumption:` lines** — a trailing list under `# Technical Plan`, one line each: what you assumed and why, for anything the spec could not settle. EVERY spec writer produces them: inline at step 1, `feature-brainstorming` (its §5), and the Teamleiter transcribing a `pm` agent's `OPEN:` list into the DRAFT it files. They are step 1.4's candidate list, so a spec that smooths its assumptions away disarms the gate that exists to confirm them.
+
 **Language + style: feature files follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`) — English + terse/plain across title, all sections, Tasks; every requirement/number/file/constraint kept.
 
 # WORKFLOW
@@ -95,18 +97,37 @@ Every new feature enters here. Not optional, and not a detour — one of its bra
 The test that picks — **to fill the spec, would you have to INVENT a decision the user has an opinion about?** Not "can I write fluent prose for this section": you always can, and that fluency is the failure. Ask instead which concrete choices you would be making FOR them — a limit, a default, a storage location, a scope cut.
 - **None — you would invent nothing** → skip both, straight to step 1.
 - **Several, and the IDEA itself is one of them.** Vague, exploratory, "what could we do", or the user says brainstorm/wild ideas → `drunken-genius`. Let it run its wild-round → sober-look → nightcap process. Its output stays in chat; it is NOT feature state, it never writes a file. Once the user picks an idea (or a merge of several), carry it into step 1 as the DRAFT's Summary/Problem/Solution seed — or into `feature-brainstorming` if the details are still open.
-- **Several, but the idea is settled — the DETAILS or the APPROACH are open.** The feature is named but underspecified → `feature-brainstorming`. Mostly multiple-choice `AskUserQuestion` interview, then it performs step 1 for you: DRAFT written into `/features/draft/` with status `DRAFT`. It returns there. You resume at **step 1.5** and do NOT redo step 1. That file IS feature state the moment it exists.
+- **Several, but the idea is settled — the DETAILS or the APPROACH are open.** The feature is named but underspecified → `feature-brainstorming`. Mostly multiple-choice `AskUserQuestion` interview, then it performs step 1 for you: DRAFT written into `/features/draft/` with status `DRAFT`. It returns there. You resume at **step 1.4, the implementation-questions gate** (then 1.5) and do NOT redo step 1. That file IS feature state the moment it exists.
 - **The idea is open AND the details under it are** → `drunken-genius` first, then `feature-brainstorming` on the picked idea.
 
 ## 1. Create → DRAFT
 Write the spec into `/features/draft/`. Fill all sections as far as known.
 Change mirrors an existing one (same layer, sibling module) → read that precedent FIRST and mirror its structure. A plan drafted from the file tree alone puts constants and wiring in plausible-but-wrong places, and the correction lands mid-implementation.
+Anything the spec cannot settle becomes an `Open assumption:` line under `# Technical Plan` (FEATURE FILE FORMAT). Not optional and not a confession of sloppiness — it is what step 1.4 works from. An inline spec with no assumption list hands that gate a blank page.
 Spec fixes a defect CLASS (a rule missing from several files, one pattern wrong in several places) → grep every instance BEFORE writing Tasks; count from the grep, not from the report you are working off. A spec naming 4 of 6 instances looks complete, passes its own review, and ships the other 2 unfixed.
 Plan changes an exported SIGNATURE → count call sites by grepping the SYMBOL, not the feature's surface description; the two sets differ. Sizing Impact Analysis from the wrong set understates it, and the missed callers surface as build errors mid-implementation.
-Spec written → step 1.5, never straight to step 2.
+Spec written → step 1.4, the implementation-questions gate, then 1.5. Never straight to step 2.
+
+## 1.4 Implementation questions — ask before the critique
+Runs on EVERY spec, before the premortem — in `draft/`, or in `pending/` after a Change-spec revision that opened a new question. No threshold, no folder move, no status change, and it is the only gate that asks the USER about a spec that already exists.
+
+Frame: **it is one day later, you are about to start implementing this spec, and you still have questions. What are they?**
+
+Carve-outs — the same two paths 1.5 skips, for the same reason: the audit-remediation fast-path (STATE MACHINE) and ON ACTIVATION 0.7's debt write-only entry. Neither reaches step 2, so neither has a gate to feed.
+
+Spec already carries an `# Open Questions` section → it ran; go to step 1.5, unless a Change-spec revision has since opened a new question. That section is the ONLY record that it ran.
+
+Then:
+1. Read the spec — its `Open assumption:` lines FIRST, they are your candidate list — and `reference/open-questions.md`. Join that pointer onto this skill's announced base directory; a bare relative path resolves against the CWD, which is the user's project.
+2. Walk the five categories. Each ends in a QUESTION to the user or a `settled by <evidence>` line, never blank. A candidate is a question only if a WRONG ANSWER COSTS REWORK; below that bar, settle it. Evidence is a repo `file:line`, an earlier user answer, or "no consequence either way" — never the spec you are writing.
+3. Questions qualify → **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file), ONE round, max 4 (the harness cap). More than 4 → ask the top 4 by cost, record the rest as deferred. None qualify → ask nothing; the evidence lines are the record, and the gate still ran. This is the one point in the workflow where the STOP is conditional — nothing qualifying is a real outcome, not a skipped gate.
+4. Edit the spec. Then write the table, recording the edits you MADE — never intentions.
+5. Append `# Open Questions` at the END of the file. On a first run that is after `# Validation`; no `# Premortem` can exist yet, since 1.5 has not run. Re-running on a revision → EXTEND the existing section, never append a second: it is the only record the gate ran, and two of them identify no current round.
+6. Re-ran on a revision and edited the spec → the existing `# Premortem` mitigation table now names sections that changed after it was written. Refresh it, or re-run 1.5. Leaving it is the exact staleness the 1.4-before-1.5 order exists to prevent, arriving through the back door.
+7. Go to step 1.5.
 
 ## 1.5 Premortem — self-critique before the gate
-Runs on the spec before it is approved — in `draft/`, or in `pending/` after a Change-spec revision that newly crosses the threshold. No folder move, no status change, no user stop of its own.
+Runs on the spec before it is approved — in `draft/`, or in `pending/` after a Change-spec revision that newly crosses the threshold. No folder move, no status change, no user stop of its own. Step 1.4 ran first, so the plan you critique already carries the user's answers; that is why the order is 1.4 then 1.5 and not the reverse — a spec that changes AFTER the mitigation table is written leaves the table describing a plan that no longer exists.
 
 Threshold — run it when ANY of these holds:
 - more than 2 files or modules touched
@@ -122,14 +143,14 @@ Then:
 1. Read the spec, and `reference/premortem.md` — join that pointer onto this skill's announced base directory; a bare relative path resolves against the CWD, which is the user's project.
 2. Write the failure report.
 3. Edit the spec. Then write the mitigation table, recording the edits you MADE — never intentions. `reference/premortem.md` owns both forms, and the two outcomes that legitimately change no plan: every cause accepted as a named risk, or a premortem that found nothing real.
-4. Append report + table to the feature file as a new `# Premortem` section, after `# Validation`.
+4. Append report + table to the feature file as a new `# Premortem` section, at the END of the file — after `# Validation`, and after `# Open Questions` where 1.4 wrote one. FEATURE FILE FORMAT documents the resulting order.
 5. Go to step 2.
 
 ## 2. Request approval → NEEDS_APPROVAL
-Move to `/features/pending/`. Summarize for the user. Premortem ran → the summary carries its mitigation table, not the report; skipped → carry the one-line skip reason. Neither is optional: the table is the part that changed the plan the user is about to approve. **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file). Offer at least:
+Move to `/features/pending/`. Summarize for the user. The summary carries BOTH gates' output, and neither is optional — they are the parts that changed the plan the user is about to approve. Step 1.4 → the `# Open Questions` answers and what each changed (nothing qualified → say that, naming the categories checked), PLUS every `Open assumption:` line still unresolved, said out loud. Those are the requirements nobody confirmed; left inside the file they get approved unread. Premortem ran → its mitigation table, not the report; skipped → the one-line skip reason. **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file). Offer at least:
 - **Approve & implement** — explicit approval: → APPROVED (step 3) → implementation gate (step 4) → implement (step 5) without asking again.
 - **Approve, don't implement yet** — → APPROVED then stop.
-- **Change spec** — stay in NEEDS_APPROVAL, refine.
+- **Change spec** — stay in NEEDS_APPROVAL, refine in place. Then re-enter the gates the revision invalidated, from `pending/`: step 1.4 if it opened a new question, step 1.5 if it newly crosses that step's threshold OR if 1.4 edited the spec after the mitigation table was written. Refining without this walks past both gates on the revision most likely to need them.
 - **Discard** — → DISCARDED, move to `/features/discarded/` (abandon, keep the record).
 Only an explicit "Approve" choice counts as approval. An implement option IS the explicit confirmation to proceed.
 Spec settles a choice the user judges by LOOK or FEEL (layout, composition, interaction shape) → never record it as decided. Offer the viable options AT this gate. An internally-made visual choice ships, gets rejected on sight, and costs a full rework.
