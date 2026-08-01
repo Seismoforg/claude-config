@@ -24,19 +24,33 @@ node skills/documentation/scripts/check-docs.mjs
 ```
 
 ## GitHub Copilot export
-`node scripts/build-copilot.mjs .` translates this config into `github_build/` — the same skills and
-agents in the formats Copilot reads. The output is git-ignored: build it when you want it.
-`--check` re-derives and diffs instead of writing, which answers "did my edit change the
-translation?". It is not a gate; nothing here goes stale, because nothing is committed.
-Why it used to be committed and why that changed:
-[ADR 0002](docs/adr/0002-commit-the-generated-copilot-build.md) →
-[0003](docs/adr/0003-do-not-commit-the-generated-copilot-build.md).
+Copilot reads the same `SKILL.md` format this repo writes, so a skill translates one for one.
+```
+node scripts/build-copilot.mjs .                  # build github_build/
+node scripts/build-copilot.mjs . --install-skills # also install them for this user
+node scripts/build-copilot.mjs . --check          # re-derive and diff, write nothing
+```
+- **`github_build/`** — a portable `.github/` tree for a REPO: 15 skills at `.github/skills/<name>/`,
+  the 6 subagents at `.github/agents/`, `CLAUDE.md` as `copilot-instructions.md`. Git-ignored; build
+  it when you want it.
+- **`--install-skills`** — the per-machine install, into `~/.copilot/skills` (or `=<dir>`). Writes
+  only the skill folders it emits, never deletes, and names anything there it did not write.
+- **`--check`** — answers "did my edit change the translation?". Not a gate: nothing is committed,
+  so nothing goes stale.
+
+Verify in VS Code with `/skills` in Copilot Chat, or the gear icon → Agent Customizations → Skills.
+
+Decisions behind this: [0002](docs/adr/0002-commit-the-generated-copilot-build.md) →
+[0003](docs/adr/0003-do-not-commit-the-generated-copilot-build.md) (why the build is not committed),
+and [0004](docs/adr/0004-export-skills-as-copilot-agent-skills.md) (why skills are skills again, and
+what the old split bought that this gives up).
 
 ## Decisions
 Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than edited:
 - [0001](docs/adr/0001-tester-is-read-only-not-an-executor.md) — the tester is read-only, not an executor
 - [0002](docs/adr/0002-commit-the-generated-copilot-build.md) — superseded by 0003
 - [0003](docs/adr/0003-do-not-commit-the-generated-copilot-build.md) — the Copilot build is git-ignored
+- [0004](docs/adr/0004-export-skills-as-copilot-agent-skills.md) — skills export as Copilot Agent Skills
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.

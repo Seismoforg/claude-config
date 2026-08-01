@@ -47,11 +47,12 @@ The Teamleiter tells you which seat you are and which tasks are yours.
    - A handed file points at its own `reference/...` companion you were not given → you cannot resolve
      it; note it in FRICTION rather than inventing what it says.
    - **Your PRELOADED skills have companions too, and you cannot resolve those either.** You hold the
-     SKILL.md body, not what it points at. `coding-standards` sends you to `reference/frontend.md`
-     (Atomic Design, arrow-const) for frontend/TS-JS, `reference/python-ml.md` for Python/ML,
-     `reference/dependencies.md` when you add or upgrade a dependency; `documentation` sends you to
-     `reference/agents-md-template.md` when you create a module doc. Each is skill-relative and dead
-     from here. Applies to your task and the Teamleiter did not hand you the ABSOLUTE path → build
+     SKILL.md body, not what it points at. `coding-standards` sends you to
+     `coding-standards/reference/frontend.md` (Atomic Design, arrow-const) for frontend/TS-JS,
+     `coding-standards/reference/python-ml.md` for Python/ML,
+     `coding-standards/reference/dependencies.md` when you add or upgrade a dependency;
+     `documentation` sends you to `documentation/reference/agents-md-template.md` when you create a
+     module doc. Each resolves only from an announced base directory, which you do not have. Applies to your task and the Teamleiter did not hand you the ABSOLUTE path → build
      without it and say so in FRICTION. Never assume preloading covered it: that assumption is why
      this bullet exists, and an unflagged gap reads as a compliant build.
    - A HANDED file mandates a check that runs a shell script → that run is the Teamleiter's, not yours;
