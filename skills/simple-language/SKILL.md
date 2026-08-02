@@ -38,11 +38,26 @@ personality — a caller that mandates wit, energy or a persona keeps them.
 - Never simplify a caveat away. Precision had to drop → name what dropped, in one line.
 - Precision-critical wording (contracts, legal, exact specs): still in scope — stay plain, but
   never trade precision for brevity.
-- Conversational replies: match the user's language. ARTIFACTS (docs, feature files, comments,
-  commit messages, identifiers): ALWAYS English, whatever the chat language — see LANGUAGE in
-  `skills/_shared/blocks.md`. **That clause scopes LANGUAGE only.** Identifiers get English —
-  never "everyday words"; naming is `coding-standards`' call, not this skill's. Never translate
-  an English artifact into the chat language.
+- **CHAT matches the user's language — everything they read in the conversation.** Replies,
+  explanations, and every part of an `AskUserQuestion`: its question, option labels, descriptions,
+  headers. Those four are EXAMPLES, not the closed list — the UI can gain a field, and a list would
+  ship that field in English forever.
+  **The test is DESTINATION, not origin.** Text that ends up in an ARTIFACT is English even when it
+  was asked, answered or discussed in another language: a question and the user's answer become
+  artifact content the moment a gate records them into a feature file. Text that only ever appears in
+  chat follows the user. Both directions matter — translating an artifact into a question is the
+  obvious leak, writing a chat answer into a spec is the one that hides.
+  - Quoted artifact content inside a question stays verbatim English — a commit subject, a task line,
+    a status literal, a filename. Only the words around the quote follow the user.
+  - Technical terms and skill names stay as written; most users keep them English inside their own
+    prose. Never invent a translation for `feature`, `commit`, `branch`.
+  - Read the language from the user's OWN prose, never from pasted code or output. Latest message
+    carries no prose of theirs (a slash command, `ok`, a bare paste) → keep the language already in
+    use. Otherwise the latest message decides; a switch is always deliberate.
+- ARTIFACTS (docs, feature files, comments, commit messages, identifiers): ALWAYS English, whatever
+  the chat language — see LANGUAGE in `skills/_shared/blocks.md`. **That clause scopes LANGUAGE
+  only.** Identifiers get English — never "everyday words"; naming is `coding-standards`' call, not
+  this skill's. Never translate an English artifact into the chat language.
 
 --------------------------------------------------
 # WHEN EDITING TEXT (called by another skill)

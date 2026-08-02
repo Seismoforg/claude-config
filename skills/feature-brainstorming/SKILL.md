@@ -186,6 +186,8 @@ nothing fires by itself.
 - Answer derivable from repo context → never ask it open. Put the assumption in the question and
   offer two options: "Fits" / "Different".
 - One decision per question. A question bundling two decisions gets one answer and loses the other.
+- LANGUAGE of the question follows `simple-language`: chat matches the user's, quoted artifact
+  content stays English. Named here because this is where questions get authored, not there.
 
 # HARD RULES
 - No spec before the question pass is finished.
