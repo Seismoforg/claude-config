@@ -164,13 +164,14 @@ Invoke the matching skill — don't bypass it and hand-roll:
 - Technical debt you knowingly leave → `feature` (a DRAFT of its own, never a doc entry — see §3)
 - Commit/push, or land a branch (merge into the default branch + clean up) → `git-commit`
 - Whole-codebase audit/health check → `audit-solution`
+- Build the whole feature queue unattended, one after another ("run autopilot", "work through the queue") → `autopilot` (drives `feature`; auto-approves drafts, parks everything at ready-for-done, never commits). MAIN LOOP ONLY.
 - Wild brainstorming, "think differently", no-filter creative ideation → `drunken-genius`
 - End of any skill workflow → `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule)
 
 ## 7. Skill composition order
 
 When several skills apply to one request, they compose in this order:
-1. Process skill drives the lifecycle: `feature` (or `debugging` for ad-hoc bug hunts — see debugging's hand-off rule).
+1. Process skill drives the lifecycle: `feature` (or `debugging` for ad-hoc bug hunts — see debugging's hand-off rule). `autopilot` and `crew` sit ABOVE `feature` rather than replacing it — both drive it, so its gates still apply except where `autopilot` declares an exception.
 2. Content/style skills apply in parallel during IN_PROGRESS: `coding-standards` (+ its addenda), `web-standards`, `taste` (taste's MOTION_INTENSITY overrides web-standards timing on landing/portfolio/marketing surfaces), `security-review` on sensitive code — while writing it, not after.
 3. Cross-cutting review before DONE: an independent `security-review` pre-release pass, `audit-solution` on request.
 4. `git-commit` closes.

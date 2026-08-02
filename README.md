@@ -4,7 +4,7 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills + custom s
 
 ## Layout
 - `CLAUDE.md` — global user instructions (behavioral guidelines).
-- `skills/`   — custom skills (coding-standards, web-standards, taste, feature, feature-brainstorming, crew, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
+- `skills/`   — custom skills (coding-standards, web-standards, taste, feature, feature-brainstorming, crew, autopilot, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
 - `agents/`   — custom subagents. Analysis (read-only): audit-scout, security-auditor, standards-reviewer, pm, tester. Executor (write, worktree): dev.
 
 Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/` (load on demand,
@@ -30,7 +30,7 @@ node scripts/build-copilot.mjs .                  # build github_build/
 node scripts/build-copilot.mjs . --install-skills # also install them for this user
 node scripts/build-copilot.mjs . --check          # re-derive and diff, write nothing
 ```
-- **`github_build/`** — a portable `.github/` tree for a REPO: 15 skills at `.github/skills/<name>/`,
+- **`github_build/`** — a portable `.github/` tree for a REPO: every skill at `.github/skills/<name>/`,
   the 6 subagents at `.github/agents/`, `CLAUDE.md` as `copilot-instructions.md`. Git-ignored; build
   it when you want it.
 - **`--install-skills`** — the per-machine install, into `~/.copilot/skills` (or `=<dir>`). Writes
