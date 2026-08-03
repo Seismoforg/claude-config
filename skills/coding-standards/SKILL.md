@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: Use whenever code is created, modified, reviewed, or refactored. Enforces architecture, file-size limits, Atomic Design, minimal-diff change strategy, and code-quality rules.
+description: "Use whenever code is created, modified, reviewed, or refactored — and the single entry point for DESIGN work (landing pages, portfolios, redesigns, hero/marketing UI, visual polish, design direction, make it look good, make it not look templated) and for any WEB/UI work (pages, components, layouts, styling, responsive/mobile, animations, anything user-facing on the web). Enforces architecture, file-size limits, Atomic Design, minimal-diff change strategy, code-quality rules. Design surfaces load an anti-slop addendum — brief inference, real design systems, audit-first redesigns, strict pre-flight check. Web surfaces load mobile-first responsive layout, WCAG accessibility, Core Web Vitals, purposeful motion, minimalist/bento layouts."
 ---
 
 # CODING STANDARDS
@@ -36,7 +36,35 @@ Building or editing frontend/TS-JS code → also read `reference/frontend.md` (A
 ## Python / ML specifics
 Python / ML work (training scripts, notebooks, model configs) → also read `reference/python-ml.md`. Not applicable to frontend/TS-JS work.
 
-**Dispatching a WORKER these govern → hand it the ABSOLUTE path.** Both pointers above, and
+## Web / UI surfaces
+Building or changing user-facing web UI — pages, components, layouts, styling, responsive/mobile
+work, animations → read `reference/web.md` **BEFORE writing**, not after. It owns mobile-first
+layout, WCAG AA accessibility, Core Web Vitals, purposeful motion, and the
+loading/empty/error/success states. Retrofitting those onto finished markup is the failure this
+rule exists to prevent.
+Non-web work → skip it.
+
+## Design surfaces — landing, portfolio, redesign, marketing
+Landing pages, portfolios, redesigns, hero/marketing UI, visual polish, design direction, a brief
+that says make it look good or make it not look templated → read `reference/design.md` **BEFORE
+writing**, on top of `reference/web.md`. It owns brief inference, the three dials, design-system
+choice, the AI-tell catalogue and the pre-flight check. Its MOTION_INTENSITY dial overrides
+`reference/web.md` §4's timing figures on these surfaces. Dense product UI, dashboards, admin panels
+→ `reference/design.md`'s OUT OF SCOPE header says which levers still apply.
+
+**Pre-flight is mandatory before outputting code** (`reference/design.md` §14, pass 1). The command
+line lives HERE, not in the addendum — the skill-dir placeholder substitutes at skill LOAD, and a
+`reference/` file is only ever `Read`, so an invocation written there would ship a literal token:
+```
+node ${CLAUDE_SKILL_DIR}/scripts/preflight.mjs <changed files or dir>
+```
+Exit 1 = violations as `file:line:col  rule (§)  detail`. Fix every hit, re-run until exit 0.
+
+**NAMING RULE — a design addendum is `reference/design-<name>.md`.** The `design-` prefix is the
+only thing grouping the design files inside a flat `reference/` directory. A tenth one landing as
+`reference/<name>.md` sits unmarked beside `frontend.md` and `python-ml.md`, and nothing errors.
+
+**Dispatching a WORKER these govern → hand it the ABSOLUTE path.** Every pointer above, and
 `reference/dependencies.md` below, are skill-relative: they resolve for the main loop, which is told
 this skill's base directory, and are dead for a subagent, which is not — including every subagent
 that preloads this skill, which is all of them. `crew` DISPATCH RULES owns the hand-off. Stated here,

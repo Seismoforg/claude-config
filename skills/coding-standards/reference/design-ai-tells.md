@@ -1,7 +1,7 @@
 # AI TELLS — Forbidden Patterns (detail)
 
 Load when composing sections/copy, or when a Pre-Flight Check (§14) box needs the
-"why"/examples behind it. §9.G (EM-DASH BAN) stays inline in SKILL.md — highest-severity,
+"why"/examples behind it. §9.G (EM-DASH BAN) stays inline in `reference/design.md` — highest-severity,
 most-violated, needed in working memory while writing copy, not just at review.
 
 Avoid these signatures unless the brief explicitly asks for them.

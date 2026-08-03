@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// taste pre-flight — the MECHANICAL subset of SKILL.md §14.
+// design pre-flight — the MECHANICAL subset of reference/design.md §14.
 // Judgment boxes (hero fit, zigzag cap, layout-family repetition, copy self-audit,
 // div-fake-screenshots) are NOT here: they need eyes, not grep. See §14.
 // Usage: node preflight.mjs <file|dir> [...]   Exit 1 = at least one violation.
