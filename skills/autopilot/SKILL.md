@@ -1,6 +1,6 @@
 ---
 name: autopilot
-description: Build the feature queue with one question at the start and none after — invoked as /autopilot, it works in-progress, approved and draft features one after another, parking each built one at ready-for-done for a single batch review. Auto-approves drafts and decides their open questions by taking its own recommended answer, recording every one. Four skips: no defensible default, high risk, touches a skill the loop runs under, spec drifted from the tree. Any failure stops the run. Use when the user asks to run autopilot, build the queue, or work through the queued features automatically. Never commits, pushes, merges, or marks anything DONE.
+description: Build the feature queue with one question at the start and none after — invoked as /autopilot, it works in-progress, approved and draft features one after another, parking each built one at ready-for-done for a single batch review. Auto-approves drafts and decides their open questions by taking its own recommended answer, recording every one. Four skips — no defensible default, high risk, touches a skill the loop runs under, spec drifted from the tree. Any failure stops the run. Use when the user asks to run autopilot, build the queue, or work through the queued features automatically. Never commits, pushes, merges, or marks anything DONE.
 ---
 
 # AUTOPILOT
