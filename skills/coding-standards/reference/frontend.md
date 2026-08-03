@@ -1,7 +1,9 @@
 # FRONTEND / TS-JS SPECIFICS
 
-Load when building or editing frontend / TS-JS code. Not applicable to non-frontend
-work (Python, scripts, backend-only, ML).
+Load when building or editing frontend / TS-JS code. **The two halves have different
+scope**: FRONTEND ARCHITECTURE is frontend-only; FUNCTION STYLE binds any TS/JS,
+backend included — it says so itself. TS/JS backend → the style half applies, the
+layout half does not. No TS/JS at all (Python, scripts, ML) → skip the file.
 
 # FRONTEND ARCHITECTURE
 > Web/frontend UI work also reads `reference/web.md` (load it alongside). This

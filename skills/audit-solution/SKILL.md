@@ -22,6 +22,7 @@ User args narrow the scope (a focused question/area) → audit that scope only, 
 
 # STEP 2 — INVESTIGATE (read-only; fan out per dimension)
 Dimension catalog → `reference/dimensions.md`. It owns what each dimension checks and which file holds its rules — read it, don't restate it here.
+A dimension you INVENT for one audit still needs the tool-fit test the catalog's two MAIN-LOOP-ONLY entries already state: evidence a scout cannot reach with Read/Grep/Glob is measured in 2a and handed over, or the scout improvises a workaround instead of standing down.
 Its rule-source paths are relative to the skills root (= the parent of this skill's base directory, announced at load; they carry no leading `skills/`). Join them onto that root and hand scouts the ABSOLUTE result — a scout has neither your base directory nor your CWD, so a raw string strands it.
 
 **2a. Mechanical + shell-bound checks — main loop, before any fan-out.** Deterministic and cheap; scouts are read-only by tool config and carry no shell, so these can only run here. One-shot and cheap makes them the free case under LOCAL RESOURCE RUNS (`skills/_shared/blocks.md`) — run them without asking.
@@ -36,13 +37,16 @@ unrequested agents) → run every sweep INLINE and say so in Step 3. Never let a
 silently not happen; the dimension is unswept either way, and only one of those is honest.
 Brief each scout with: the dimension name, the module map from Step 1, the rule-source path from the catalog **resolved to absolute** (per Step 2's base), and **EVERY 2a result — all of them, to every scout**, not the ones you judge relevant. You cannot predict which check a dimension leans on: a scout decides that from its own preloaded rule source, and one that expected an output and got none either eyeballs what a script already settled or stands down, leaving the dimension unswept while it reads as swept. A few extra lines of brief is the whole cost.
 **The pressure that breaks this rule is FAN-OUT GROWTH.** Every dimension added makes the brief longer, and trimming the 2a block "just for the last couple" is what it looks like from the inside. The last couple are the newest dimensions, and `Effectiveness` is the one that cannot survive it — its entire method is holding a rule's claim against a measurement, so a trimmed brief leaves it standing down while its dimension reads as swept and clean. Scouts return findings + a FRICTION line; they never fix, never gate.
+**Every FACT in a brief is DERIVED, not recalled** — STEP 1's enumerate rule binds the brief too, and reaches past the file map: section counts, block names, which document a quotation came from. A wrong count costs little because a scout reads the source anyway; a wrong ATTRIBUTION sends it to the wrong file to check a claim that is not there. **Then read the brief against itself before dispatch.** A scope line excluding what a later paragraph tells the scout to measure leaves it picking which half to obey, and nothing in its report tells you which it picked.
 Main loop dedupes, ranks, and owns Steps 3-8: **subagents cannot call AskUserQuestion, so every gate stays in the main loop.**
 Scout reports FRICTION (missing tool, rule it could not apply) → carry it to Step 8, it is self-improve evidence.
 
 Investigation changes nothing. Dimension clean → say so.
 
 # STEP 3 — REPORT
-One findings list, **ranked by severity**. Each: `file:line`, what's wrong, why it matters, proposed fix. Separate:
+One findings list, **ranked by severity**. Each: `file:line`, what's wrong, why it matters, proposed fix.
+**Two findings citing the SAME `file:line` with incompatible readings of it → read the source yourself before ranking, and say which scout was right.** Dedupe merges findings that AGREE; nothing in it settles findings that disagree, and the better-argued one is not the true one. Parallel scouts make this routine, not rare.
+Separate:
 - **Must-fix** — real bugs, broken docs/links, standards violations, inconsistencies.
 - **Optional** — guideline-soft items, polish, nice-to-haves.
 - **UNCHECKED** — REQUIRED whenever a 2a check did not run (script missing/failed, no shell, wrong stack, or the user declined the run under LOCAL RESOURCE RUNS) or a dimension was skipped. Name the dimension and what stayed unexamined. A dimension whose mechanical half never ran is NOT clean — listing it as clean is the worst outcome this skill can produce, because it buys false confidence. Empty only if every applicable check actually ran.
