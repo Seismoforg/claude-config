@@ -143,7 +143,7 @@ const homeOf = (skill) => `skills/${skill}`;
 const rewritePointers = (text, skill, skillNames) => text
   .replace(/`?skills\/_shared\/blocks\.md`?/g, '`.github/blocks.md`')
   .replace(/\$\{CLAUDE_SKILL_DIR\}\/scripts\//g, '.github/scripts/')
-  // A pointer may name ANOTHER skill's reference — audit-solution cites taste/reference/ai-tells.md,
+  // A pointer may name ANOTHER skill's reference — audit-solution cites coding-standards/reference/design-ai-tells.md,
   // security-review cites coding-standards/reference/dependencies.md. Resolve to the OWNING skill's
   // home when one is named; only a bare `reference/x.md` belongs to the citing skill. Assuming the
   // citing skill always owns it silently invented 3 paths that exist nowhere.

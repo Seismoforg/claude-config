@@ -12,19 +12,39 @@ each other, so all gating and all dispatch stay here, in the main loop. The draw
 
 Composes with: `feature` (REQUIRED — owns the lifecycle, the state machine, and EVERY approval gate; the
 crew does not replace it, it delegates the work inside it) and the `feature` step 5 skill set, which
-reaches the workers two ways:
+reaches the workers two ways — the first two bullets. The last two say who RUNS what:
 - **Preloaded** (always applies): `coding-standards` for every worker; `documentation` for `pm` and `dev`.
-- **Handed per dispatch** (surface-specific): `security-review` (sensitive code), `web-standards` (web/UI),
-  `taste` (frontend design). Skills are not auto-discovered in a subagent, but a worker HAS `Read` — so
-  the Teamleiter names the ABSOLUTE path of each applicable one and the worker reads it BEFORE writing.
-  Baking these into `skills:` instead would load every rule into every dispatch, including backend work
-  that needs none.
-- **Teamleiter-only** (main loop): the shell-bound check a HANDED skill mandates — e.g. `taste`'s
-  pre-flight — plus the final cross-cutting pass. A worker cannot run a handed skill's script: the
-  skill-dir placeholder substitutes at skill LOAD, and a handed skill is only ever `Read`, so the worker
-  gets the literal token. A PRELOADED skill's script is the opposite case — its placeholder does
-  substitute, so `dev` (which holds `Bash`) can run `documentation`'s check-docs inside its worktree;
-  `pm` cannot, having no shell. Repo-wide checks still run here, over the integrated whole.
+  The SKILL.md BODY only — a skill's `reference/` addenda are never preloaded and must be handed.
+- **Handed per dispatch** (surface-specific): `security-review` (sensitive code) as a whole skill, plus
+  `coding-standards`' surface addenda — `coding-standards/reference/web.md` (web/UI) and
+  `coding-standards/reference/design.md` (frontend design). Skills are not auto-discovered in a subagent,
+  but a worker HAS `Read` — so the Teamleiter names the ABSOLUTE path of each applicable one and the worker
+  reads it BEFORE writing. Baking these into `skills:` instead would load every rule into every dispatch,
+  including backend work that needs none.
+- **Scripts split by LOAD, not by role — whoever the placeholder resolves for owns the run.** A HANDED
+  skill's script runs nowhere in a worker: the skill-dir placeholder substitutes at skill LOAD, and a
+  handed skill is only ever `Read`, so the worker gets the literal token. A PRELOADED skill's script is the
+  opposite case — its placeholder does substitute, so `dev` (which holds `Bash`) runs it inside its
+  worktree; `pm` and `tester` hold no shell and run nothing.
+  **OBSERVED 20260803, on ONE live `pm` dispatch reading its own context:** the preloaded block opened
+  with `Base directory for this skill: <absolute path>`, and the pre-flight invocation inside it arrived
+  as a real path with no `${...}` token left. This paragraph asserted that before anyone had checked, and
+  the repo carried the OPPOSITE claim in several other places at the same time.
+  **One run, on a generative target, by an agent holding no shell** — so it establishes that the token is
+  substituted, and NOT that the run then succeeds from a worker. Enough to stop asserting the opposite;
+  not enough to found a mandate on. Repeat it before anyone does. Sites still carrying the old claim in
+  different words: `agents/pm.md`, `skills/documentation/SKILL.md` — both recorded as open in
+  `20260802-0001`, neither corrected here.
+  **Pre-flight is the `dev`'s for exactly that reason.** `preflight.mjs` lives in
+  `coding-standards/scripts/` and `coding-standards` is preloaded by every worker, so its invocation
+  arrives already absolute — the same case as `documentation`'s check-docs. The DISPATCH BRIEF must name
+  the run, or it happens nowhere. **The MANDATE to run it sits in the handed
+  `coding-standards/reference/design.md`, not in the preloaded body** — say so in the brief. A dev reading a rule about handed files otherwise
+  declines the run as the Teamleiter's, reports FRICTION, and the pre-flight happens nowhere while both
+  sides believe the other covered it. `agents/dev.md` now triggers on where the SCRIPT lives; the brief
+  should not rely on that alone.
+- **Teamleiter-only** (main loop): the final cross-cutting pass, plus every repo-wide check over the
+  INTEGRATED whole — the one thing no worker can see from inside its own worktree.
 
 `feature` step 5 says "invoke each skill via the Skill tool". No worker holds that tool, so inside the
 crew the workers substitute handed-path + `Read`; the Teamleiter's own pass uses the Skill tool as
@@ -59,6 +79,11 @@ its workflow — the crew only assigns the work.
    `feature`; reading them as `feature` steps skips the gate. Dispatching the PM anyway writes a second
    spec for the same feature — and so does routing a later "Change spec" answer back to it. Refine that
    DRAFT in place instead, staying in NEEDS_APPROVAL as `feature` step 2 prescribes.
+   **A DRAFT written in an EARLIER session is the different case: re-planning it is correct, not a
+   second spec.** Its counts, file lists and blockers describe a tree that has since moved. Dispatch the
+   PM with that spec plus what to re-verify, and fold the answer into the SAME file. The rule above
+   forbids a second FILE, never a second look — and this is how a stale DRAFT gets a real plan stage
+   instead of being waved through on numbers nobody rechecked.
 2. **Plan (PM).** Dispatch the `pm` agent with the task brief + repo AND the ABSOLUTE rule-source paths
    the BRIEF's surface implies (see DISPATCH RULES) — a web or auth feature must be PLANNED against those
    rules, not only built against them. The surface is readable from the brief; you do not need a task-set
@@ -119,9 +144,13 @@ its workflow — the crew only assigns the work.
    stays unchecked and gets its reason on the line (`feature` step 6 owns that form). Then run a
    cross-cutting pass over the merged result with the applicable skills — the devs wrote WITH them, you
    confirm the whole holds together — plus the shell-bound checks for whichever skills ACTUALLY applied:
-   `taste`'s pre-flight if this was a design surface (a worker that only READ the file could not run it),
-   `documentation`'s check-docs if the change touched docs. Applied-but-unrun is not "clean"; a skill that
-   never applied needs no run. Commit any fix you make in that pass.
+   `coding-standards`' pre-flight if this was a design surface, `documentation`'s check-docs if the change
+   touched docs — both over the INTEGRATED whole, the one thing a worker cannot see. **Neither is yours
+   because a worker could not run it.** Both skills are preloaded, so both placeholders resolve for a `dev`
+   and it runs them in its own worktree; your run covers what its worktree could not, and does not replace
+   it. A dev whose brief never named the run did not make it — check the brief you sent before assuming it
+   is covered. Applied-but-unrun is not "clean"; a skill that never applied needs no run. Commit any fix
+   you make in that pass.
 6. **Test (Vera, read-only).** Dispatch the `tester` agent with a full DISPATCH BRIEF and **NO
    `isolation: worktree`** — do not mirror step 5's flag. She holds no write tools, so there is nothing
    to contain, and a worktree would only feed her a stale tree to read the code from. She is read-only:
@@ -137,8 +166,12 @@ its workflow — the crew only assigns the work.
    - Code that does not RUN (syntax, wrong runner, missing import) → a defect in her deliverable, not in
      the product. Fix the test or send it back to her; never write it into the spec as a product task.
    - Predicted red, went red → the finding she was dispatched for. Real work.
-   - Predicted red, went GREEN → the test is toothless or the promise was already met. Do not bank it as
-     validation; work out which, and say so.
+   - Predicted red, went GREEN → THREE causes, not two: the test is toothless, the promise was already
+     met, or **the check never SAW the broken input** — its own filter excluded the very shape it was
+     built to catch, so the corpus silently shrank instead of failing. Work out which, and say so.
+     The third hides, because the run reports clean. Catch it by comparing the run's COUNT of things
+     inspected against its clean baseline: a count that FELL while you were breaking something is that
+     case, every time.
    - Predicted green, went red → a genuine regression, the most valuable outcome here.
    Why she does not run it herself: running means writing, writing means a worktree, and a worktree is
    cut from a base that may predate this very build (THE INVARIANT) — an isolated tester would faithfully
@@ -168,28 +201,48 @@ its workflow — the crew only assigns the work.
   exactly why the tester is read-only and why fix rounds are main-loop work.
 - **Assign every task; verify coverage twice** (before dispatch, after merge). Fanning a checklist
   to parallel workers with a gap drops that item with no error.
-- **Hand surface rules as ABSOLUTE FILE paths.** Decide which apply — `web-standards` (web/UI), `taste`
-  (frontend design), `security-review` (auth/sessions/input/external payloads). Join each onto the skills
-  root (the parent of this skill's announced base directory) and pass the ABSOLUTE result. Point at the
-  FILE, never the skill directory: `<skills-root>/taste/SKILL.md`, not `<skills-root>/taste` — `Read` on a
-  directory errors, and the worker then falls into its read-failed branch and builds blind.
+- **Hand surface rules as ABSOLUTE FILE paths.** Decide which apply — web/UI, frontend design,
+  auth/sessions/input/external payloads. `security-review` is still a whole skill; web and design are now
+  `coding-standards` addenda, and the satellite rule below owns their paths so this list is not kept twice.
+  Join each onto the skills root (the parent of this skill's announced base directory) and pass the
+  ABSOLUTE result. Point at the FILE, never the skill directory: `<skills-root>/security-review/SKILL.md`,
+  not `<skills-root>/security-review` — `Read` on a directory errors, and the worker then falls into its
+  read-failed branch and builds blind.
   None applies → hand none and say so. Applies but unnamed → the worker builds blind and flags FRICTION,
   which is YOUR miss, not its.
-- **Hand the satellite files too, not just SKILL.md.** A handed file's own `reference/...` pointers are
-  skill-relative and resolve only from an announced base directory, which a worker does not have — so they
-  are dead on arrival. Pass every load-bearing companion explicitly, e.g. `taste/SKILL.md` AND
-  `taste/reference/ai-tells.md` (the banned-pattern catalogue — taste without it is half a rule set).
-  A handed file may also point into ANOTHER skill (`<skill>/reference/...`) — that is skills-root-relative
-  and equally dead for a worker. Resolve and hand it too, or name it as not handed.
-  **A PRELOADED skill's satellites are dead the same way** — and this is the case that hides, because
+- **Hand the satellite files too, not just the entry file.** A handed file's own `reference/...` pointers
+  are skill-relative and resolve only from an announced base directory, which a worker does not have — so
+  they are dead on arrival. A handed file may also point into ANOTHER skill (`<skill>/reference/...`) —
+  skills-root-relative, and equally dead. Resolve and hand every load-bearing companion, or name it as not
+  handed: `security-review/SKILL.md` cites `coding-standards/reference/dependencies.md` for its CVE check,
+  which is that second case. The rule below hands that same file, but only when a DEPENDENCY changes — a
+  different trigger, so a security dispatch that adds no dependency still needs it named here.
+  **A PRELOADED skill's satellites still have to be handed** — and this is the case that hides, because
   preloading feels like the worker already has everything. It has the SKILL.md body and nothing it
-  points at. So `coding-standards` (preloaded by every worker) reaches a `dev` without its stack
-  addenda: hand `coding-standards/reference/frontend.md` for frontend/TS-JS work,
-  `coding-standards/reference/python-ml.md` for Python/ML,
-  `coding-standards/reference/dependencies.md` when a dependency is added or upgraded, and
-  `documentation/reference/agents-md-template.md` when the task creates a module doc. Every one
-  spelled from the skills root, never bare — a bare `reference/...` resolves inside THIS skill's
-  directory, and `crew/reference/` does not exist.
+  points at. (A worker COULD join a preloaded pointer onto the base directory it is given — MEASURED,
+  see the scripts bullet above — but hand the absolute path anyway: it is unambiguous, it costs
+  nothing, and it is the only option for a handed file.) So `coding-standards`, preloaded by every
+  worker, reaches a `dev` without any of its addenda:
+  - `coding-standards/reference/frontend.md` — frontend/TS-JS work
+  - `coding-standards/reference/python-ml.md` — Python/ML
+  - `coding-standards/reference/dependencies.md` — a dependency added or upgraded
+  - `coding-standards/reference/web.md` — web/UI work
+  - `documentation/reference/agents-md-template.md` — the task creates a module doc
+  - **A design surface takes `design.md` + `web.md` + `design-ai-tells.md` — all three, never
+    `design.md` alone.** `design.md` defers to `web.md` five times for contrast thresholds, reduced
+    motion and the CWV targets, and explicitly forbids restating them locally, so without it those
+    boxes cannot be filled at all. `design-ai-tells.md` is the banned-pattern catalogue — the design
+    rules without it are half a rule set.
+  - **The eight remaining `design-*` catalogues, handed BY TASK, not as a bundle:**
+    `design-redesign-protocol.md` (any redesign — `design.md` says load it *before touching
+    anything*), `design-design-directives.md` (composing a look), `design-install-commands.md` and
+    `design-canonical-sources.md` (installing a real design system — `design.md` forbids hand-rolling
+    its CSS, which is unfollowable without these), `design-liquid-glass.md`, `design-motion-skeletons.md`
+    (motion work), `design-pattern-vocabulary.md` (naming or planning a layout/motion pattern),
+    `design-block-library-schema.md` (authoring a block). Handing all nine every time is noise; handing
+    only the first two leaves a dev told to load a file it has never been given.
+  Every one spelled from the skills root, never bare — a bare `reference/...` resolves inside THIS
+  skill's directory, and `crew/reference/` does not exist.
   Cannot or will not hand one → say so in the brief, so the worker flags the gap instead of assuming
   coverage.
 - **Merge a worker in; never copy paths out.** `git merge --no-ff <worker-branch>` (`git worktree list`
@@ -243,6 +296,10 @@ Every worker dispatch carries all of it. A missing item is YOUR miss, not the wo
 - Executors only: the `DEBT:` line is EXPECTED — say so in the brief, so a knowingly-left shortcut
   comes back as a report instead of being filed (it cannot be) or dropped. `agents/dev.md` OUTPUT owns
   its format; you own the transcription (step 5) and the filing (step 7).
+- Executors only: the shell-bound checks the task's own surface mandates — `coding-standards`' pre-flight
+  on a design surface, `documentation`'s check-docs when the change touches docs. Both skills are
+  preloaded, so a `dev` CAN run them in its worktree; left out of the brief it will not, and the check
+  then exists only in your own pass over the integrated whole.
 - Executors only: the EXPECTED base — branch name AND commit — plus "check `git rev-parse HEAD` first;
   behind it → move onto that base before editing". A worktree is cut from the tip as of SESSION START,
   so every round after a merge starts stale. MEASURED: three dispatches in one feature, each 2-3 commits

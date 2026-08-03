@@ -1,8 +1,8 @@
 # Block Library Schema
 
-Load only when actually authoring a block under `skills/taste/blocks/`.
+Load only when actually authoring a block under `skills/coding-standards/blocks/`.
 
-The Reference Vocabulary (`pattern-vocabulary.md`) names patterns. The Block Library
+The Reference Vocabulary (`reference/design-pattern-vocabulary.md`) names patterns. The Block Library
 implements them with real props, real motion specs, and real code sketches.
 
 **Status:** schema defined here. Blocks are added iteratively. Do not freelance a new
@@ -10,7 +10,7 @@ block without following this schema.
 
 ## File Location
 ```
-skills/taste/blocks/
+skills/coding-standards/blocks/
   hero/
     asymmetric-split.md
     editorial-manifesto.md
@@ -58,5 +58,5 @@ stack: ["react", "next", "tailwind", "motion"]
 ## Block-Library Discipline
 - One block per file. No multi-block files.
 - Every block must work standalone (drop it into a page, it renders).
-- Every block must pass the Pre-Flight Check (SKILL.md Section 14).
+- Every block must pass the Pre-Flight Check (`reference/design.md` Section 14).
 - Blocks that depend on a design system from Section 2.A live under `blocks/<category>/<name>--<system>.md` (e.g. `feature/bento-grid--material.md`).

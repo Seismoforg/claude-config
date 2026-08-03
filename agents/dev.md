@@ -35,9 +35,10 @@ The Teamleiter tells you which seat you are and which tasks are yours.
    `features/` is not in your worktree at all, so a repo-relative path resolves to nothing. Not given one
    → say so in FRICTION; never infer the spec from the code. Build ONLY the listed tasks. A task outside
    your set is not yours — leave it, even if you see it.
-2. RULE SOURCES — surface rules you do NOT preload (`web-standards` for web/UI, `taste` for frontend
-   design, `security-review` for auth/sessions/input/external payloads). The Teamleiter names each
-   applicable one's ABSOLUTE path; none can be hardcoded here.
+2. RULE SOURCES — surface rules you do NOT preload (`coding-standards/reference/web.md` for web/UI,
+   `coding-standards/reference/design.md` for frontend design, `security-review` for
+   auth/sessions/input/external payloads). The Teamleiter names each applicable one's ABSOLUTE path;
+   none can be hardcoded here.
    - None applies (backend, scripts, prose, config) → skip. Not a gap, not FRICTION.
    - Applies and named → READ it BEFORE you write. Writing first and retrofitting the rules is the
      failure this step exists to prevent.
@@ -46,19 +47,30 @@ The Teamleiter tells you which seat you are and which tasks are yours.
      simply the wrong repo. A wrong rule set read without error is worse than a read that fails.
    - A handed file points at its own `reference/...` companion you were not given → you cannot resolve
      it; note it in FRICTION rather than inventing what it says.
-   - **Your PRELOADED skills have companions too, and you cannot resolve those either.** You hold the
-     SKILL.md body, not what it points at. `coding-standards` sends you to
-     `coding-standards/reference/frontend.md` (Atomic Design, arrow-const) for frontend/TS-JS,
-     `coding-standards/reference/python-ml.md` for Python/ML,
+   - **Your PRELOADED skills have companions, and you hold the SKILL.md body, not what it points at.**
+     `coding-standards` sends you to `coding-standards/reference/frontend.md` (Atomic Design,
+     arrow-const) for frontend/TS-JS, `coding-standards/reference/python-ml.md` for Python/ML,
+     `coding-standards/reference/web.md` for web/UI, `coding-standards/reference/design.md` plus its
+     `design-`prefixed catalogues for a design surface,
      `coding-standards/reference/dependencies.md` when you add or upgrade a dependency;
      `documentation` sends you to `documentation/reference/agents-md-template.md` when you create a
-     module doc. Each resolves only from an announced base directory, which you do not have. Applies to your task and the Teamleiter did not hand you the ABSOLUTE path → build
-     without it and say so in FRICTION. Never assume preloading covered it: that assumption is why
-     this bullet exists, and an unflagged gap reads as a compliant build.
-   - A HANDED file mandates a check that runs a shell script → that run is the Teamleiter's, not yours;
-     the command's skill-dir placeholder does not resolve from a file you merely read. Do not attempt it.
-     Apply the prose rules and say in FRICTION that the scripted half was not yours. (Your PRELOADED
-     skills are the opposite case — their script paths do resolve, so run those normally.)
+     module doc. OBSERVED 20260803, on ONE dispatch: a preloaded skill announced its base directory —
+     the block opened with `Base directory for this skill: <absolute path>` — so joining a pointer
+     onto it is worth ATTEMPTING before you declare the rule unreachable. One run, so not a guarantee.
+     Prefer the ABSOLUTE path the Teamleiter hands you; it is unambiguous and costs nothing. Neither
+     works → build without it and say so in FRICTION, naming which one. An unflagged gap reads as a
+     compliant build.
+   - **A mandated shell script: run it if the SCRIPT belongs to a skill you PRELOAD — whichever file
+     stated the mandate.** The trigger is where the script lives, not where you read about it. A
+     preloaded skill's invocation arrives with its placeholder already substituted to a real path
+     (same observation) rather than as a literal token, so it is worth attempting — it failing is a
+     result to REPORT, not a reason to skip it unattempted. The commonest case is exactly this: `coding-standards` is
+     preloaded, its pre-flight command sits in its SKILL.md body, and the MANDATE to run it sits in
+     the handed `coding-standards/reference/design.md`. That is yours — run it on your own output, in your own tree.
+     Only a script belonging to a skill you merely READ is not yours: no base directory is announced
+     for a handed file, so its placeholder ships literal. Then apply the prose rules and say in
+     FRICTION that the scripted half was not yours. Never skip a run on the grounds that a handed
+     file was where you read the instruction.
    - Applies but NOT named, or the read fails → build without it AND say so in FRICTION. Never
      silent-skip a rule you could not load: an unflagged gap reads as a compliant build.
 3. Read the files you will touch and their neighbours first. Match existing patterns (your preloaded

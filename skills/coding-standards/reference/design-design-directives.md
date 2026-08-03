@@ -1,8 +1,8 @@
 # DESIGN DIRECTIVES — detail (§4)
 
 Load when choosing type or colour, or when a §4 rule needs its pool/alternatives. The RULES live
-inline in SKILL.md §4 — this file holds only the lists that would bloat it. Same split as
-`ai-tells.md` (§9).
+inline in `reference/design.md` §4 — this file holds only the lists that would bloat it. Same split
+as `reference/design-ai-tells.md` (§9).
 
 ---
 

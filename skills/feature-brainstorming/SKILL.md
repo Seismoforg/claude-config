@@ -42,10 +42,11 @@ URL. Even then, put a sensible default in the options; the user's own "Other" co
 Scan before the first question:
 - repo structure and the files the request names
 - `/features/` — the non-terminal files especially, they are your overlap risk
-- **the SURFACE rules the feature implies** — web/UI → `web-standards` (+ `taste` on
-  landing/marketing/portfolio surfaces); auth, sessions, input handling, external payloads →
-  `security-review`; any code at all → `coding-standards`. Invoke each via the Skill tool — you are
-  in the main loop, so you have it — and PLAN against them. A spec written blind to its surface
+- **the SURFACE rules the feature implies** — web/UI → `coding-standards/reference/web.md` (+
+  `coding-standards/reference/design.md` on landing/marketing/portfolio surfaces); auth, sessions, input
+  handling, external payloads → `security-review`; any code at all → `coding-standards`. Invoke each
+  SKILL via the Skill tool — you are in the main loop, so you have it — and READ the addenda; PLAN
+  against all of them. A spec written blind to its surface
   rules gets approved, then fights them during implementation.
 
 Anything derivable from code or docs is NOT asked; it becomes an assumption to confirm (§2).

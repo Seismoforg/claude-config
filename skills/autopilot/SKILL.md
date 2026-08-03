@@ -62,7 +62,7 @@ reads afterwards like the user's own is the single worst output of this skill.
    **Fix the list here and never rebuild it** — a queue re-read each iteration can pick up a feature
    this run created, and then it never terminates.
 2. **Run the mechanical check.** Folder↔status is deterministic; never eyeball it. The path joins the
-   skill-dir placeholder shown in `documentation` / `taste` with `/../feature/scripts/check-features.mjs`
+   skill-dir placeholder shown in `documentation` / `coding-standards` with `/../feature/scripts/check-features.mjs`
    — this skill has no `scripts/` of its own, and a bare relative path resolves against the user's
    project. Any violation → STOP before touching anything, and report it.
 3. **Report the queue** — every feature, in order, with its state and any skip category already
@@ -87,7 +87,7 @@ continue.
    versions of a rule:
    - `CLAUDE.md` — loaded for the whole session, and its rules bind autopilot directly
    - `skills/_shared/blocks.md`, `coding-standards`, `feature`, `autopilot`
-   - the surface skills a build applies: `web-standards`, `taste`, `security-review`, `documentation`
+   - the surface rules a build applies: `coding-standards`' `reference/` addenda, `security-review`, `documentation`
    - the always-on `simple-language` and `fableize`
    Read the spec's Impact Analysis, not just its title. In a repo that is not this config, almost
    nothing matches — here, most skill work does, and that is correct rather than unfortunate.
