@@ -152,9 +152,7 @@ you to append such a footer. The user is the sole author of every commit.
 ## 6. Use the Skill System
 
 Invoke the matching skill — don't bypass it and hand-roll:
-- Writing/modifying/reviewing code → `coding-standards`
-- Web/UI work → `web-standards` (+ `coding-standards`)
-- Frontend design — landing pages, portfolios, redesigns, hero/marketing UI, "make it look good / not templated", visual polish, design direction → `taste` (+ `web-standards`)
+- Writing/modifying/reviewing code → `coding-standards`. It also owns web/UI work (`coding-standards/reference/web.md`) and frontend design — landing pages, portfolios, redesigns, hero/marketing UI, "make it look good / not templated", visual polish, design direction (`coding-standards/reference/design.md`, plus its `design-` prefixed catalogues). Read the addendum BEFORE writing on that surface.
 - New features (plan/spec/approve/implement) → `feature`
 - Feature named but underspecified — pin the requirements down before speccing → `feature-brainstorming` (runs inside `feature` step 0; multiple-choice interview, then writes the DRAFT). MAIN LOOP ONLY — it lives on `AskUserQuestion`, which a subagent does not have.
 - Delegate a task to the role-based crew (Teamleiter/PM/devs/tester) → `crew` (drives `feature`)
@@ -172,7 +170,7 @@ Invoke the matching skill — don't bypass it and hand-roll:
 
 When several skills apply to one request, they compose in this order:
 1. Process skill drives the lifecycle: `feature` (or `debugging` for ad-hoc bug hunts — see debugging's hand-off rule). `autopilot` and `crew` sit ABOVE `feature` rather than replacing it — both drive it, so its gates still apply except where `autopilot` declares an exception.
-2. Content/style skills apply in parallel during IN_PROGRESS: `coding-standards` (+ its addenda), `web-standards`, `taste` (taste's MOTION_INTENSITY overrides web-standards timing on landing/portfolio/marketing surfaces), `security-review` on sensitive code — while writing it, not after.
+2. Content/style skills apply in parallel during IN_PROGRESS: `coding-standards` (+ its addenda — web and design included), `security-review` on sensitive code — while writing it, not after.
 3. Cross-cutting review before DONE: an independent `security-review` pre-release pass, `audit-solution` on request.
 4. `git-commit` closes.
 This is a default order, not a rigid gate — skip steps that don't apply.

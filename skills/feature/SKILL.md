@@ -188,8 +188,8 @@ A fact found while building that INVALIDATES the premise of a decision the user 
 Feature DERIVES its output from real data (heuristic, scan, model) → run the real pipeline on real input as soon as ONE slice works, before building the rest. Tests written first encode your assumption about the data and all go green while the derivation is wrong; Step 6's sample read then costs a rebuild, not a fix. That real run is subject to LOCAL RESOURCE RUNS in `skills/_shared/blocks.md` — a model or GPU pipeline asks the user before it starts.
 - Apply `coding-standards` to every code change.
 - Apply `security-review` when the feature touches auth, sessions, input handling, or external payloads.
-- Apply `web-standards` to any web/UI change (responsive, a11y, perf, motion).
-- Apply `taste` when the feature is frontend design work — landing/marketing/hero/portfolio surfaces, redesigns, visual polish, "make it look good / not templated" (composes with `web-standards`).
+- Web/UI change (responsive, a11y, perf, motion) → also read `coding-standards/reference/web.md`.
+- Frontend design work — landing/marketing/hero/portfolio surfaces, redesigns, visual polish, "make it look good / not templated" → also read `coding-standards/reference/design.md` (composes with the web addendum above).
 - Apply `documentation` whenever the change touches architecture, modules, responsibilities, public APIs, AGENTS.md, or ADRs. Technical debt is NOT on this list any more — it is a feature of its own, see above.
 Invoke each skill via the Skill tool; don't just paraphrase.
 - Fanning an enumerated task/checklist out to parallel workers → explicitly assign every item, and re-verify full coverage against the list before dispatch AND after merge; unassigned items drop silently.

@@ -13,7 +13,7 @@ the finding, don't "fix" it. (Stated here AND in `audit-solution` HARD RULES on 
 never loads that file. Keep both copies identical.)
 
 Rule-source paths below are relative to the SKILLS ROOT (the dir holding `audit-solution/`,
-`taste/`, `_shared/`, …) — no leading `skills/`. The dispatcher resolves them to absolute before
+`coding-standards/`, `_shared/`, …) — no leading `skills/`. The dispatcher resolves them to absolute before
 briefing a scout; a scout's cwd is the audited repo and will not resolve them.
 
 ---
@@ -29,17 +29,17 @@ Rule source: `coding-standards/SKILL.md` + the stack addendum under
 `coding-standards/reference/` (frontend / python-ml / dependencies) — load only the one
 that matches.
 
-## Web-standards conformance (UI)
+## Web conformance (UI)
 Mobile-first responsive layout, accessibility (WCAG — semantics/labels/focus/contrast),
 Core Web Vitals perf, purposeful motion, minimalist/bento layout.
-Rule source: `web-standards/SKILL.md`. Skip if the solution has no web UI.
+Rule source: `coding-standards/reference/web.md`. Skip if the solution has no web UI.
 
-## Design quality (taste)
+## Design quality
 Does it look templated/generic ("slop")? Cookie-cutter hero, default component look, no coherent
-design direction, weak type/spacing/color system. Design-direction quality — distinct from
-web-standards mechanics. Mechanical tells are the dispatcher's script (`preflight.mjs`), not
+design direction, weak type/spacing/color system. Design-direction quality — distinct from the web
+mechanics above. Mechanical tells are the dispatcher's script (`preflight.mjs`), not
 yours; judge the rest.
-Rule source: `taste/SKILL.md` + `taste/reference/ai-tells.md`.
+Rule source: `coding-standards/reference/design.md` + `coding-standards/reference/design-ai-tells.md`.
 Skip if no user-facing design surface, or the UI is internal tooling with no design ambition.
 
 ## Documentation conformance

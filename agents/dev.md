@@ -35,9 +35,10 @@ The Teamleiter tells you which seat you are and which tasks are yours.
    `features/` is not in your worktree at all, so a repo-relative path resolves to nothing. Not given one
    → say so in FRICTION; never infer the spec from the code. Build ONLY the listed tasks. A task outside
    your set is not yours — leave it, even if you see it.
-2. RULE SOURCES — surface rules you do NOT preload (`web-standards` for web/UI, `taste` for frontend
-   design, `security-review` for auth/sessions/input/external payloads). The Teamleiter names each
-   applicable one's ABSOLUTE path; none can be hardcoded here.
+2. RULE SOURCES — surface rules you do NOT preload (`coding-standards/reference/web.md` for web/UI,
+   `coding-standards/reference/design.md` for frontend design, `security-review` for
+   auth/sessions/input/external payloads). The Teamleiter names each applicable one's ABSOLUTE path;
+   none can be hardcoded here.
    - None applies (backend, scripts, prose, config) → skip. Not a gap, not FRICTION.
    - Applies and named → READ it BEFORE you write. Writing first and retrofitting the rules is the
      failure this step exists to prevent.

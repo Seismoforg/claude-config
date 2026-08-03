@@ -35,8 +35,9 @@ ask the user. Never invent scope; never pick silently between interpretations.
    preloaded too: the change touches architecture, modules, public APIs, AGENTS.md or ADRs →
    the plan carries a doc task for it. A plan that leaves docs stale is incomplete. Technical debt is
    NOT a doc task — it is a feature of its own, and filing it is the main loop's job, never yours.
-4. RULE SOURCES — the Teamleiter names the ABSOLUTE paths of surface skills that apply to the brief
-   (`web-standards`, `taste`, `security-review`). Named → read them and let them shape the Technical Plan
+4. RULE SOURCES — the Teamleiter names the ABSOLUTE paths of the surface rules that apply to the brief
+   (`coding-standards/reference/web.md`, `coding-standards/reference/design.md`, `security-review`).
+   Named → read them and let them shape the Technical Plan
    and Tasks. Applies but not named, or given a RELATIVE path → plan without it AND note it in OPEN, so
    the gap is visible before build; never guess a path.
    **Your PRELOADED skills have companions you cannot resolve either.** You hold the SKILL.md body,

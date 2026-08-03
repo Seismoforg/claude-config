@@ -4,7 +4,7 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills + custom s
 
 ## Layout
 - `CLAUDE.md` — global user instructions (behavioral guidelines).
-- `skills/`   — custom skills (coding-standards, web-standards, taste, feature, feature-brainstorming, crew, autopilot, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
+- `skills/`   — custom skills (coding-standards, feature, feature-brainstorming, crew, autopilot, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
 - `agents/`   — custom subagents. Analysis (read-only): audit-scout, security-auditor, standards-reviewer, pm, tester. Executor (write, worktree): dev.
 
 Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/` (load on demand,
@@ -51,6 +51,7 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 - [0002](docs/adr/0002-commit-the-generated-copilot-build.md) — superseded by 0003
 - [0003](docs/adr/0003-do-not-commit-the-generated-copilot-build.md) — the Copilot build is git-ignored
 - [0004](docs/adr/0004-export-skills-as-copilot-agent-skills.md) — skills export as Copilot Agent Skills
+- [0005](docs/adr/0005-merge-surface-skills-into-coding-standards.md) — the web and design skills become coding-standards addenda
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
