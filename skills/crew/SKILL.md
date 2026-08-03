@@ -145,16 +145,15 @@ its workflow — the crew only assigns the work.
    cross-cutting pass over the merged result with the applicable skills — the devs wrote WITH them, you
    confirm the whole holds together — plus the shell-bound checks for whichever skills ACTUALLY applied:
    `coding-standards`' pre-flight if this was a design surface, `documentation`'s check-docs if the change
-   touched docs — both over the INTEGRATED whole, the one thing a worker cannot see.
-   **A design surface also owes pass 2** — the reviewer dispatch in
-   `coding-standards/reference/design.md` §14. Unlike the two above it is not a shell check and no dev
-   can ever make it: subagents do not nest. Yours, or it happens nowhere, and the self-review it exists
-   to prevent is what ships. **Neither is yours
+   touched docs — both over the INTEGRATED whole, the one thing a worker cannot see. **Neither is yours
    because a worker could not run it.** Both skills are preloaded, so both placeholders resolve for a `dev`
    and it runs them in its own worktree; your run covers what its worktree could not, and does not replace
    it. A dev whose brief never named the run did not make it — check the brief you sent before assuming it
-   is covered. Applied-but-unrun is not "clean"; a skill that never applied needs no run. Commit any fix
-   you make in that pass.
+   is covered. Applied-but-unrun is not "clean"; a skill that never applied needs no run.
+   **A design surface also owes pass 2** — the reviewer dispatch in
+   `coding-standards/reference/design.md` §14. That one IS yours, and for the opposite reason: it is not
+   a shell check, and no dev can ever make it because subagents do not nest. Yours, or it happens
+   nowhere. Commit any fix you make in that pass.
 6. **Test (Vera, read-only).** Dispatch the `tester` agent with a full DISPATCH BRIEF and **NO
    `isolation: worktree`** — do not mirror step 5's flag. She holds no write tools, so there is nothing
    to contain, and a worktree would only feed her a stale tree to read the code from. She is read-only:

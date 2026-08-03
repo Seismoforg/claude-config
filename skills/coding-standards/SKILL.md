@@ -24,7 +24,7 @@ Sets read scope + approval needs:
 
 Overriding rule: **match the surrounding code** — REPO PATTERNS in `skills/_shared/blocks.md` governs the DEFAULTS below. It never overrides the HARD RULES at the end; those hold against any repo pattern.
 
-**Carve-out — REPO PATTERNS does not govern `reference/design.md`.** It says *never impose a LOOK the project doesn't use*, which cancels the design addendum on the exact request it exists for: asked to make something less templated, the templated look IS the repo pattern, and the conservative reading wins. The design rules outranked REPO PATTERNS when they were a standalone skill; folding them into an addendum must not quietly demote them. Scope is LOOK only — code STRUCTURE still matches the repo, and `reference/web.md` stays governed as before.
+**Carve-out — REPO PATTERNS does not govern `reference/design.md`.** It says *never impose a LOOK the project doesn't use*, which cancels the design addendum on the exact request it exists for: asked to make something less templated, the templated look IS the repo pattern, and the conservative reading wins. The design rules outranked REPO PATTERNS as a standalone skill; folding them into an addendum must not quietly demote them. Scope is LOOK only — code STRUCTURE still matches the repo. Stated ONCE, here: `reference/web.md` used to restate the same conservative rule four times over, and every restatement was a place this carve-out could be silently overridden.
 
 # CORE PRINCIPLES
 Prefer: separation of concerns · small focused modules · reusable components · explicit dependencies · consistent patterns.
@@ -154,7 +154,8 @@ Adding/upgrading a dependency → also read `reference/dependencies.md`.
 Main loop, diff worth a second pair of eyes (broad, structural, or pre-commit) → delegate the
 `standards-reviewer` agent: read-only, fetches the diff itself, reviews against THESE rules
 rather than generic best practice. Returns violations + FRICTION. Optional — skip for a
-one-line fix.
+one-line fix. **Not optional on a design surface:** `reference/design.md` §14 pass 2 requires this
+dispatch before code is output, and no subagent can make it.
 Addendum applies (frontend/TS-JS · Python/ML · dependency change · web/UI · design surface) → join
 the matching `reference/<file>.md` onto this skill's announced base directory and hand the agent that
 ABSOLUTE path. A HANDED file announces no base directory, so its own pointers are dead — hand every
