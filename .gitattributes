@@ -1,6 +1,8 @@
-# LF for the check scripts. They are copied verbatim into the generated Copilot build, and this
-# machine runs core.autocrlf=true — without the rule git restores CRLF on checkout while the build
-# emits LF, so the source and its copy stop being byte-identical.
+# LF for the check scripts. They are copied verbatim into the generated Copilot build, so the source
+# and its copy must stay byte-identical. Without this rule a checkout under core.autocrlf=true
+# restores CRLF while the build emits LF, and the two diverge.
+# Written as a property of that SETTING, never of one machine: an earlier version of this comment
+# asserted "this machine runs core.autocrlf=true" and went stale the day the global config changed.
 # The matching `github_build/** text eol=lf` rule is gone: the build is no longer committed
 # (docs/adr/0003), so git never stores or restores those files.
 scripts/*.mjs text eol=lf
