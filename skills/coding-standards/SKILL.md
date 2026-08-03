@@ -11,13 +11,14 @@ Governs HOW code is written. Composes with `feature` (what to build) and
 # ON ACTIVATION — CLASSIFY THE CHANGE
 **A design surface ROUTES before it is classified.** A request about how something LOOKS (see DESIGN
 SURFACES below) goes to `reference/design.md` first; the buckets here then describe the code work
-inside that. Classify it first and "the hero looks generic, fix it" reads as SMALL_CHANGE, whose
-"don't scan the repo" forbids the audit `reference/design.md` mandates as its own first action — so
-the page gets patched in place and still looks generic. The classifier is upstream of brief
-inference, which is exactly why it has to defer here.
+inside that. Classify it first and "the hero looks generic, fix it" reads as SMALL_CHANGE, which caps
+reading before the addendum has said what to read — and the page gets patched in place and still
+looks generic.
 
 Sets read scope + approval needs:
 - **SMALL_CHANGE** — bug fix / localized edit. Read only relevant files. Don't scan the repo.
+  **Exception: a design surface.** Its addendum sets the read scope, and on a redesign that scope is
+  an audit. This bullet does not override it.
 - **FEATURE** — new behavior. Read only affected modules. Expand scope only when needed.
 - **REFACTOR** — structural. Full impact analysis allowed; significant structural changes REQUIRE approval first.
 
@@ -163,8 +164,6 @@ companion, or the reviewer reviews half a rule set and cannot tell.
   contrast thresholds, reduced motion and the CWV targets, and forbids restating them locally — so
   without it those boxes are unfulfillable), and `reference/design-ai-tells.md` (the banned-pattern
   catalogue, half that rule set on its own).
-`agents/standards-reviewer.md` must be told these are not "stack" addenda and that more than one can
-apply at once; its own brief otherwise says read only the single matching stack file.
 
 # COMPLETION CHECKLIST
 - [ ] No obvious duplication introduced

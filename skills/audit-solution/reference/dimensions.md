@@ -39,7 +39,9 @@ Does it look templated/generic ("slop")? Cookie-cutter hero, default component l
 design direction, weak type/spacing/color system. Design-direction quality — distinct from the web
 mechanics above. Mechanical tells are the dispatcher's script (`preflight.mjs`), not
 yours; judge the rest.
-Rule source: `coding-standards/reference/design.md` + `coding-standards/reference/design-ai-tells.md`.
+Rule source: `coding-standards/reference/design.md` + `coding-standards/reference/design-ai-tells.md`
++ `coding-standards/reference/web.md` — design.md defers to web.md for contrast, reduced motion and
+the CWV targets and forbids restating them, so those checks cannot be made without it.
 Skip if no user-facing design surface, or the UI is internal tooling with no design ambition.
 
 ## Documentation conformance

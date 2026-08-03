@@ -72,7 +72,7 @@ Never ship the happy path alone.
 
 # HARD RULES
 Non-obvious, high-severity only — the pillars above are not repeated here.
-- **Match the existing design system over these defaults.** Governs everything above.
+- **Match the existing design system over these defaults.** Governs everything above — the defaults in THIS file. It does not govern a design brief: on a design surface `reference/design.md` owns the visual direction, and a redesign is precisely the case where the existing system is the thing being replaced.
 - **The three non-negotiables ship on every change:** mobile-first + fluid (never desktop-first with pixel-locked widths) · WCAG AA (semantic HTML before ARIA, keyboard-operable, contrast verified not eyeballed) · green CWV.
 - **Verify contrast, don't guess** — ACCESSIBILITY above owns it, every supported theme included.
 - **Every data view handles loading / empty / error** — DATA STATES above owns it.
