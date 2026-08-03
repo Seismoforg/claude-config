@@ -98,6 +98,9 @@ on the machine.
   helper), and a hard kill of the parent ORPHANS them. Kill the tree, then LIST the survivors and
   confirm none are left. A process holding a port, a lock, a device or a global hotkey keeps holding it
   after its parent is gone.
+  - **A survivor check that greps COMMAND LINES matches ITSELF** — its own command line contains the
+    pattern it searches for. Exclude your own PID, or it reports a false survivor on every run and you
+    chase a process that is you.
 - Verify by the EFFECT, not by the absence of a PID: the port binds again, the hotkey registers again,
   the lock file is gone. "The process is not in the list" and "the resource is free" are different claims.
 - Kill only what YOU started. Check parentage first — the user's own long-running session may be in the
@@ -120,6 +123,10 @@ to watch the thing that keeps running, and read its output when it dies.
 - **Visible and captured is not a tradeoff — pipe through `tee`.** Long command whose output you still need:
   `... 2>&1 | tee '<logfile>'` inside the visible window, then read the logfile. The user watches it live,
   you get the full output. Verified working.
+  - **PowerShell's `tee` writes UTF-16, and byte tools then match NOTHING.** `grep` — including `grep -a` —
+    and any wait loop polling that logfile for a done-marker find nothing in a run that has already
+    finished, so it reads as still running until the timeout. Strip the NULs before reading
+    (`tr -d '\000' < log`), or wait on the PROCESS rather than on the file.
 - Keep the window open after exit (`-NoExit` / `--hold always`). A crashed process must leave its error on
   screen, not vanish with the window.
 - **Capture the PID at launch** — `-PassThru` in PowerShell, `ps -W` in bash (the 4th column is the WINPID
