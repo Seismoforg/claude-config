@@ -79,6 +79,11 @@ its workflow — the crew only assigns the work.
    `feature`; reading them as `feature` steps skips the gate. Dispatching the PM anyway writes a second
    spec for the same feature — and so does routing a later "Change spec" answer back to it. Refine that
    DRAFT in place instead, staying in NEEDS_APPROVAL as `feature` step 2 prescribes.
+   **A DRAFT written in an EARLIER session is the different case: re-planning it is correct, not a
+   second spec.** Its counts, file lists and blockers describe a tree that has since moved. Dispatch the
+   PM with that spec plus what to re-verify, and fold the answer into the SAME file. The rule above
+   forbids a second FILE, never a second look — and this is how a stale DRAFT gets a real plan stage
+   instead of being waved through on numbers nobody rechecked.
 2. **Plan (PM).** Dispatch the `pm` agent with the task brief + repo AND the ABSOLUTE rule-source paths
    the BRIEF's surface implies (see DISPATCH RULES) — a web or auth feature must be PLANNED against those
    rules, not only built against them. The surface is readable from the brief; you do not need a task-set
@@ -161,8 +166,12 @@ its workflow — the crew only assigns the work.
    - Code that does not RUN (syntax, wrong runner, missing import) → a defect in her deliverable, not in
      the product. Fix the test or send it back to her; never write it into the spec as a product task.
    - Predicted red, went red → the finding she was dispatched for. Real work.
-   - Predicted red, went GREEN → the test is toothless or the promise was already met. Do not bank it as
-     validation; work out which, and say so.
+   - Predicted red, went GREEN → THREE causes, not two: the test is toothless, the promise was already
+     met, or **the check never SAW the broken input** — its own filter excluded the very shape it was
+     built to catch, so the corpus silently shrank instead of failing. Work out which, and say so.
+     The third hides, because the run reports clean. Catch it by comparing the run's COUNT of things
+     inspected against its clean baseline: a count that FELL while you were breaking something is that
+     case, every time.
    - Predicted green, went red → a genuine regression, the most valuable outcome here.
    Why she does not run it herself: running means writing, writing means a worktree, and a worktree is
    cut from a base that may predate this very build (THE INVARIANT) — an isolated tester would faithfully
