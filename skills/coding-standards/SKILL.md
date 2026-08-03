@@ -127,6 +127,7 @@ Scheduled or polled work (cron, timer, queue poller) must not overlap itself. In
 # CHANGE STRATEGY
 Prefer: minimal diffs · localized edits · existing patterns · incremental improvements.
 Avoid: full-file rewrites · broad restructuring · unnecessary renaming · large refactors without approval.
+Exception — a design surface whose brief is a redesign. Replacing the look IS the task, so a full rewrite of that surface's markup is in scope; `reference/design.md` owns how far it goes. Everything else here still holds.
 Introducing a whole-repo formatter/linter alongside other edits → run the format pass FIRST, or commit functional changes before formatting, so mechanical churn lands in its own commit, never intermingled with functional diffs.
 
 # REFACTOR RULES
@@ -172,7 +173,7 @@ companion, or the reviewer reviews half a rule set and cannot tell.
 - [ ] No obvious duplication introduced
 - [ ] File sizes within guidelines
 - [ ] Architecture consistent with surrounding code
-- [ ] Existing patterns respected
+- [ ] Existing patterns respected — on a design surface asked to CHANGE the look, this box covers code patterns only; the look is judged against `reference/design.md`, not against what was there
 - [ ] Diff minimal, matches task scope
 - [ ] No unnecessary complexity / premature abstraction
 - [ ] Verification (compile/tests/smoke) ran against the project's OWN env/toolchain (its virtualenv/lockfile/interpreter), not a global install — so a failure means a real defect

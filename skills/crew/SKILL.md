@@ -155,6 +155,10 @@ its workflow — the crew only assigns the work.
    `coding-standards/reference/design.md` §14. That one IS yours, and for the opposite reason: it is not
    a shell check, and no dev can ever make it because subagents do not nest. Yours, or it happens
    nowhere. Commit what it makes you fix, the same as above.
+   **And pass 3's whole-page boxes.** Each dev ticked its own slice; several of §14's boxes are only
+   checkable on the MERGED page — the theme/colour/shape locks, the zigzag cap, layout-family
+   repetition, duplicate CTA intent. Two devs can each pass locally while the merged page fails every
+   one. Tick those here, or nobody does.
 6. **Test (Vera, read-only).** Dispatch the `tester` agent with a full DISPATCH BRIEF and **NO
    `isolation: worktree`** — do not mirror step 5's flag. She holds no write tools, so there is nothing
    to contain, and a worktree would only feed her a stale tree to read the code from. She is read-only:

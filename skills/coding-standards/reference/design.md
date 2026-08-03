@@ -402,6 +402,9 @@ Mode resolved to either **Redesign** → load it now, before touching anything. 
 # 14. FINAL PRE-FLIGHT CHECK
 
 Three passes, in order, before outputting code. This is the last filter. **NOT OPTIONAL.**
+The ordering is per-ACTOR, not per-clock. Where a WORKER outputs the code it cannot run pass 2 at all
+(no subagent dispatches another), so passes 2 and 3 run on the INTEGRATED result and the dispatcher
+owns them — `crew` step 5 assigns both. Nothing here is skipped; it moves.
 
 **1. Mechanical — run the script, never eyeball these.** The command line lives in
 `coding-standards/SKILL.md`, design routing section — NOT here. It carries the skill-dir
