@@ -132,6 +132,10 @@ to watch the thing that keeps running, and read its output when it dies.
 - **Capture the PID at launch** — `-PassThru` in PowerShell, `ps -W` in bash (the 4th column is the WINPID
   you need for a Windows-side kill). These children are detached; without the PID you cannot honour the
   kill-the-tree rule above. A visible window is still your mess to clean up.
+  - **That PID is the WINDOW's, not the WORK's.** `-NoExit` / `--hold always` — mandated two bullets
+    up — keeps the shell alive after the command finishes, so waiting on that PID to detect completion
+    blocks until the user closes the window. Watch the CHILD process, or a marker the command writes.
+    The window PID is for cleanup only.
 - Do not trust `MainWindowHandle` to confirm visibility — for console apps the window belongs to `conhost`
   or Windows Terminal, so the handle reads 0 on a window that is plainly visible. Confirm by enumerating
   visible top-level windows, or just ask the user.
