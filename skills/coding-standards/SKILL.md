@@ -48,7 +48,7 @@ Nothing below is loaded automatically; a rule that never loads is indistinguisha
 does not exist.
 
 ## Frontend / TS-JS specifics
-Building or editing frontend/TS-JS code → also read `reference/frontend.md` (Atomic Design layout, arrow-const function style). Not applicable to non-frontend work (Python, scripts, backend-only, ML) — skip it there.
+Building or editing frontend/TS-JS code → also read `reference/frontend.md`. **Its two halves have different scope**: Atomic Design layout is FRONTEND-only; the arrow-const function style binds ANY TS/JS, backend included. TS/JS backend → read it and apply the style half. No TS/JS at all (Python, scripts, ML) → skip it.
 
 ## Python / ML specifics
 Python / ML work (training scripts, notebooks, model configs) → also read `reference/python-ml.md`. Not applicable to frontend/TS-JS work.

@@ -70,6 +70,10 @@ both are emitted from the same task-list walk. An unclosed fence in `draft/`, `p
 A blanket "never auto-fix" over both would forbid the only sensible response to the commonest and
 least dangerous violation.
 
+**The script reports repo-wide, so a red run says nothing about YOUR file on its own.** A repo carrying
+standing violations from other features is red on every run, forever. Grep the output for the filename
+you just wrote, and read the total only to notice it did not grow.
+
 # FEATURE FILE FORMAT
 Frontmatter (source of truth for status):
 ```
@@ -118,6 +122,7 @@ The test that picks — **to fill the spec, would you have to INVENT a decision 
 ## 1. Create → DRAFT
 Write the spec into `/features/draft/`. Fill all sections as far as known.
 Change mirrors an existing one (same layer, sibling module) → read that precedent FIRST and mirror its structure. A plan drafted from the file tree alone puts constants and wiring in plausible-but-wrong places, and the correction lands mid-implementation.
+**A precedent that is the SOLE user of a shared mechanism proves nothing about a SECOND one.** Hook, event bus, registry, singleton slot: copying the sibling that already uses it inherits its assumption of being alone. Read the mechanism's own composition contract — does it merge, queue, or keep only the last writer? — before planning to be user number two. The precedent looks correct either way, so this is a plan that reviews clean and fails silently at runtime.
 Anything the spec cannot settle becomes an `Open assumption:` line under `# Technical Plan` (FEATURE FILE FORMAT). Not optional and not a confession of sloppiness — it is what step 1.4 works from. An inline spec with no assumption list hands that gate a blank page.
 Spec fixes a defect CLASS (a rule missing from several files, one pattern wrong in several places) → grep every instance BEFORE writing Tasks; count from the grep, not from the report you are working off. A spec naming 4 of 6 instances looks complete, passes its own review, and ships the other 2 unfixed.
 Plan changes an exported SIGNATURE → count call sites by grepping the SYMBOL, not the feature's surface description; the two sets differ. Sizing Impact Analysis from the wrong set understates it, and the missed callers surface as build errors mid-implementation.
@@ -175,6 +180,7 @@ Only on explicit approval: move to `/features/approved/`.
 
 ## 4. Implementation gate → IN_PROGRESS
 Before ANY code change: verify file exists AND status = APPROVED. Then move to `/features/in-progress/`. Implementation begins only after this.
+**A spec can be APPROVED and still have nothing to build.** A write-only record (ON ACTIVATION 0.7) ships with `# Solution` and `# Technical Plan` as placeholders on purpose, so approval approved the RECORD, not a plan. Read both sections here. Placeholder → write the plan into the spec, and put the APPROACH to the user via AskUserQuestion before any code: they approved a problem, and approval of an empty plan is not approval of whatever you invent to fill it.
 
 ## 5. Implement
 Build only the spec's tasks. Scope changes → update the spec first.

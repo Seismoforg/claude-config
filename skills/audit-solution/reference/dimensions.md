@@ -98,6 +98,10 @@ Two guards, because the bar is only as good as the number behind it:
   to bind files that do not exist yet matches nothing on the day it ships and is working as designed.
   Same shape as the "duplication the text itself declares AND justifies" carve-out above, and the
   intentional-convention guard at the top of this file. Check for a stated reason before counting.
+- **Counting what a CHECK matches → use the CHECK's own predicate, read from its source.** A plainer
+  approximation — case-sensitive where it is insensitive, a different anchor, a wider folder set —
+  returns a near-miss that reads exactly like the real number. Read the check. Cannot → say the count
+  is approximate and name the pattern you used.
 Denominators come from your OWN unbounded search, or from a 2a mechanical-check result the dispatcher
 handed you — a check script's violation list and the file count it ran over are measurements, and using
 one is cheaper and more reliable than re-deriving it. Handed no 2a results at all → say so rather than
