@@ -4,14 +4,14 @@ A `coding-standards` addendum, not a skill. You are reading it because that skil
 web work: `coding-standards` owns code STRUCTURE, this file owns the EXPERIENCE. Both apply.
 
 # SCOPE
-1. Identify surface: component, layout, styling, motion, or full page. Read nearest existing components first to inherit the system.
+1. Identify surface: component, layout, styling, motion, or full page. Read nearest existing components first and inherit the system — **unless the brief is to change it.** A redesign replaces the existing look by definition; `reference/design.md` owns that call and outranks this step wherever it applies. This is the ONLY place in this file that arbitrates the two; do not restate it below.
 2. Apply the pillars; run the Completion Checklist before done.
 
 No "is this web work?" branch here: the routing section in `coding-standards/SKILL.md` already
 decided that, and this file is only ever `Read` after it did. A stop-branch in a file that cannot be
 activated is dead prose.
 
-Bias: enforce the non-negotiables (a11y, responsive, perf) on every change. The aesthetic pillars below follow the brief.
+Bias: enforce the non-negotiables (a11y, responsive, perf) on every change; apply the aesthetic pillars below in the project's own idiom. No design brief in play → there is nothing to override SCOPE step 1, so inherit.
 
 # 1. RESPONSIVE & MOBILE-FIRST (non-negotiable)
 - Design small-screen first, enhance up with `min-width`. Never desktop-first with `max-width` overrides.

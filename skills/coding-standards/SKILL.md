@@ -151,11 +151,13 @@ Adding/upgrading a dependency → also read `reference/dependencies.md`.
 
 # INDEPENDENT REVIEW — main loop only
 **You are a subagent → skip this section entirely; you cannot dispatch another agent.**
+**A DESIGN SURFACE ALWAYS QUALIFIES**, however small the diff — `reference/design.md` §14 pass 2
+requires this dispatch, and no subagent can make it. Read the rest of this section as already
+triggered; the size test below does not apply.
 Main loop, diff worth a second pair of eyes (broad, structural, or pre-commit) → delegate the
 `standards-reviewer` agent: read-only, fetches the diff itself, reviews against THESE rules
 rather than generic best practice. Returns violations + FRICTION. Optional — skip for a
-one-line fix. **Not optional on a design surface:** `reference/design.md` §14 pass 2 requires this
-dispatch before code is output, and no subagent can make it.
+one-line fix.
 Addendum applies (frontend/TS-JS · Python/ML · dependency change · web/UI · design surface) → join
 the matching `reference/<file>.md` onto this skill's announced base directory and hand the agent that
 ABSOLUTE path. A HANDED file announces no base directory, so its own pointers are dead — hand every

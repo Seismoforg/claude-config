@@ -149,11 +149,12 @@ its workflow — the crew only assigns the work.
    because a worker could not run it.** Both skills are preloaded, so both placeholders resolve for a `dev`
    and it runs them in its own worktree; your run covers what its worktree could not, and does not replace
    it. A dev whose brief never named the run did not make it — check the brief you sent before assuming it
-   is covered. Applied-but-unrun is not "clean"; a skill that never applied needs no run.
+   is covered. Applied-but-unrun is not "clean"; a skill that never applied needs no run. Commit any fix
+   you make in that pass.
    **A design surface also owes pass 2** — the reviewer dispatch in
    `coding-standards/reference/design.md` §14. That one IS yours, and for the opposite reason: it is not
    a shell check, and no dev can ever make it because subagents do not nest. Yours, or it happens
-   nowhere. Commit any fix you make in that pass.
+   nowhere. Commit what it makes you fix, the same as above.
 6. **Test (Vera, read-only).** Dispatch the `tester` agent with a full DISPATCH BRIEF and **NO
    `isolation: worktree`** — do not mirror step 5's flag. She holds no write tools, so there is nothing
    to contain, and a worktree would only feed her a stale tree to read the code from. She is read-only:
