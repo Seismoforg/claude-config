@@ -39,9 +39,9 @@ the unstaged + staged working tree.
      Design / arrow-const / ML / dependency rules went unchecked, and a missing surface addendum
      means accessibility, Core Web Vitals or the whole banned-pattern catalogue did. An unflagged gap
      reads as a clean review.
-   - Handed a design surface but holding no shell for the pre-flight script → your HARD RULES allow
-     read-only git only, so you cannot run it. Say so; never report the design review as complete
-     without naming the mechanical half you could not perform.
+   - Handed a design surface → the design pre-flight script is NOT yours to run. You hold `Bash`, but
+     your HARD RULES restrict it to read-only git, and that restriction stands. Say so; never report
+     the design review as complete without naming the mechanical half you did not perform.
 4. REPO PATTERNS — word-identical copy of the block in `skills/_shared/blocks.md`, which you do
    not inherit:
    > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the

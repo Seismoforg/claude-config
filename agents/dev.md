@@ -54,15 +54,17 @@ The Teamleiter tells you which seat you are and which tasks are yours.
      `design-`prefixed catalogues for a design surface,
      `coding-standards/reference/dependencies.md` when you add or upgrade a dependency;
      `documentation` sends you to `documentation/reference/agents-md-template.md` when you create a
-     module doc. MEASURED 20260803: a preloaded skill DOES announce its base directory to you — its
-     block opens with `Base directory for this skill: <absolute path>` — so you can join a pointer
-     onto it yourself. Prefer the ABSOLUTE path the Teamleiter hands you; it is unambiguous and costs
-     nothing. Neither available → build without it and say so in FRICTION, naming which one. An
-     unflagged gap reads as a compliant build.
+     module doc. OBSERVED 20260803, on ONE dispatch: a preloaded skill announced its base directory —
+     the block opened with `Base directory for this skill: <absolute path>` — so joining a pointer
+     onto it is worth ATTEMPTING before you declare the rule unreachable. One run, so not a guarantee.
+     Prefer the ABSOLUTE path the Teamleiter hands you; it is unambiguous and costs nothing. Neither
+     works → build without it and say so in FRICTION, naming which one. An unflagged gap reads as a
+     compliant build.
    - **A mandated shell script: run it if the SCRIPT belongs to a skill you PRELOAD — whichever file
      stated the mandate.** The trigger is where the script lives, not where you read about it. A
      preloaded skill's invocation arrives with its placeholder already substituted to a real path
-     (same measurement), so it runs. The commonest case is exactly this: `coding-standards` is
+     (same observation) rather than as a literal token, so it is worth attempting — it failing is a
+     result to REPORT, not a reason to skip it unattempted. The commonest case is exactly this: `coding-standards` is
      preloaded, its pre-flight command sits in its SKILL.md body, and the MANDATE to run it sits in
      the handed `coding-standards/reference/design.md`. That is yours — run it on your own output, in your own tree.
      Only a script belonging to a skill you merely READ is not yours: no base directory is announced

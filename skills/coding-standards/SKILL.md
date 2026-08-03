@@ -40,7 +40,9 @@ Code comments & docstrings: governed entirely by `documentation` — invoke it, 
 - Too large → extract along seams (components, hooks, services, helpers). Never split mid-responsibility.
 
 # ADDENDA — STACK AND SURFACE
-Four on-demand files, each with its own trigger. Read the matching one BEFORE writing, never after.
+On-demand files, each with its own trigger. Read every matching one BEFORE writing, never after.
+More than one can apply to a single change, and `reference/dependencies.md` further down belongs to
+this set too.
 Nothing below is loaded automatically; a rule that never loads is indistinguishable from one that
 does not exist.
 
@@ -80,31 +82,36 @@ node ${CLAUDE_SKILL_DIR}/scripts/preflight.mjs <changed files or dir>
 ```
 Exit 1 = violations as `file:line:col  rule (§)  detail`. Fix every hit, re-run until exit 0.
 
-**Who runs it: whoever wrote the code, if they hold a shell.** This skill is preloaded, so the
-placeholder above is already a real path in a subagent's context too (MEASURED — see the dispatch
-note below). A worker with `Bash` runs it on its own output, in its own tree. No shell (`pm`,
-`tester`, `audit-scout`, and `standards-reviewer`, whose HARD RULES allow read-only git only) → say
-so in your report; do not claim the check as done and do not treat it as someone else's silence. The
-dispatcher's own run covers the integrated whole and does NOT replace the per-worker one.
+**Who runs it: whoever wrote the code, if they hold a shell — the dispatcher otherwise.** The
+placeholder above arrives substituted in a preloaded context, including a subagent's (OBSERVED once —
+see the dispatch note below; it was observed on an agent with no shell, so whether the run then
+SUCCEEDS from a worker is untested. Try it; report the failure rather than assuming either answer).
+Holding no shell at all (`pm`, `tester`, `audit-scout`) or only a restricted one
+(`standards-reviewer`'s HARD RULES allow read-only git) → say so in your report; do not claim the
+check as done and do not treat it as someone else's silence. The dispatcher's own run covers the
+integrated whole and does NOT replace the per-worker one.
 
 **NAMING RULE — a design addendum is `reference/design-<name>.md`.** The `design-` prefix is the
 only thing grouping the design files inside a flat `reference/` directory; a tenth one landing as
 `reference/<name>.md` sits unmarked beside `frontend.md` and `python-ml.md`.
-`node scripts/check-pointers.mjs` enforces this — `unprefixed-design-ref`. A genuinely non-design
-addendum is added to that script's `NON_DESIGN_REFS` set, deliberately, so the call is written down
-instead of assumed.
+In THIS config's own repo a check enforces it (`unprefixed-design-ref`); its command is in that
+repo's README, not here — this skill loads in every project, and a repo-root path spelled here is a
+guaranteed ENOENT everywhere else. Elsewhere the rule is yours to keep.
 
 **Dispatching a WORKER these govern → hand it the ABSOLUTE path.** Every pointer above, and
 `reference/dependencies.md` below, is skill-relative. `crew` DISPATCH RULES owns the hand-off. Stated
 here, where the addenda are introduced, so the reader who must act on it meets it at the pointer
 itself.
 
-**MEASURED 20260803, because this line previously claimed the opposite:** a subagent that PRELOADS a
+**OBSERVED 20260803, because this line previously claimed the opposite:** a subagent that PRELOADS a
 skill IS told its base directory — its context opens with `Base directory for this skill: <absolute
 path>` — and the skill-dir placeholder in that body is already substituted to a real path when the
-agent receives it. Probed on a live `pm` dispatch, reading its own context rather than the disk. So
-a preloaded skill's script is runnable by any worker holding a shell, and the pre-flight command
-above is NOT dead for a subagent.
+agent receives it. Probed on one live `pm` dispatch, reading its own context rather than the disk.
+So the pre-flight command above is not a literal token for a subagent.
+**Scoped honestly: ONE run, on a NON-DETERMINISTIC target, by an agent with no shell.** HARD RULES
+below make that an observation, not a measurement, and it says nothing about whether the substituted
+path then RESOLVES from a worker's process. Do not build a mandate on it; repeat it before anyone
+does.
 The hand-off rule stands anyway, for the case it was actually written for: a HANDED file is only
 `Read`, announces no base directory, and its own `reference/...` pointers really are dead. Handing
 the absolute path also costs nothing when the worker could have joined it itself. What changed is

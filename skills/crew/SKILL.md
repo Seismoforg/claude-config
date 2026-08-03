@@ -26,11 +26,15 @@ reaches the workers two ways — the first two bullets. The last two say who RUN
   handed skill is only ever `Read`, so the worker gets the literal token. A PRELOADED skill's script is the
   opposite case — its placeholder does substitute, so `dev` (which holds `Bash`) runs it inside its
   worktree; `pm` and `tester` hold no shell and run nothing.
-  **MEASURED 20260803, on a live `pm` dispatch reading its own context:** the preloaded block opens with
-  `Base directory for this skill: <absolute path>`, and the pre-flight invocation inside it arrives as a
-  real path with no `${...}` token left. This paragraph asserted that before anyone had checked, and the
-  repo carried the OPPOSITE claim in three other places at the same time. Now measured, and those three
-  are corrected: `coding-standards` SKILL.md, `agents/dev.md`, `agents/AGENTS.md`.
+  **OBSERVED 20260803, on ONE live `pm` dispatch reading its own context:** the preloaded block opened
+  with `Base directory for this skill: <absolute path>`, and the pre-flight invocation inside it arrived
+  as a real path with no `${...}` token left. This paragraph asserted that before anyone had checked, and
+  the repo carried the OPPOSITE claim in several other places at the same time.
+  **One run, on a generative target, by an agent holding no shell** — so it establishes that the token is
+  substituted, and NOT that the run then succeeds from a worker. Enough to stop asserting the opposite;
+  not enough to found a mandate on. Repeat it before anyone does. Sites still carrying the old claim in
+  different words: `agents/pm.md`, `skills/documentation/SKILL.md` — both recorded as open in
+  `20260802-0001`, neither corrected here.
   **Pre-flight is the `dev`'s for exactly that reason.** `preflight.mjs` lives in
   `coding-standards/scripts/` and `coding-standards` is preloaded by every worker, so its invocation
   arrives already absolute — the same case as `documentation`'s check-docs. The DISPATCH BRIEF must name
