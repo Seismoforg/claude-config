@@ -1,6 +1,6 @@
 ---
 name: audit-solution
-description: Full-solution audit — sweep the entire codebase for weaknesses and inconsistencies (structure, coding-standards conformance, documentation coverage, consistency, obvious perf/correctness smells), report findings ranked by severity with evidence, then correct the approved ones and verify. Use when the user asks to audit / review the whole solution or codebase, check for weaknesses or inconsistencies, or do a health check. Composes with the coding-standards, web-standards, taste, and documentation skills for the checks, and ends by running self-improve.
+description: Full-solution audit — sweep the entire codebase for weaknesses and inconsistencies (structure, coding-standards conformance, documentation coverage, consistency, obvious perf/correctness smells), report findings ranked by severity with evidence, then correct the approved ones and verify. Use when the user asks to audit / review the whole solution or codebase, check for weaknesses or inconsistencies, or do a health check. Composes with the coding-standards skill (including its web and design addenda) and documentation for the checks, and ends by running self-improve.
 ---
 
 # AUDIT SOLUTION
@@ -9,7 +9,7 @@ Whole-solution health check: find weaknesses, report with evidence, fix the appr
 ones per the project's rules, verify. Investigation is READ-ONLY until the user
 approves a remediation scope.
 
-Composes with: `coding-standards` (how code must be), `web-standards` (how web/UI must be), `taste` (how frontend design must look — anti-slop, not templated), `documentation` (how docs must be), `feature` (REQUIRED — approved remediation is captured as a feature draft and carried out through the feature lifecycle before any code is touched), `self-improve` (at the end).
+Composes with: `coding-standards` (how code must be — plus `coding-standards/reference/web.md` for how web/UI must be, and `coding-standards/reference/design.md` for how frontend design must look: anti-slop, not templated), `documentation` (how docs must be), `feature` (REQUIRED — approved remediation is captured as a feature draft and carried out through the feature lifecycle before any code is touched), `self-improve` (at the end).
 
 # STEP 1 — SCOPE & MAP (local context first)
 Understand before judging, in order:
@@ -25,7 +25,7 @@ Dimension catalog → `reference/dimensions.md`. It owns what each dimension che
 Its rule-source paths are relative to the skills root (= the parent of this skill's base directory, announced at load; they carry no leading `skills/`). Join them onto that root and hand scouts the ABSOLUTE result — a scout has neither your base directory nor your CWD, so a raw string strands it.
 
 **2a. Mechanical + shell-bound checks — main loop, before any fan-out.** Deterministic and cheap; scouts are read-only by tool config and carry no shell, so these can only run here. One-shot and cheap makes them the free case under LOCAL RESOURCE RUNS (`skills/_shared/blocks.md`) — run them without asking.
-- Docs present → invoke `documentation`, run ITS mechanical check. Design surface → invoke `taste`, run ITS pre-flight. **Each skill owns its own script path — invoke that skill and take the path from its body, never hand-write one.** Their bodies carry the skill-dir placeholder, so the path arrives already absolute; a hand-written one resolves against the audited repo's CWD and fails. Audited repo defines its own subagents → its own agent check applies too.
+- Docs present → invoke `documentation`, run ITS mechanical check. Design surface → invoke `coding-standards`, which now owns `preflight.mjs`, and run ITS pre-flight. **Each skill owns its own script path — invoke that skill and take the path from its body, never hand-write one.** Their bodies carry the skill-dir placeholder, so the path arrives already absolute; a hand-written one resolves against the audited repo's CWD and fails. Audited repo defines its own subagents → its own agent check applies too.
 - VCS hygiene (tracked artifacts, ignore gaps, committed secrets) → read-only `git` here: `ls-files`, `check-ignore`, `log`. Never a scout's job — it has no shell.
 - External premises (a claim about a third-party tool/API/format, and any workaround built on one) → `WebSearch`/`WebFetch` here. Never a scout's job — it has no web tool. Skipping it is invisible: every other dimension can pass a file whose premise is years stale.
 Script hits are findings already. Feed them into Step 3 directly; don't re-derive them by eyeball, and don't hand them to a scout.

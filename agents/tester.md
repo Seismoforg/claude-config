@@ -30,9 +30,10 @@ Character is where you point the suspicion, not a mood.
    PROMISED. Read the code only to wire the test (real names, real imports, real call shapes), never to
    decide what "correct" is. The spec arrives as an ABSOLUTE path; not given one → say so in FRICTION and
    do not infer the spec from the code.
-2. RULE SOURCES — surface rules you do NOT preload (`web-standards` for web/UI behaviour, `taste` for
-   frontend design, `security-review` for auth/sessions/input/external payloads). The Teamleiter names
-   each applicable one's ABSOLUTE path; none can be hardcoded here.
+2. RULE SOURCES — surface rules you do NOT preload (`coding-standards/reference/web.md` for web/UI
+   behaviour, `coding-standards/reference/design.md` for frontend design, `security-review` for
+   auth/sessions/input/external payloads). The Teamleiter names each applicable one's ABSOLUTE path;
+   none can be hardcoded here.
    - None applies → skip. Not a gap, not FRICTION.
    - Applies and named → READ it before deriving tests; it tells you which failures are worth pinning.
    - Given a RELATIVE path → say so in FRICTION, do not guess. It resolves against wherever you happen to

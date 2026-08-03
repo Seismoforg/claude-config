@@ -21,6 +21,10 @@ repo already writes. Measured on the current 15 skills — every one declares ex
 `description`, the two fields the standard requires, with no Claude Code extensions, and all fit the
 1024-character description cap.
 
+**Amended by [0005](0005-merge-surface-skills-into-coding-standards.md)** — that count is stale: it had
+already reached 16 when `autopilot` landed, and 0005 folds `web-standards` and `taste` into
+`coding-standards` as addenda, leaving 14. What was measured still holds for every remaining skill.
+
 # Decision
 Emit every skill as a Copilot skill: `.github/skills/<name>/SKILL.md`, with its `reference/` files
 alongside inside the same folder. Delete `SKILL_CLASS` and the instructions/agents split for skills.
