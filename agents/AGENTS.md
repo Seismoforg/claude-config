@@ -93,3 +93,4 @@ Node (`node:` builtins only) for the check script. No package manager, no third-
 
 # Related Modules
 - Parent: [../](../README.md) — repo root: layout, skills, the Copilot build, machine wiring
+- Sibling: [../skills/](../skills/AGENTS.md) — the skills these agents preload via `skills:`

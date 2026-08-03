@@ -32,5 +32,9 @@ Theme configuration and the SSR-safe MUI provider chain.
 @mui/material, @emotion/react, @mui/material-nextjs
 
 # Related Modules
-- Parent: ../  (src)
+- Parent: [../](../AGENTS.md) — src
 ```
+**The link syntax is load-bearing, not cosmetic.** `check-docs.mjs` builds the link graph from
+markdown links ONLY, and only counts an edge whose target is or contains an `AGENTS.md`. A bare path
+here — `- Parent: ../` — yields zero edges and a green run that verified nothing. Copy the bracket
+form above; a plain path silently defeats the check this section exists to satisfy.

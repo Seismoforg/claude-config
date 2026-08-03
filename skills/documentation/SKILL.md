@@ -64,7 +64,11 @@ Keeps AGENTS.md the single source of truth, auto-loaded via CLAUDE.md.
 - Deleting an AGENTS.md → delete its CLAUDE.md sibling too.
 
 # LINKING (HARD RULE)
-AGENTS.md files form a tree, kept bidirectionally linked:
+AGENTS.md files form a tree, kept bidirectionally linked. **The mechanical half needs at least TWO
+AGENTS.md files that reference each other; below that it enforces nothing** — a one-node tree has no
+edge to check, and a parent documented by a `README.md` instead is excluded by construction (see
+MECHANICAL CHECK). The rule below still binds you as an author; just do not read a green run as
+proof it held.
 - Parent lists each child module under `# Related Modules`.
 - Each child links back to its parent under `# Related Modules`.
 - Creating/moving/deleting a module → update BOTH ends in the same change.
@@ -101,10 +105,17 @@ Exit 1 = violations as `file  rule  detail` (missing/bad CLAUDE.md sibling, one-
 link). Fix, re-run to exit 0. Structure only — coverage, prose style and "is this the right doc"
 stay judgment calls below. Exit 0 on a repo with NO AGENTS.md says "nothing checked", not "clean" —
 an empty set is not a pass, and whether a module needs one is your call, not the script's.
-**Same for an empty EDGE set: read the counts it prints, not just the exit code.** Link checking sees
-markdown links only, so a repo writing bare paths under `# Related Modules` yields zero edges and a
-green run that verified nothing about the link graph. Zero links checked = the link half is UNCHECKED;
-say so, and verify the parent/child ends by hand.
+**Same for an empty EDGE set: read the counts it prints, not just the exit code.** TWO different
+things produce zero edges, and only the first is a mistake:
+1. **Bare paths.** Link checking sees markdown links only, so `- Parent: ../` under
+   `# Related Modules` yields no edge. Fix the syntax — `reference/agents-md-template.md` shows the
+   form.
+2. **A parent that is not an AGENTS.md.** An edge counts only when the link target IS or CONTAINS an
+   `AGENTS.md`. A repo whose top module is documented by a root `README.md` has a real, correct
+   markdown link that is still excluded, and no violation is raised. Nothing is wrong with the doc;
+   the check simply cannot reach it.
+Either way, zero links checked = the link half is UNCHECKED; say so, and verify the parent/child ends
+by hand.
 
 # COMPLETION CHECKLIST
 - [ ] Required docs updated (or explicit "no docs required")

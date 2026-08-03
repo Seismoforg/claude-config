@@ -73,6 +73,13 @@ New-Item -ItemType Junction -Path "$HOME\.claude\agents" -Target "$repo\agents"
 ```
 First session shows a one-time external-import approval dialog — approve it.
 
+## Related Modules
+- [skills/](skills/AGENTS.md) — the skills: layout, what loads when, pointer style, naming
+- [agents/](agents/AGENTS.md) — the subagents: two classes, three harness constraints, the FRICTION channel
+
+Neither edge is counted by `check-docs.mjs` — it only builds edges between AGENTS.md files, and this
+is a README. The child ends link back to each other, which is the pair the script does verify.
+
 ## Portability
 This setup uses Windows junctions + `@import` to link the config into Claude Code's
 expected location. On Mac/Linux, the equivalent is a symlink (`ln -s`) instead of a
