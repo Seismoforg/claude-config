@@ -32,9 +32,11 @@ reaches the workers two ways — the first two bullets. The last two say who RUN
   the repo carried the OPPOSITE claim in several other places at the same time.
   **One run, on a generative target, by an agent holding no shell** — so it establishes that the token is
   substituted, and NOT that the run then succeeds from a worker. Enough to stop asserting the opposite;
-  not enough to found a mandate on. Repeat it before anyone does. Sites still carrying the old claim in
-  different words: `agents/pm.md`, `skills/documentation/SKILL.md` — both recorded as open in
-  `20260802-0001`, neither corrected here.
+  not enough to found a mandate on. Repeat it before anyone does. `agents/pm.md` was the last site missing the
+  correction — not asserting the old claim, just lacking the attempt-first instruction `agents/dev.md`
+  carries. Corrected by `20260803-0005`. `skills/documentation/SKILL.md` never carried the claim
+  either; it states only that its pointer is skill-relative and hands off to DISPATCH RULES below,
+  which is correct as written.
   **Pre-flight is the `dev`'s for exactly that reason.** `preflight.mjs` lives in
   `coding-standards/scripts/` and `coding-standards` is preloaded by every worker, so its invocation
   arrives already absolute — the same case as `documentation`'s check-docs. The DISPATCH BRIEF must name
@@ -97,7 +99,7 @@ its workflow — the crew only assigns the work.
    CREW step 3 — the PM is read-only and holds neither a user channel nor a gate, so BOTH questioning the
    user about its plan and critiquing it are the Teamleiter's, and both must land while the spec is still
    a DRAFT.
-3. **Approval gate (Teamleiter).** `feature` step 2 — move to pending/, **STOP, AskUserQuestion**. A worker
+3. **Approval gate (Teamleiter).** `feature` step 2 — move to pending/, **STOP. Ask via AskUserQuestion**. A worker
    NEVER runs this. Then honour the choice `feature` offers:
    - **Approve & implement** (fast-path, `feature` step 2/4) → straight to in-progress/, then THROUGH
      step 4 (it establishes the working branch) and on to step 5. The fast-path collapses the folder
@@ -192,7 +194,7 @@ its workflow — the crew only assigns the work.
    new ones = not converging → report the pattern and ask. `feature` step 6 owns both rules; they apply
    here too, and grinding on without them is the exact failure this skill has already lived through.
 7. **Validation + finish (Teamleiter).** `feature` step 6 — fill # Validation, move to ready-for-done/,
-   **STOP, AskUserQuestion**. Its debt bullet is yours alone: EVERY `# Debt Found` line becomes its own
+   **STOP. Ask via AskUserQuestion**. Its debt bullet is yours alone: EVERY `# Debt Found` line becomes its own
    DRAFT in `/features/draft/` — the ones you transcribed from devs in step 5 AND the ones your own
    main-loop work produced (step 5's cross-cutting pass, step 6's fix rounds; you write code too).
    No worker can do it — `features/` is not in any worktree. Then `feature` step 7 (DONE) and `feature` step 8 (`self-improve`), both main-loop.
@@ -275,9 +277,12 @@ its workflow — the crew only assigns the work.
 
 # THE INVARIANT
 **A worker sees only its own worktree, cut from a base that may be older than yours — verify its
-reported HEAD, never assume it matches.** MEASURED: two workers of different types, dispatched after a
-commit landed on the working branch, both reported the tip as of SESSION START, not that commit; their
-own `git worktree list` showed the main checkout ahead of them.
+reported HEAD, never assume it matches.** A worktree is cut from the branch tip as of SESSION START,
+not current HEAD. The measurement behind that, and the decision it forced, live in
+[ADR 0001](../../docs/adr/0001-tester-is-read-only-not-an-executor.md) — one owner, cited rather than
+re-narrated here. Seen again in this skill's own runs: two workers of different types, dispatched
+after a commit landed on the working branch, both reported the older tip, and their own
+`git worktree list` showed the main checkout ahead of them.
 Everything else about isolation follows from this one line:
 - Worktrees are for PARALLEL INDEPENDENT work. They cannot hand state from one worker to the next.
 - A step that must SEE earlier work therefore cannot be a worktree worker at all. Build it read-only so

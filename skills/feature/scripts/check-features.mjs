@@ -154,10 +154,13 @@ for (const entry of readdirSync(featuresDir)) {
       violations.push(`${rel(path)}  debt-not-recorded  # Validation must state the filed debt ids or "no debt taken" — silence is not proof`);
     }
     // `# Tasks` is a live work-list (feature step 5). By ready-for-done/done every box is ticked, or
-    // says WHY it is not. Scoped to specs carrying `# Premortem`: MEASURED at build time, 0 of 26
-    // done/ specs carried `# Open Questions` while 5 carried `# Premortem`, so the section-PAIR that
-    // scopes debt-not-recorded matches nothing at all. A check nothing can reach is worse than one
-    // nobody can drive to zero. Deliberately NOT reusing that pair — this scope selects real files.
+    // says WHY it is not. Scoped to `# Premortem` alone, which is the WIDER of the two scopes here.
+    // RE-MEASURED 20260803: 15 of 43 specs carry `# Premortem`, and the debt-not-recorded PAIR above
+    // now matches 10 of the 38 in ready-for-done/ + done/. At build time the pair matched 0 of 26,
+    // which is why this walk was given its own scope rather than reusing it; the pair has since
+    // caught up, so the reason is now breadth, not emptiness. Keep the wider scope: `unterminated-fence`
+    // is emitted from this same walk, and narrowing it would stop catching fences on specs that never
+    // ran the 1.4 gate.
     if ((entry === 'ready-for-done' || entry === 'done') && /^# Premortem/im.test(body)) {
       for (const v of tasksNotCurrent(body)) violations.push(`${rel(path)}  ${v}`);
     }

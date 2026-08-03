@@ -32,4 +32,15 @@ every gate. Scope it so the out-of-scope line does not exclude what your own que
 default value or a platform-specific no-op is often only answerable inside the dependency you
 just excluded.
 
+# HARD RULES
+Non-obvious, high-severity only — the checks above are not repeated here.
+- **Never roll your own crypto or session handling.** Use the project's existing auth
+  library/pattern, even when writing it yourself looks smaller.
+- **FLAG, never silently fix, a missing auth check.** A silent fix hides that the gap existed, and
+  the same gap usually sits on the endpoints you did not touch.
+- **Never print a secret's VALUE while investigating** — not from a config file, not from an env
+  file, not from a command's output. Presence, location and a hash only. A transcript is a copy.
+- **A subagent cannot run the independent pass.** It cannot dispatch, so that section is main-loop
+  only; reading it from inside one means skipping it, not improvising it.
+
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

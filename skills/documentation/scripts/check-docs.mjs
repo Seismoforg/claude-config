@@ -133,9 +133,13 @@ if (!violations.length) {
     // repo whose Related Modules are bare paths yields zero edges and the bidirectional + broken-link
     // checks validate nothing — while still printing "clean". Observed: every file in a repo listed,
     // zero edges checked, green run. A count the reader can see makes that impossible to miss.
+    // TWO causes reach zero, and naming only the first sends a reader hunting a syntax bug that is not
+    // there: (1) bare paths, a real mistake; (2) the edge loop above keeps a target only when it IS or
+    // CONTAINS an AGENTS.md, so a correct markdown link to a README-documented parent is dropped
+    // silently. Measured in this repo: one AGENTS.md linking `[../](../README.md)`, zero edges, green.
     const edgeCount = [...edges.values()].reduce((n, s) => n + s.size, 0);
     const linkNote = edgeCount === 0
-      ? " — 0 links checked: no `# Related Modules` entry is a markdown link, so NOTHING about the link graph was verified"
+      ? " — 0 links checked, so NOTHING about the link graph was verified. Either no `# Related Modules` entry is a markdown link, or every link points at something that is not an AGENTS.md (a README-documented parent is dropped by design)"
       : `, ${edgeCount} link(s) checked`;
     console.log(`check-docs: clean — ${agents.length} AGENTS.md file(s) under ${where}${linkNote}`);
   }
