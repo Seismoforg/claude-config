@@ -47,7 +47,7 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 
 **Touch only what you must. Clean up only your own mess.**
 - Don't "improve" adjacent code, comments, or formatting. Don't refactor what isn't broken.
-- Match existing style, even if you'd do it differently.
+- Match existing style, even if you'd do it differently. EXCEPT when the brief is to change how it LOOKS: then the existing look is the thing being replaced, not a convention to preserve, and the design addendum owns that call. (FLOOR of REPO PATTERNS in `skills/_shared/blocks.md`.)
 - Notice unrelated dead code → mention it, don't delete it.
 - Remove imports/vars/functions YOUR change orphaned; leave pre-existing dead code alone.
 - Test: every changed line traces directly to the user's request.

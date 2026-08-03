@@ -40,12 +40,12 @@ ask the user. Never invent scope; never pick silently between interpretations.
    Named → read them and let them shape the Technical Plan
    and Tasks. Applies but not named, or given a RELATIVE path → plan without it AND note it in OPEN, so
    the gap is visible before build; never guess a path.
-   **Your PRELOADED skills have companions you cannot resolve either.** You hold the SKILL.md body,
+   **Your PRELOADED skills have companions you must load separately.** You hold the SKILL.md body,
    not what it points at. `coding-standards` sends you to `coding-standards/reference/frontend.md`
    for frontend/TS-JS, `coding-standards/reference/python-ml.md` for Python/ML,
    `coding-standards/reference/dependencies.md` for a dependency change; `documentation` sends you to
-   `documentation/reference/agents-md-template.md` for a new module doc. Each resolves only from an
-   announced base directory, which you do not have. Applies to the brief and no ABSOLUTE path was handed → plan
+   `documentation/reference/agents-md-template.md` for a new module doc. Prefer the ABSOLUTE path the
+   Teamleiter hands you; it is unambiguous. Applies to the brief and nothing resolves it → plan
    without it and note it in OPEN. A Technical Plan shaped without the addendum that governs the
    stack sends the devs the wrong layout.
    Mechanical check scripts your preloaded skills mandate (`documentation`'s check-docs, and any other)
@@ -61,7 +61,8 @@ ask the user. Never invent scope; never pick silently between interpretations.
    not inherit:
    > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
    > whole repo shares is a convention, not a finding. Never impose a structure or look the project
-   > doesn't use.
+   > doesn't use — EXCEPT when the brief is to change how it LOOKS: then the existing look is the
+   > thing being replaced, not a convention to preserve, and the design addendum owns that call.
    > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
    > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
 8. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the repo

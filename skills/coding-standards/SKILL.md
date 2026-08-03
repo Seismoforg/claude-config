@@ -11,19 +11,20 @@ Governs HOW code is written. Composes with `feature` (what to build) and
 # ON ACTIVATION — CLASSIFY THE CHANGE
 **A design surface ROUTES before it is classified.** A request about how something LOOKS (see DESIGN
 SURFACES below) goes to `reference/design.md` first; the buckets here then describe the code work
-inside that. Classify it first and "the hero looks generic, fix it" reads as SMALL_CHANGE, whose
-"don't scan the repo" forbids the audit `reference/design.md` mandates as its own first action — so
-the page gets patched in place and still looks generic. The classifier is upstream of brief
-inference, which is exactly why it has to defer here.
+inside that. Classify it first and "the hero looks generic, fix it" reads as SMALL_CHANGE, which caps
+reading before the addendum has said what to read — and the page gets patched in place and still
+looks generic.
 
 Sets read scope + approval needs:
 - **SMALL_CHANGE** — bug fix / localized edit. Read only relevant files. Don't scan the repo.
+  **Exception: a design surface.** Its addendum sets the read scope, and on a redesign that scope is
+  an audit. This bullet does not override it.
 - **FEATURE** — new behavior. Read only affected modules. Expand scope only when needed.
 - **REFACTOR** — structural. Full impact analysis allowed; significant structural changes REQUIRE approval first.
 
 Overriding rule: **match the surrounding code** — REPO PATTERNS in `skills/_shared/blocks.md` governs the DEFAULTS below. It never overrides the HARD RULES at the end; those hold against any repo pattern.
 
-**Carve-out — REPO PATTERNS does not govern `reference/design.md`.** It says *never impose a LOOK the project doesn't use*, which cancels the design addendum on the exact request it exists for: asked to make something less templated, the templated look IS the repo pattern, and the conservative reading wins. The design rules outranked REPO PATTERNS when they were a standalone skill; folding them into an addendum must not quietly demote them. Scope is LOOK only — code STRUCTURE still matches the repo, and `reference/web.md` stays governed as before.
+**Carve-out — REPO PATTERNS does not govern `reference/design.md`.** It says *never impose a LOOK the project doesn't use*, which cancels the design addendum on the exact request it exists for: asked to make something less templated, the templated look IS the repo pattern, and the conservative reading wins. The design rules outranked REPO PATTERNS as a standalone skill; folding them into an addendum must not quietly demote them. Scope is LOOK only — code STRUCTURE still matches the repo. Stated ONCE, here: `reference/web.md` used to restate the same conservative rule four times over, and every restatement was a place this carve-out could be silently overridden.
 
 # CORE PRINCIPLES
 Prefer: separation of concerns · small focused modules · reusable components · explicit dependencies · consistent patterns.
@@ -126,6 +127,7 @@ Scheduled or polled work (cron, timer, queue poller) must not overlap itself. In
 # CHANGE STRATEGY
 Prefer: minimal diffs · localized edits · existing patterns · incremental improvements.
 Avoid: full-file rewrites · broad restructuring · unnecessary renaming · large refactors without approval.
+Exception — a design surface whose brief is a redesign. Replacing the look IS the task, so a full rewrite of that surface's markup is in scope; `reference/design.md` owns how far it goes. Everything else here still holds.
 Introducing a whole-repo formatter/linter alongside other edits → run the format pass FIRST, or commit functional changes before formatting, so mechanical churn lands in its own commit, never intermingled with functional diffs.
 
 # REFACTOR RULES
@@ -150,6 +152,9 @@ Adding/upgrading a dependency → also read `reference/dependencies.md`.
 
 # INDEPENDENT REVIEW — main loop only
 **You are a subagent → skip this section entirely; you cannot dispatch another agent.**
+**A DESIGN SURFACE ALWAYS QUALIFIES**, however small the diff — `reference/design.md` §14 pass 2
+requires this dispatch, and no subagent can make it. Read the rest of this section as already
+triggered; the size test below does not apply.
 Main loop, diff worth a second pair of eyes (broad, structural, or pre-commit) → delegate the
 `standards-reviewer` agent: read-only, fetches the diff itself, reviews against THESE rules
 rather than generic best practice. Returns violations + FRICTION. Optional — skip for a
@@ -163,14 +168,12 @@ companion, or the reviewer reviews half a rule set and cannot tell.
   contrast thresholds, reduced motion and the CWV targets, and forbids restating them locally — so
   without it those boxes are unfulfillable), and `reference/design-ai-tells.md` (the banned-pattern
   catalogue, half that rule set on its own).
-`agents/standards-reviewer.md` must be told these are not "stack" addenda and that more than one can
-apply at once; its own brief otherwise says read only the single matching stack file.
 
 # COMPLETION CHECKLIST
 - [ ] No obvious duplication introduced
 - [ ] File sizes within guidelines
 - [ ] Architecture consistent with surrounding code
-- [ ] Existing patterns respected
+- [ ] Existing patterns respected — on a design surface asked to CHANGE the look, this box covers code patterns only; the look is judged against `reference/design.md`, not against what was there
 - [ ] Diff minimal, matches task scope
 - [ ] No unnecessary complexity / premature abstraction
 - [ ] Verification (compile/tests/smoke) ran against the project's OWN env/toolchain (its virtualenv/lockfile/interpreter), not a global install — so a failure means a real defect

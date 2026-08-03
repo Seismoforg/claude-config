@@ -31,7 +31,8 @@ sweep of everything buries the exploitable finding in the ones nobody can act on
    not inherit:
    > Match what the repo already does. Repo patterns beat this config's DEFAULTS — a deviation the
    > whole repo shares is a convention, not a finding. Never impose a structure or look the project
-   > doesn't use.
+   > doesn't use — EXCEPT when the brief is to change how it LOOKS: then the existing look is the
+   > thing being replaced, not a convention to preserve, and the design addendum owns that call.
    > Defaults only — a HARD RULE is never overridden. A repo-wide unsafe pattern (hardcoded secrets,
    > weakened tests, logic in controllers) stays a defect however consistently it is repeated.
 6. No web tool — you hold no `WebSearch`/`WebFetch`. An uncertainty you cannot settle from the repo

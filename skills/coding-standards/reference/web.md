@@ -3,17 +3,15 @@
 A `coding-standards` addendum, not a skill. You are reading it because that skill routed you here for
 web work: `coding-standards` owns code STRUCTURE, this file owns the EXPERIENCE. Both apply.
 
-Overriding rule: **match the project's existing design system** — REPO PATTERNS in `skills/_shared/blocks.md` governs; here it reads as tokens, components, spacing, conventions.
-
 # SCOPE
-1. Identify surface: component, layout, styling, motion, or full page. Read nearest existing components first to inherit the system.
+1. Identify surface: component, layout, styling, motion, or full page. Read nearest existing components first and inherit the system — **unless the brief is to change it.** A redesign replaces the existing look by definition; `reference/design.md` owns that call and outranks this step wherever it applies. This is the ONLY place in this file that arbitrates the two; do not restate it below.
 2. Apply the pillars; run the Completion Checklist before done.
 
 No "is this web work?" branch here: the routing section in `coding-standards/SKILL.md` already
 decided that, and this file is only ever `Read` after it did. A stop-branch in a file that cannot be
 activated is dead prose.
 
-Bias: enforce non-negotiables (a11y, responsive, perf) every change; apply aesthetics (minimalism, bento, motion) in the project's style, not as a rewrite.
+Bias: enforce the non-negotiables (a11y, responsive, perf) on every change; apply the aesthetic pillars below in the project's own idiom. No design brief in play → there is nothing to override SCOPE step 1, so inherit.
 
 # 1. RESPONSIVE & MOBILE-FIRST (non-negotiable)
 - Design small-screen first, enhance up with `min-width`. Never desktop-first with `max-width` overrides.
@@ -66,13 +64,11 @@ Never ship the happy path alone.
 - [ ] Motion purposeful, subtle, respects `prefers-reduced-motion`
 - [ ] Data views handle loading / empty / error, not just success
 - [ ] Values fed to bounded/ranged controls (progress, meter, gauge, slider) clamped to the control's range — upstream data can overshoot
-- [ ] Matches the project's design system (tokens, spacing, components)
 - [ ] Referenced i18n/translation keys actually resolve — a missing key often fails silently (renders the raw key), passing typecheck + build
 - [ ] Build + typecheck clean (rendered viewport / interaction / visual regressions → LIVE VERIFICATION in `skills/_shared/blocks.md`)
 
 # HARD RULES
 Non-obvious, high-severity only — the pillars above are not repeated here.
-- **Match the existing design system over these defaults.** Governs everything above.
 - **The three non-negotiables ship on every change:** mobile-first + fluid (never desktop-first with pixel-locked widths) · WCAG AA (semantic HTML before ARIA, keyboard-operable, contrast verified not eyeballed) · green CWV.
 - **Verify contrast, don't guess** — ACCESSIBILITY above owns it, every supported theme included.
 - **Every data view handles loading / empty / error** — DATA STATES above owns it.

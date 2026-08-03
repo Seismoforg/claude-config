@@ -39,8 +39,10 @@ Does it look templated/generic ("slop")? Cookie-cutter hero, default component l
 design direction, weak type/spacing/color system. Design-direction quality — distinct from the web
 mechanics above. Mechanical tells are the dispatcher's script (`preflight.mjs`), not
 yours; judge the rest.
-Rule source: `coding-standards/reference/design.md` + `coding-standards/reference/design-ai-tells.md`.
-Skip if no user-facing design surface, or the UI is internal tooling with no design ambition.
+Rule source: `coding-standards/reference/design.md` + `coding-standards/reference/design-ai-tells.md`
++ `coding-standards/reference/web.md`. All three: design.md's own §4.5 marks the BUTTON and FORM
+contrast checks mandatory and defers to web.md for the thresholds, forbidding a local restatement —
+so handed design.md alone, this scout is told to make a check and denied the numbers for it.
 
 ## Documentation conformance
 AGENTS.md coverage for real modules, ADRs for major decisions, stale/contradictory docs.
