@@ -333,7 +333,7 @@ Dual-mode by default. Never assume light-only unless the brief is print-emulatin
 - **CSS variables** (for shadcn/ui, Radix Themes, or component libraries with theming): define semantic tokens (`--surface`, `--surface-elevated`, `--text-primary`, `--accent`) and swap values under `[data-theme="dark"]` or `@media (prefers-color-scheme: dark)`.
 
 ## 8.B Do Not Prescribe Specific Colors Here
-The brief and brand decide. This skill enforces only:
+The brief and brand decide. This addendum enforces only:
 - **Contrast** - WCAG AA minimum for body text, AAA target for hero copy.
 - **Hierarchy parity** - visual hierarchy that works in light must work in dark. If a CTA pops in light, it pops in dark.
 - **Brand fidelity** - primary brand color stays recognisable. Don't desaturate the brand into a dark mode.
@@ -415,11 +415,16 @@ AI-tell strings. Rules about what the user SEES (em-dash, serif, Inter, AI-tell)
 lines; code rules fire everywhere. Fix every hit, re-run until exit 0. A model self-checking 60 boxes
 misses some; grep does not.
 
-**2. Judgment — dispatch ONE reviewer agent** (main loop only; *subagent reading this as a rule
-source → skip, you cannot dispatch another agent*), fresh context, over the changed files +
-`reference/design-ai-tells.md`. You wrote the page, so you are primed not to see your own tells: self-review
-is the weakest review. The agent checks the judgment boxes (hero fit, zigzag cap, layout-family
-repetition, copy self-audit, div-fake-screenshots, bento rhythm).
+**2. Judgment — dispatch the `standards-reviewer` agent** (main loop only; *subagent reading this as a
+rule source → skip, you cannot dispatch another agent*), fresh context, over the changed files. Name
+it: an unnamed "reviewer agent" gets dispatched by nobody.
+**Hand it ABSOLUTE paths — three of them:** this file, `coding-standards/reference/web.md`, and
+`coding-standards/reference/design-ai-tells.md`. Join each onto `coding-standards`' announced base
+directory. The relative spellings on this page resolve for YOU and are dead for the agent you are
+briefing, which announces no base directory for a file it is merely handed.
+You wrote the page, so you are primed not to see your own tells: self-review is the weakest review.
+The agent checks the judgment boxes (hero fit, zigzag cap, layout-family repetition, copy
+self-audit, div-fake-screenshots, bento rhythm).
 
 **3. Fix** everything the script and the agent returned. Then the boxes below must all tick.
 

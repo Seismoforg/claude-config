@@ -16,12 +16,17 @@ constraints that bind both, and the `FRICTION:` reporting channel — all docume
 they govern, in [agents/AGENTS.md](agents/AGENTS.md). Not repeated here: one home per rule.
 
 ## Mechanical checks
-Run all three after editing anything they cover. Each exits 1 on a violation, printing `file  rule  detail`.
+Run all four after editing anything they cover. Each exits 1 on a violation, printing `file  rule  detail`.
 ```
 node agents/scripts/check-agents.mjs
 node skills/feature/scripts/check-features.mjs
 node skills/documentation/scripts/check-docs.mjs
+node scripts/check-pointers.mjs
 ```
+`check-pointers` is the repo-wide one: it resolves every `reference/` and skill-dir-script pointer in
+live rule prose at exact on-disk case, and enforces the `design-` prefix on design addenda. Its corpus
+is an ALLOWLIST (`skills/`, `agents/`, `CLAUDE.md`, `README.md`) — a new top-level directory joins it
+only by being added to `CORPUS_DIRS`, never silently.
 
 ## GitHub Copilot export
 Copilot reads the same `SKILL.md` format this repo writes, so a skill translates one for one.

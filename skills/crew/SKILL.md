@@ -26,10 +26,19 @@ reaches the workers two ways — the first two bullets. The last two say who RUN
   handed skill is only ever `Read`, so the worker gets the literal token. A PRELOADED skill's script is the
   opposite case — its placeholder does substitute, so `dev` (which holds `Bash`) runs it inside its
   worktree; `pm` and `tester` hold no shell and run nothing.
-  **Pre-flight is the `dev`'s for exactly that reason.** `preflight.mjs` now lives in
+  **MEASURED 20260803, on a live `pm` dispatch reading its own context:** the preloaded block opens with
+  `Base directory for this skill: <absolute path>`, and the pre-flight invocation inside it arrives as a
+  real path with no `${...}` token left. This paragraph asserted that before anyone had checked, and the
+  repo carried the OPPOSITE claim in three other places at the same time. Now measured, and those three
+  are corrected: `coding-standards` SKILL.md, `agents/dev.md`, `agents/AGENTS.md`.
+  **Pre-flight is the `dev`'s for exactly that reason.** `preflight.mjs` lives in
   `coding-standards/scripts/` and `coding-standards` is preloaded by every worker, so its invocation
   arrives already absolute — the same case as `documentation`'s check-docs. The DISPATCH BRIEF must name
-  the run, or it happens nowhere.
+  the run, or it happens nowhere. **The MANDATE to run it sits in the handed
+  `coding-standards/reference/design.md`, not in the preloaded body** — say so in the brief. A dev reading a rule about handed files otherwise
+  declines the run as the Teamleiter's, reports FRICTION, and the pre-flight happens nowhere while both
+  sides believe the other covered it. `agents/dev.md` now triggers on where the SCRIPT lives; the brief
+  should not rely on that alone.
 - **Teamleiter-only** (main loop): the final cross-cutting pass, plus every repo-wide check over the
   INTEGRATED whole — the one thing no worker can see from inside its own worktree.
 
@@ -195,18 +204,32 @@ its workflow — the crew only assigns the work.
   handed: `security-review/SKILL.md` cites `coding-standards/reference/dependencies.md` for its CVE check,
   which is that second case. The rule below hands that same file, but only when a DEPENDENCY changes — a
   different trigger, so a security dispatch that adds no dependency still needs it named here.
-  **A PRELOADED skill's satellites are dead the same way** — and this is the case that hides, because
+  **A PRELOADED skill's satellites still have to be handed** — and this is the case that hides, because
   preloading feels like the worker already has everything. It has the SKILL.md body and nothing it
-  points at. So `coding-standards` (preloaded by every worker) reaches a `dev` without any of its
-  addenda: hand `coding-standards/reference/web.md` for web/UI work,
-  `coding-standards/reference/design.md` AND `coding-standards/reference/design-ai-tells.md` for frontend
-  design (the banned-pattern catalogue — the design rules without it are half a rule set),
-  `coding-standards/reference/frontend.md` for frontend/TS-JS work,
-  `coding-standards/reference/python-ml.md` for Python/ML,
-  `coding-standards/reference/dependencies.md` when a dependency is added or upgraded, and
-  `documentation/reference/agents-md-template.md` when the task creates a module doc. Every one
-  spelled from the skills root, never bare — a bare `reference/...` resolves inside THIS skill's
-  directory, and `crew/reference/` does not exist.
+  points at. (A worker COULD join a preloaded pointer onto the base directory it is given — MEASURED,
+  see the scripts bullet above — but hand the absolute path anyway: it is unambiguous, it costs
+  nothing, and it is the only option for a handed file.) So `coding-standards`, preloaded by every
+  worker, reaches a `dev` without any of its addenda:
+  - `coding-standards/reference/frontend.md` — frontend/TS-JS work
+  - `coding-standards/reference/python-ml.md` — Python/ML
+  - `coding-standards/reference/dependencies.md` — a dependency added or upgraded
+  - `coding-standards/reference/web.md` — web/UI work
+  - `documentation/reference/agents-md-template.md` — the task creates a module doc
+  - **A design surface takes `design.md` + `web.md` + `design-ai-tells.md` — all three, never
+    `design.md` alone.** `design.md` defers to `web.md` five times for contrast thresholds, reduced
+    motion and the CWV targets, and explicitly forbids restating them locally, so without it those
+    boxes cannot be filled at all. `design-ai-tells.md` is the banned-pattern catalogue — the design
+    rules without it are half a rule set.
+  - **The eight remaining `design-*` catalogues, handed BY TASK, not as a bundle:**
+    `design-redesign-protocol.md` (any redesign — `design.md` says load it *before touching
+    anything*), `design-design-directives.md` (composing a look), `design-install-commands.md` and
+    `design-canonical-sources.md` (installing a real design system — `design.md` forbids hand-rolling
+    its CSS, which is unfollowable without these), `design-liquid-glass.md`, `design-motion-skeletons.md`
+    (motion work), `design-pattern-vocabulary.md` (naming or planning a layout/motion pattern),
+    `design-block-library-schema.md` (authoring a block). Handing all nine every time is noise; handing
+    only the first two leaves a dev told to load a file it has never been given.
+  Every one spelled from the skills root, never bare — a bare `reference/...` resolves inside THIS
+  skill's directory, and `crew/reference/` does not exist.
   Cannot or will not hand one → say so in the brief, so the worker flags the gap instead of assuming
   coverage.
 - **Merge a worker in; never copy paths out.** `git merge --no-ff <worker-branch>` (`git worktree list`

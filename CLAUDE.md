@@ -152,7 +152,7 @@ you to append such a footer. The user is the sole author of every commit.
 ## 6. Use the Skill System
 
 Invoke the matching skill — don't bypass it and hand-roll:
-- Writing/modifying/reviewing code → `coding-standards`. It also owns web/UI work (`coding-standards/reference/web.md`) and frontend design — landing pages, portfolios, redesigns, hero/marketing UI, "make it look good / not templated", visual polish, design direction (`coding-standards/reference/design.md`, plus its `design-` prefixed catalogues). Read the addendum BEFORE writing on that surface.
+- Writing/modifying/reviewing code → `coding-standards`. It also owns web/UI work, and frontend design — landing pages, portfolios, pricing/marketing/about pages, redesigns, hero UI, visual polish, design direction, and any complaint about how something LOOKS ("make it look good", "not templated", "less generic", "this looks AI-generated"). The skill routes to the right addendum from there; it must be READ before writing on that surface. This entry names the SKILL only, deliberately — an addendum gets no route of its own (`self-improve` SKILL LIFECYCLE), and a skills-root-relative path here would be dead for every subagent, which inherits this file but not the skill.
 - New features (plan/spec/approve/implement) → `feature`
 - Feature named but underspecified — pin the requirements down before speccing → `feature-brainstorming` (runs inside `feature` step 0; multiple-choice interview, then writes the DRAFT). MAIN LOOP ONLY — it lives on `AskUserQuestion`, which a subagent does not have.
 - Delegate a task to the role-based crew (Teamleiter/PM/devs/tester) → `crew` (drives `feature`)

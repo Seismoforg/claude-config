@@ -44,9 +44,18 @@ write-capable executors are still safe.
   `skills:` field. `CLAUDE.md` is inherited automatically (except the built-in `Explore`/`Plan`
   agents, which skip it — that is why they exist). `skills/_shared/blocks.md` is NOT inherited → an
   agent needing a shared rule keeps its own word-identical copy. A preloaded skill arrives as its
-  SKILL.md body ALONE: its `reference/...` pointers are skill-relative and dead here, so a needed
-  addendum must be handed over as an absolute path (`crew` DISPATCH RULES owns that). An agent's cwd
-  is the target repo, so hand it ABSOLUTE paths.
+  SKILL.md body ALONE — not the `reference/...` files it points at — so a needed addendum is handed
+  over as an absolute path (`crew` DISPATCH RULES owns that). An agent's cwd is the target repo, so
+  hand it ABSOLUTE paths.
+  **MEASURED 20260803 — a preloaded skill is NOT base-directory-less, which this line used to
+  claim.** A subagent's preloaded block opens with `Base directory for this skill: <absolute path>`,
+  and any skill-dir placeholder inside that body arrives already substituted to a real path. Probed
+  on a live `pm` dispatch reading its own context. Consequences: a worker CAN join a preloaded
+  skill's pointer onto that base itself, and CAN run a preloaded skill's script. The hand-off rule
+  above still stands — it is unambiguous, it costs nothing, and it is the only option for a HANDED
+  file, which announces no base directory and whose own pointers really are dead. The instruction did
+  not change; the reason under it did, and an instruction resting on a false reason gets deleted as
+  redundant by the next reader.
 
 ## A `tools:` list narrows the blast radius; it is not a sandbox
 `Bash`/`PowerShell` write too (`rm`, `>`, `git reset`); the check cannot catch that statically. So the

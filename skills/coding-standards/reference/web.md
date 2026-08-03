@@ -1,16 +1,17 @@
-# WEB STANDARDS
+# WEB / UI ADDENDUM
 
-Governs HOW user-facing web UI looks and behaves. Load when building or changing web UI —
-pages, components, layouts, styling, responsive/mobile work, animations, anything
-user-facing on the web. `coding-standards` = code structure; this file = the experience.
-Apply BOTH on web work.
+A `coding-standards` addendum, not a skill. You are reading it because that skill routed you here for
+web work: `coding-standards` owns code STRUCTURE, this file owns the EXPERIENCE. Both apply.
 
 Overriding rule: **match the project's existing design system** — REPO PATTERNS in `skills/_shared/blocks.md` governs; here it reads as tokens, components, spacing, conventions.
 
-# ON ACTIVATION — SCOPE
-1. User-facing web UI? No → "no web addendum needed", stop.
-2. Identify surface: component, layout, styling, motion, or full page. Read nearest existing components first to inherit the system.
-3. Apply the pillars; run the Completion Checklist before done.
+# SCOPE
+1. Identify surface: component, layout, styling, motion, or full page. Read nearest existing components first to inherit the system.
+2. Apply the pillars; run the Completion Checklist before done.
+
+No "is this web work?" branch here: the routing section in `coding-standards/SKILL.md` already
+decided that, and this file is only ever `Read` after it did. A stop-branch in a file that cannot be
+activated is dead prose.
 
 Bias: enforce non-negotiables (a11y, responsive, perf) every change; apply aesthetics (minimalism, bento, motion) in the project's style, not as a rewrite.
 
@@ -28,7 +29,7 @@ Bias: enforce non-negotiables (a11y, responsive, perf) every change; apply aesth
 - **Respect settings**: honor `prefers-reduced-motion` and `prefers-color-scheme`.
 
 # 3. PERFORMANCE & CORE WEB VITALS (non-negotiable)
-Target usable < ~2s. Thresholds — this skill owns them, don't restate elsewhere: **LCP < 2.5s · INP < 200ms · CLS < 0.1.**
+Target usable < ~2s. Thresholds — this file owns them, don't restate elsewhere: **LCP < 2.5s · INP < 200ms · CLS < 0.1.**
 - **LCP**: optimize hero/largest element — WebP/AVIF, sized/responsive `srcset`, preload critical assets.
 - **INP**: keep the main thread free — avoid heavy sync JS, debounce expensive handlers, split/defer non-critical bundles.
 - **CLS**: reserve space for images/embeds (width+height or aspect-ratio); don't insert content above existing content.

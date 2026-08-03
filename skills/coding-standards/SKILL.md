@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: "Use whenever code is created, modified, reviewed, or refactored — and the single entry point for DESIGN work (landing pages, portfolios, redesigns, hero/marketing UI, visual polish, design direction, make it look good, make it not look templated) and for any WEB/UI work (pages, components, layouts, styling, responsive/mobile, animations, anything user-facing on the web). Enforces architecture, file-size limits, Atomic Design, minimal-diff change strategy, code-quality rules. Design surfaces load an anti-slop addendum — brief inference, real design systems, audit-first redesigns, strict pre-flight check. Web surfaces load mobile-first responsive layout, WCAG accessibility, Core Web Vitals, purposeful motion, minimalist/bento layouts."
+description: "Use whenever code is created, modified, reviewed, or refactored — and the single entry point for DESIGN work (landing pages, portfolios, pricing/marketing/about pages, redesigns, hero UI, visual polish, design direction, make it look good, make it not look templated, make it less generic, this looks AI-generated, AI slop) and for any WEB/UI work (pages, components, layouts, styling, responsive/mobile, animations, anything user-facing on the web). Enforces architecture, file-size limits, Atomic Design, minimal-diff change strategy, code-quality rules. Design surfaces load an anti-slop addendum — brief inference, real design systems, audit-first redesigns, strict pre-flight check. Web surfaces load mobile-first responsive layout, WCAG accessibility, Core Web Vitals, purposeful motion, minimalist/bento layouts."
 ---
 
 # CODING STANDARDS
@@ -9,12 +9,21 @@ Governs HOW code is written. Composes with `feature` (what to build) and
 `documentation` (what to document).
 
 # ON ACTIVATION — CLASSIFY THE CHANGE
+**A design surface ROUTES before it is classified.** A request about how something LOOKS (see DESIGN
+SURFACES below) goes to `reference/design.md` first; the buckets here then describe the code work
+inside that. Classify it first and "the hero looks generic, fix it" reads as SMALL_CHANGE, whose
+"don't scan the repo" forbids the audit `reference/design.md` mandates as its own first action — so
+the page gets patched in place and still looks generic. The classifier is upstream of brief
+inference, which is exactly why it has to defer here.
+
 Sets read scope + approval needs:
 - **SMALL_CHANGE** — bug fix / localized edit. Read only relevant files. Don't scan the repo.
 - **FEATURE** — new behavior. Read only affected modules. Expand scope only when needed.
 - **REFACTOR** — structural. Full impact analysis allowed; significant structural changes REQUIRE approval first.
 
 Overriding rule: **match the surrounding code** — REPO PATTERNS in `skills/_shared/blocks.md` governs the DEFAULTS below. It never overrides the HARD RULES at the end; those hold against any repo pattern.
+
+**Carve-out — REPO PATTERNS does not govern `reference/design.md`.** It says *never impose a LOOK the project doesn't use*, which cancels the design addendum on the exact request it exists for: asked to make something less templated, the templated look IS the repo pattern, and the conservative reading wins. The design rules outranked REPO PATTERNS when they were a standalone skill; folding them into an addendum must not quietly demote them. Scope is LOOK only — code STRUCTURE still matches the repo, and `reference/web.md` stays governed as before.
 
 # CORE PRINCIPLES
 Prefer: separation of concerns · small focused modules · reusable components · explicit dependencies · consistent patterns.
@@ -29,6 +38,11 @@ Code comments & docstrings: governed entirely by `documentation` — invoke it, 
 - Target **300–500 lines**. Soft cap **700**.
 - Guidelines, not hard failures — a cohesive file slightly over beats an arbitrary split.
 - Too large → extract along seams (components, hooks, services, helpers). Never split mid-responsibility.
+
+# ADDENDA — STACK AND SURFACE
+Four on-demand files, each with its own trigger. Read the matching one BEFORE writing, never after.
+Nothing below is loaded automatically; a rule that never loads is indistinguishable from one that
+does not exist.
 
 ## Frontend / TS-JS specifics
 Building or editing frontend/TS-JS code → also read `reference/frontend.md` (Atomic Design layout, arrow-const function style). Not applicable to non-frontend work (Python, scripts, backend-only, ML) — skip it there.
@@ -45,9 +59,15 @@ rule exists to prevent.
 Non-web work → skip it.
 
 ## Design surfaces — landing, portfolio, redesign, marketing
-Landing pages, portfolios, redesigns, hero/marketing UI, visual polish, design direction, a brief
-that says make it look good or make it not look templated → read `reference/design.md` **BEFORE
-writing**, on top of `reference/web.md`. It owns brief inference, the three dials, design-system
+Landing pages, portfolios, pricing/marketing/about pages, redesigns, hero UI, visual polish, design
+direction → read `reference/design.md` **BEFORE writing**, on top of `reference/web.md`.
+
+**Trigger on the COMPLAINT, not just the artifact.** "make it look good", "make it not look
+templated", "make it less generic", "this looks AI-generated", "it looks like AI slop" are design
+surfaces whatever the page is called. Users describe the problem, not the page type; a list of
+artifact nouns routes "build me a pricing page that doesn't look AI-generated" to `reference/web.md`
+on the word *page*, and it ships fast, accessible and entirely templated. This list is EXAMPLES —
+a request about how something LOOKS belongs here even when it matches no phrase above. It owns brief inference, the three dials, design-system
 choice, the AI-tell catalogue and the pre-flight check. Its MOTION_INTENSITY dial overrides
 `reference/web.md` §4's timing figures on these surfaces. Dense product UI, dashboards, admin panels
 → `reference/design.md`'s OUT OF SCOPE header says which levers still apply.
@@ -60,15 +80,36 @@ node ${CLAUDE_SKILL_DIR}/scripts/preflight.mjs <changed files or dir>
 ```
 Exit 1 = violations as `file:line:col  rule (§)  detail`. Fix every hit, re-run until exit 0.
 
+**Who runs it: whoever wrote the code, if they hold a shell.** This skill is preloaded, so the
+placeholder above is already a real path in a subagent's context too (MEASURED — see the dispatch
+note below). A worker with `Bash` runs it on its own output, in its own tree. No shell (`pm`,
+`tester`, `audit-scout`, and `standards-reviewer`, whose HARD RULES allow read-only git only) → say
+so in your report; do not claim the check as done and do not treat it as someone else's silence. The
+dispatcher's own run covers the integrated whole and does NOT replace the per-worker one.
+
 **NAMING RULE — a design addendum is `reference/design-<name>.md`.** The `design-` prefix is the
-only thing grouping the design files inside a flat `reference/` directory. A tenth one landing as
-`reference/<name>.md` sits unmarked beside `frontend.md` and `python-ml.md`, and nothing errors.
+only thing grouping the design files inside a flat `reference/` directory; a tenth one landing as
+`reference/<name>.md` sits unmarked beside `frontend.md` and `python-ml.md`.
+`node scripts/check-pointers.mjs` enforces this — `unprefixed-design-ref`. A genuinely non-design
+addendum is added to that script's `NON_DESIGN_REFS` set, deliberately, so the call is written down
+instead of assumed.
 
 **Dispatching a WORKER these govern → hand it the ABSOLUTE path.** Every pointer above, and
-`reference/dependencies.md` below, are skill-relative: they resolve for the main loop, which is told
-this skill's base directory, and are dead for a subagent, which is not — including every subagent
-that preloads this skill, which is all of them. `crew` DISPATCH RULES owns the hand-off. Stated here,
-where the addenda are introduced, so the reader who must act on it meets it at the pointer itself.
+`reference/dependencies.md` below, is skill-relative. `crew` DISPATCH RULES owns the hand-off. Stated
+here, where the addenda are introduced, so the reader who must act on it meets it at the pointer
+itself.
+
+**MEASURED 20260803, because this line previously claimed the opposite:** a subagent that PRELOADS a
+skill IS told its base directory — its context opens with `Base directory for this skill: <absolute
+path>` — and the skill-dir placeholder in that body is already substituted to a real path when the
+agent receives it. Probed on a live `pm` dispatch, reading its own context rather than the disk. So
+a preloaded skill's script is runnable by any worker holding a shell, and the pre-flight command
+above is NOT dead for a subagent.
+The hand-off rule stands anyway, for the case it was actually written for: a HANDED file is only
+`Read`, announces no base directory, and its own `reference/...` pointers really are dead. Handing
+the absolute path also costs nothing when the worker could have joined it itself. What changed is
+the REASON, not the instruction — and an instruction resting on a false reason is one edit away from
+being deleted as redundant.
 
 # BACKEND ARCHITECTURE
 Layer: Controllers → Services → Repositories → Domain Models. No business logic in controllers or UI — it belongs in services/domain models.
@@ -108,10 +149,15 @@ rather than generic best practice. Returns violations + FRICTION. Optional — s
 one-line fix.
 Addendum applies (frontend/TS-JS · Python/ML · dependency change · web/UI · design surface) → join
 the matching `reference/<file>.md` onto this skill's announced base directory and hand the agent that
-ABSOLUTE path. It has no base directory and its CWD is the reviewed repo — unbriefed, it cannot
-load the addendum at all. A design surface takes `reference/design.md` AND
-`reference/design-ai-tells.md`: the banned-pattern catalogue is half that rule set, and the reviewer
-cannot resolve the pointer between them.
+ABSOLUTE path. A HANDED file announces no base directory, so its own pointers are dead — hand every
+companion, or the reviewer reviews half a rule set and cannot tell.
+- Web/UI → `reference/web.md`.
+- Design surface → **all three**: `reference/design.md`, `reference/web.md` (design defers to it for
+  contrast thresholds, reduced motion and the CWV targets, and forbids restating them locally — so
+  without it those boxes are unfulfillable), and `reference/design-ai-tells.md` (the banned-pattern
+  catalogue, half that rule set on its own).
+`agents/standards-reviewer.md` must be told these are not "stack" addenda and that more than one can
+apply at once; its own brief otherwise says read only the single matching stack file.
 
 # COMPLETION CHECKLIST
 - [ ] No obvious duplication introduced
