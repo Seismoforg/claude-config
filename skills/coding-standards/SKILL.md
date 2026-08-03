@@ -106,10 +106,12 @@ Main loop, diff worth a second pair of eyes (broad, structural, or pre-commit) �
 `standards-reviewer` agent: read-only, fetches the diff itself, reviews against THESE rules
 rather than generic best practice. Returns violations + FRICTION. Optional — skip for a
 one-line fix.
-Stack addendum applies (frontend/TS-JS · Python/ML · dependency change) → join the matching
-`reference/<file>.md` onto this skill's announced base directory and hand the agent that
+Addendum applies (frontend/TS-JS · Python/ML · dependency change · web/UI · design surface) → join
+the matching `reference/<file>.md` onto this skill's announced base directory and hand the agent that
 ABSOLUTE path. It has no base directory and its CWD is the reviewed repo — unbriefed, it cannot
-load the addendum at all.
+load the addendum at all. A design surface takes `reference/design.md` AND
+`reference/design-ai-tells.md`: the banned-pattern catalogue is half that rule set, and the reviewer
+cannot resolve the pointer between them.
 
 # COMPLETION CHECKLIST
 - [ ] No obvious duplication introduced

@@ -1,4 +1,4 @@
-# TASTE — Anti-Slop Frontend
+# DESIGN — Anti-Slop Frontend
 
 > Landing pages, portfolios, redesigns. Every rule below is **contextual**. None fires automatically.
 > Read the brief first, then pull only what fits.
@@ -186,7 +186,7 @@ LLMs default to clichés. Override these defaults proactively. Each rule has a c
 - **SHAPE CONSISTENCY LOCK (mandatory):** Pick ONE corner-radius scale for the page and stick to it. Options: all-sharp (radius 0), all-soft (radius 12-16px), all-pill (full radius for interactive). Mixed systems are allowed only when there is a documented rule (e.g. "buttons are full-pill, cards are 16px, inputs are 8px") and that rule is followed everywhere. Round buttons in a square layout, or square cards on a pill-button page, is broken design.
 
 ## 4.5 Interactive UI States
-LLMs default to "static successful state only." `reference/web.md` §6 owns loading/empty/error/success — never ship the happy path alone. Taste-specific riders:
+LLMs default to "static successful state only." `reference/web.md` §6 owns loading/empty/error/success — never ship the happy path alone. Design-specific riders:
 - **Empty States:** beautifully composed, not a blank box; indicate how to populate.
 - **Error States:** inline (forms) or contextual (toasts only for transient).
 - **Tactile Feedback:** on `:active`, `-translate-y-[1px]` or `scale-[0.98]` to simulate a physical push.
@@ -302,7 +302,7 @@ These are tools, not defaults. Use them when the design read calls for them. **N
 - Use `will-change: transform` sparingly - only on elements that will actually animate.
 
 ## 6.B Reduced Motion (mandatory)
-`reference/web.md` §4 owns the rule; it composes on every web surface. Taste-specific rider: at
+`reference/web.md` §4 owns the rule; it composes on every web surface. Design-specific rider: at
 `MOTION_INTENSITY > 3` it is non-negotiable, and infinite loops, parallax, scroll-hijack and
 magnetic physics MUST collapse to static/instant. In Motion wrap with `useReducedMotion()`; in CSS
 gate behind `@media (prefers-reduced-motion: no-preference)`.
@@ -312,7 +312,7 @@ Mandatory for any consumer-facing page. Design BOTH modes from the start; never 
 dark-only without explicit instruction. Tokens + thresholds → §8.
 
 ## 6.D Core Web Vitals
-`reference/web.md` §3 owns the targets and the optimisation rules. Taste-specific rider: the hero image
+`reference/web.md` §3 owns the targets and the optimisation rules. Design-specific rider: the hero image
 is the LCP element — `next/image priority` or preloaded.
 
 ## 6.E DOM Cost
