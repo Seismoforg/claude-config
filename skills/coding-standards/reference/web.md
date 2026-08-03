@@ -1,17 +1,14 @@
----
-name: web-standards
-description: "Use whenever building or changing web UI — pages, components, layouts, styling, responsive/mobile work, animations, or anything user-facing on the web. Enforces modern web-design standards: mobile-first responsive layout, accessibility (WCAG), Core Web Vitals performance, purposeful motion, and minimalist/bento layouts."
----
-
 # WEB STANDARDS
 
-Governs HOW user-facing web UI looks and behaves. Composes with `coding-standards`
-(code structure) — apply BOTH on web work. This skill = the experience.
+Governs HOW user-facing web UI looks and behaves. Load when building or changing web UI —
+pages, components, layouts, styling, responsive/mobile work, animations, anything
+user-facing on the web. `coding-standards` = code structure; this file = the experience.
+Apply BOTH on web work.
 
 Overriding rule: **match the project's existing design system** — REPO PATTERNS in `skills/_shared/blocks.md` governs; here it reads as tokens, components, spacing, conventions.
 
 # ON ACTIVATION — SCOPE
-1. User-facing web UI? No → "no web-standards needed", stop.
+1. User-facing web UI? No → "no web addendum needed", stop.
 2. Identify surface: component, layout, styling, motion, or full page. Read nearest existing components first to inherit the system.
 3. Apply the pillars; run the Completion Checklist before done.
 
@@ -38,7 +35,7 @@ Target usable < ~2s. Thresholds — this skill owns them, don't restate elsewher
 - Lazy-load below-the-fold; ship only the CSS/JS a route needs.
 
 # 4. MOTION & INTERACTION (motion with intention)
-`taste` active on this surface (landing/portfolio/marketing) → its MOTION_INTENSITY dial overrides the timing figures below; this section's figures are the default when taste is not in scope.
+`reference/design.md` active on this surface (landing/portfolio/marketing) → its MOTION_INTENSITY dial overrides the timing figures below; this section's figures are the default when the design addendum is not in scope.
 - Motion serves a purpose: feedback, continuity, or directing attention — never decoration.
 - Subtle + fast: ~150–300ms, ease-out entrances; animate `transform`/`opacity`, not layout props.
 - Real-time feedback on every interactive state (hover, focus, active, loading, disabled).

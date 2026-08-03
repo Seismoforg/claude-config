@@ -4,8 +4,8 @@ Load when building or editing frontend / TS-JS code. Not applicable to non-front
 work (Python, scripts, backend-only, ML).
 
 # FRONTEND ARCHITECTURE
-> Web/frontend UI work also triggers `web-standards` (invoke it alongside). This
-> section = code STRUCTURE; web-standards = EXPERIENCE.
+> Web/frontend UI work also reads `reference/web.md` (load it alongside). This
+> section = code STRUCTURE; `reference/web.md` = EXPERIENCE.
 
 Greenfield default = Atomic Design:
 ```text

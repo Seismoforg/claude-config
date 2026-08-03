@@ -1,8 +1,3 @@
----
-name: taste
-description: Anti-slop frontend skill for landing pages, portfolios, and redesigns. The agent reads the brief, infers the right design direction, and ships interfaces that do not look templated. Real design systems when applicable, audit-first on redesigns, strict pre-flight check.
----
-
 # TASTE — Anti-Slop Frontend
 
 > Landing pages, portfolios, redesigns. Every rule below is **contextual**. None fires automatically.
@@ -58,6 +53,9 @@ After the design read, set three dials. Every layout, motion, and density decisi
   - **1-3 Static:** no automatic animation. `:hover`/`:active` only.
   - **4-7 Fluid CSS:** `transition: transform .3s cubic-bezier(0.16,1,0.3,1), opacity .3s cubic-bezier(0.16,1,0.3,1)`. Never `transition: all` — it animates the layout props §6.A bans. `animation-delay` cascades for load-ins.
   - **8-10 Advanced Choreography:** scroll-triggered reveals, parallax, scroll-driven animation (`animation-timeline` or GSAP ScrollTrigger), Motion hooks. `window.addEventListener('scroll')` is a HARD ban → §5.D.
+  - **PRECEDENCE (mandatory):** on landing / portfolio / marketing surfaces, MOTION_INTENSITY
+    overrides the timing figures in `reference/web.md` §4. Those figures are the default only when
+    this addendum is out of scope. Mirror half: `reference/web.md` §4.
 - **`VISUAL_DENSITY: 4`** - 1 = Art Gallery / Airy, 10 = Cockpit / Packed Data
   - **1-3 Art Gallery:** huge section gaps (`py-32`-`py-48`).
   - **4-7 Daily App:** standard spacing (`py-16`-`py-24`).
@@ -103,8 +101,8 @@ Once you have the design read (Section 0) and dials (Section 1), pick the right 
 
 **One system per project.** Do not mix Fluent React with Carbon in the same tree. Do not import shadcn/ui components into a Material 3 app.
 
-> Install command per system → `reference/install-commands.md`. Official doc link to ground the
-> choice → `reference/canonical-sources.md`. Load either when you pick a system above — the
+> Install command per system → `reference/design-install-commands.md`. Official doc link to ground the
+> choice → `reference/design-canonical-sources.md`. Load either when you pick a system above — the
 > honesty rule needs the real command, not an invented one.
 
 ## 2.B When the brief is an aesthetic, not a system
@@ -160,7 +158,7 @@ Before importing ANY 3rd-party library, check `package.json`. If the package is 
 
 LLMs default to clichés. Override these defaults proactively. Each rule has a context-aware override path.
 
-> Font pools, palette alternatives and the banned hex list → `reference/design-directives.md`.
+> Font pools, palette alternatives and the banned hex list → `reference/design-design-directives.md`.
 > Load it when choosing type or colour. Rules stay here.
 
 ## 4.1 Typography
@@ -175,7 +173,7 @@ LLMs default to clichés. Override these defaults proactively. Each rule has a c
 - Max 1 accent colour. Saturation < 80% by default. **One palette per project** — never fluctuate between warm and cool greys.
 - **THE AI-PURPLE DEFAULT RULE:** "AI Purple / Blue glow" discouraged as default. No automatic purple button glows, no random neon gradients. Neutral bases (Zinc / Slate / Stone) + one high-contrast accent (Emerald, Electric Blue, Deep Rose, Burnt Orange). **Override:** brand explicitly asks for purple/violet → embrace it, but execute with intent (consistent palette, harmonised neutrals, restrained gradients), not AI gradient slop.
 - **COLOR CONSISTENCY LOCK (mandatory):** one accent, locked, across the WHOLE page. No blue CTA in section 7 of a warm-grey site; no teal badge in a rose site's footer. Audit every component before shipping.
-- **PREMIUM-CONSUMER PALETTE BAN (mandatory, second-most-recurring AI-tell):** for premium-consumer briefs (cookware, wellness, artisan, luxury, heritage craft, DTC home goods) the LLM default is warm beige/cream + brass/clay/oxblood/ochre + espresso text. BANNED as the default reach — the brand becomes invisible. Exact hexes + 7 rotation alternatives → `reference/design-directives.md`; `preflight.mjs` greps the hexes. **Rotation rule:** never ship the same warm-craft palette twice in a row. **Override:** only when the brief names those colours, or the identity is genuinely vintage/artisan/warm-craft AND you can articulate why it fits THIS brand.
+- **PREMIUM-CONSUMER PALETTE BAN (mandatory, second-most-recurring AI-tell):** for premium-consumer briefs (cookware, wellness, artisan, luxury, heritage craft, DTC home goods) the LLM default is warm beige/cream + brass/clay/oxblood/ochre + espresso text. BANNED as the default reach — the brand becomes invisible. Exact hexes + 7 rotation alternatives → `reference/design-design-directives.md`; `preflight.mjs` greps the hexes. **Rotation rule:** never ship the same warm-craft palette twice in a row. **Override:** only when the brief names those colours, or the identity is genuinely vintage/artisan/warm-craft AND you can articulate why it fits THIS brand.
 
 ## 4.3 Layout Diversification
 - **ANTI-CENTER BIAS:** Centered Hero / H1 sections are avoided when `DESIGN_VARIANCE > 4`. Force "Split Screen" (50/50), "Left-aligned content / right-aligned asset", "Asymmetric white-space", or scroll-pinned structures.
@@ -188,14 +186,14 @@ LLMs default to clichés. Override these defaults proactively. Each rule has a c
 - **SHAPE CONSISTENCY LOCK (mandatory):** Pick ONE corner-radius scale for the page and stick to it. Options: all-sharp (radius 0), all-soft (radius 12-16px), all-pill (full radius for interactive). Mixed systems are allowed only when there is a documented rule (e.g. "buttons are full-pill, cards are 16px, inputs are 8px") and that rule is followed everywhere. Round buttons in a square layout, or square cards on a pill-button page, is broken design.
 
 ## 4.5 Interactive UI States
-LLMs default to "static successful state only." `web-standards` §6 owns loading/empty/error/success — never ship the happy path alone. Taste-specific riders:
+LLMs default to "static successful state only." `reference/web.md` §6 owns loading/empty/error/success — never ship the happy path alone. Taste-specific riders:
 - **Empty States:** beautifully composed, not a blank box; indicate how to populate.
 - **Error States:** inline (forms) or contextual (toasts only for transient).
 - **Tactile Feedback:** on `:active`, `-translate-y-[1px]` or `scale-[0.98]` to simulate a physical push.
-- **BUTTON CONTRAST CHECK (mandatory, a11y):** Before shipping any button, verify the button text is readable against the button background. White button + white text, `bg-white` CTA with `text-white` label, transparent button against the page background with no border → all banned. Audit every CTA against `web-standards` §2 — it owns the contrast thresholds; never restate them here (18px is NOT "large" under WCAG). Same rule applies to ghost buttons over photographic backgrounds (use a backdrop, scrim, or stroke).
+- **BUTTON CONTRAST CHECK (mandatory, a11y):** Before shipping any button, verify the button text is readable against the button background. White button + white text, `bg-white` CTA with `text-white` label, transparent button against the page background with no border → all banned. Audit every CTA against `reference/web.md` §2 — it owns the contrast thresholds; never restate them here (18px is NOT "large" under WCAG). Same rule applies to ghost buttons over photographic backgrounds (use a backdrop, scrim, or stroke).
 - **CTA BUTTON WRAP BAN (mandatory):** Button text MUST fit on one line at desktop. If a label like "VIEW SELECTED WORK" wraps to 2 or 3 lines, the button is broken. Fix by EITHER shortening the label (3 words max for primary CTAs, ideally 1-2) OR widening the button (do not artificially constrain `max-width` on CTAs). Wrapped CTAs at desktop are a Pre-Flight Fail.
 - **NO DUPLICATE CTA INTENT (mandatory):** Two CTAs with the same intent on one page is a Pre-Flight Fail. Examples of same intent: "Get in touch" + "Contact us" + "Let's talk" + "Start a project" + "Start something" + "Reach out" = all "contact" intent → pick ONE label and use it everywhere on the page (nav, hero, footer). Same for "Try free" + "Get started" + "Sign up free" (all "signup" intent) and "View work" + "See selected work" + "Browse projects" (all "portfolio" intent). One label per intent.
-- **FORM CONTRAST CHECK (mandatory, a11y):** Form inputs, placeholder text, focus rings, helper text, and error text all pass WCAG AA contrast against the section background. Light placeholders on a near-white form, white form on white page section, form labels below the AA floor → all banned. Thresholds: `web-standards` §2. Audit every form before shipping.
+- **FORM CONTRAST CHECK (mandatory, a11y):** Form inputs, placeholder text, focus rings, helper text, and error text all pass WCAG AA contrast against the section background. Light placeholders on a near-white form, white form on white page section, form labels below the AA floor → all banned. Thresholds: `reference/web.md` §2. Audit every form before shipping.
 
 ## 4.6 Data & Form Patterns
 - Label ABOVE input. Helper text optional but present in markup. Error text BELOW input. Standard `gap-2` for input blocks.
@@ -253,7 +251,7 @@ Landing pages live on the **first impression**, not the full read. Cut ruthlessl
   - Marquee / carousel for breadth
   - Different page entirely if the data is the product
 - **Long lists need a different UI component, not a longer list.** `<ul>` with bullets / `divide-y` rows is the lazy choice. > 5 items → 2-col split with grouped items · card grid (image + label) · tabs/accordion if categorisable · horizontal scroll-snap pills · carousel for breadth (testimonials, logos, capabilities) · marquee for things that don't need individual attention. A 10-row spec sheet with a hairline under every row is the WORST default.
-- **Spec sheets (the cookware/hardware/apparel pattern):** a long spec table with `border-b` on every row is BANNED. Alternatives → `reference/design-directives.md` §4.9 (2-col card grid · scroll-snap pills · grouped chunks · featured-vs-rest disclosure).
+- **Spec sheets (the cookware/hardware/apparel pattern):** a long spec table with `border-b` on every row is BANNED. Alternatives → `reference/design-design-directives.md` §4.9 (2-col card grid · scroll-snap pills · grouped chunks · featured-vs-rest disclosure).
 - **COPY SELF-AUDIT (mandatory before ship):** re-read EVERY visible string (headlines, subheads, eyebrows, button labels, body, captions, alt text, footer, errors). Rewrite any that is grammatically broken, has unclear referents, sounds like AI hallucination (cute-but-wrong wordplay, forced metaphors), or reads like an LLM trying to sound thoughtful (passive-aggressive humility, fake-craftsman labels, mock-poetic micro-meta). Unsure a string makes sense → replace with a plain functional sentence. AI-cute copy is worse than boring copy. Examples → reference.
 - **Fake-precise numbers are BANNED.** `92%`, `4.1×`, `48k`, `5.8 mm`, `13.4 lb` are fine ONLY if from real data (brief, brand guidelines, public metrics) or explicitly labelled mock (`<!-- mock -->`, "example"). AI-invented spec aesthetics → banned. Don't fake engineering precision the brand doesn't claim.
 - **One copy register per page.** Don't mix technical mono ("47 tasks · 0.6 ctx-switches/day"), editorial prose and marketing punch in one composition unless the brand voice calls for it.
@@ -281,13 +279,13 @@ The page has ONE theme. Sections do not invert.
 
 These are tools, not defaults. Use them when the design read calls for them. **None of these fire automatically.**
 
-- **Liquid Glass / Glassmorphism:** for premium consumer, Apple-adjacent, luxury, media-overlay. NOT for dashboards, public-sector, boring B2B. Go beyond `backdrop-blur`: 1px inner border (`border-white/10`) + subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for edge refraction. Solid-fill fallback under `prefers-reduced-transparency`. Full approximation recipe → `reference/liquid-glass.md`; load it when the design read calls for glass.
+- **Liquid Glass / Glassmorphism:** for premium consumer, Apple-adjacent, luxury, media-overlay. NOT for dashboards, public-sector, boring B2B. Go beyond `backdrop-blur`: 1px inner border (`border-white/10`) + subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) for edge refraction. Solid-fill fallback under `prefers-reduced-transparency`. Full approximation recipe → `reference/design-liquid-glass.md`; load it when the design read calls for glass.
 - **Magnetic Micro-physics:** only at `MOTION_INTENSITY > 5` AND a premium/playful/agency brief. EXCLUSIVELY Motion's `useMotionValue`/`useTransform`, outside the React render cycle. Never `useState` (§3.B).
 - **Perpetual Micro-Interactions** (Pulse, Typewriter, Float, Shimmer, Carousel): only at `MOTION_INTENSITY > 5` AND where the section benefits (status indicators, live feeds, AI-feel). **Not every card needs an infinite loop** — informational section → leave it still. Spring physics (`type: "spring", stiffness: 100, damping: 20`), never linear easing.
 - **"Motion claimed, motion shown."** At `MOTION_INTENSITY > 4` the page MUST actually move: hero entry transitions, scroll-reveal on key sections, hover physics on CTAs, minimum. A static page claiming `MOTION_INTENSITY: 7` is broken. Can't ship working motion in scope → drop the dial to 3 and ship clean static. Never half-build motion that breaks (cut-off ScrollTriggers, jumpy enters, missing cleanups).
 - **MOTION MUST BE MOTIVATED (mandatory).** Every animation answers "what does this communicate?" — valid: hierarchy · storytelling (sequence matching a narrative) · feedback · state transition. Invalid: "it looked cool". GSAP everywhere because GSAP exists is amateur. Can't articulate the reason in one sentence → drop the animation.
 - **MARQUEE MAX-ONE-PER-PAGE (mandatory).** Horizontal scrolling text marquees (endless logos, sideways manifesto, kinetic word strip) at most ONCE per page — two+ reads as lazy filler. `preflight.mjs` counts them. Pick the one section the marquee actually serves; the rest get a different layout.
-- **GSAP Sticky-Stack / Horizontal-Pan:** a scroll card-stack must be a REAL sticky-stack, not a sequential reveal list. Canonical skeletons → `reference/motion-skeletons.md` (load only when implementing). Common failure for both: the trigger fires before the section pins, so the user sees half a slide. Fix: `start: "top top"` (never `"top center"`/`"top 80%"`), pin the wrapper, scrub the inner track.
+- **GSAP Sticky-Stack / Horizontal-Pan:** a scroll card-stack must be a REAL sticky-stack, not a sequential reveal list. Canonical skeletons → `reference/design-motion-skeletons.md` (load only when implementing). Common failure for both: the trigger fires before the section pins, so the user sees half a slide. Fix: `start: "top top"` (never `"top center"`/`"top 80%"`), pin the wrapper, scrub the inner track.
 
 ## 5.D Forbidden Animation Patterns
 
@@ -304,7 +302,7 @@ These are tools, not defaults. Use them when the design read calls for them. **N
 - Use `will-change: transform` sparingly - only on elements that will actually animate.
 
 ## 6.B Reduced Motion (mandatory)
-`web-standards` §4 owns the rule; it composes on every web surface. Taste-specific rider: at
+`reference/web.md` §4 owns the rule; it composes on every web surface. Taste-specific rider: at
 `MOTION_INTENSITY > 3` it is non-negotiable, and infinite loops, parallax, scroll-hijack and
 magnetic physics MUST collapse to static/instant. In Motion wrap with `useReducedMotion()`; in CSS
 gate behind `@media (prefers-reduced-motion: no-preference)`.
@@ -314,7 +312,7 @@ Mandatory for any consumer-facing page. Design BOTH modes from the start; never 
 dark-only without explicit instruction. Tokens + thresholds → §8.
 
 ## 6.D Core Web Vitals
-`web-standards` §3 owns the targets and the optimisation rules. Taste-specific rider: the hero image
+`reference/web.md` §3 owns the targets and the optimisation rules. Taste-specific rider: the hero image
 is the LCP element — `next/image priority` or preloaded.
 
 ## 6.E DOM Cost
@@ -353,7 +351,7 @@ Both light and dark fully styled and token-correct in code. Eyeballing each rend
 
 Avoid these signatures unless the brief explicitly asks for them. Full catalog with examples
 (§9.A Visual & CSS, §9.B Typography, §9.C Layout & Spacing, §9.D Content & Data, §9.E External
-Resources & Components, §9.F Production-Test Tells) → `reference/ai-tells.md`. Load it when
+Resources & Components, §9.F Production-Test Tells) → `reference/design-ai-tells.md`. Load it when
 composing sections/copy, or when a Pre-Flight Check (§14) box needs the "why" behind it — every
 item there is also condensed into a §14 checkbox.
 
@@ -379,9 +377,9 @@ This rule is non-negotiable. The agent has historically ignored em-dash limits w
 
 # 10. Reference Vocabulary & Block Library
 
-Pattern names (heroes, nav, grids, cards, scroll, galleries, typography, micro-interactions, animation-library choice) → `reference/pattern-vocabulary.md`. A vocabulary, not a library — load when naming or planning a layout/motion pattern.
+Pattern names (heroes, nav, grids, cards, scroll, galleries, typography, micro-interactions, animation-library choice) → `reference/design-pattern-vocabulary.md`. A vocabulary, not a library — load when naming or planning a layout/motion pattern.
 
-**Block Library** = the forward contract for real implementations (props, motion specs, code sketches) in `skills/taste/blocks/` — **not yet populated, so there is nothing to load today.** Authoring schema → `reference/block-library-schema.md`, load only when actually adding a block.
+**Block Library** = the forward contract for real implementations (props, motion specs, code sketches) in `skills/coding-standards/blocks/` — **not yet populated, so there is nothing to load today.** Authoring schema → `reference/design-block-library-schema.md`, load only when actually adding a block.
 
 ---
 
@@ -396,7 +394,7 @@ Greenfield AND redesigns. **Misclassifying the mode is the single biggest source
 
 Ambiguous → ask **once**: *"Should this redesign preserve the existing brand, or are we starting visually from scratch?"*
 
-## 11.B-11.F Redesign detail → `reference/redesign-protocol.md`
+## 11.B-11.F Redesign detail → `reference/design-redesign-protocol.md`
 Mode resolved to either **Redesign** → load it now, before touching anything. Covers: audit before touching (brand tokens, IA, SEO baseline — **SEO migration is the #1 redesign risk**) · preservation rules · modernisation levers · targeted-evolution vs full-redesign call · what never changes silently. **Greenfield → skip, nothing there applies.**
 
 ---
@@ -405,10 +403,11 @@ Mode resolved to either **Redesign** → load it now, before touching anything. 
 
 Three passes, in order, before outputting code. This is the last filter. **NOT OPTIONAL.**
 
-**1. Mechanical — run the script, never eyeball these:**
-```
-node ${CLAUDE_SKILL_DIR}/scripts/preflight.mjs <changed files or dir>
-```
+**1. Mechanical — run the script, never eyeball these.** The command line lives in
+`coding-standards/SKILL.md`, design routing section — NOT here. It carries the skill-dir
+placeholder, which substitutes at skill LOAD; a `reference/` file is only ever `Read`, so an
+invocation written here would ship a literal unsubstituted token.
+
 Exit 1 = violations as `file:line:col  rule (§)  detail`. Covers: em-dash · eyebrow count vs
 ceil(sections/3) · scroll listener · viewport stability · flex-math · banned serif · banned
 premium-consumer palette · icon library · pure #000/#fff · Inter default · marquee count ·
@@ -418,7 +417,7 @@ misses some; grep does not.
 
 **2. Judgment — dispatch ONE reviewer agent** (main loop only; *subagent reading this as a rule
 source → skip, you cannot dispatch another agent*), fresh context, over the changed files +
-`reference/ai-tells.md`. You wrote the page, so you are primed not to see your own tells: self-review
+`reference/design-ai-tells.md`. You wrote the page, so you are primed not to see your own tells: self-review
 is the weakest review. The agent checks the judgment boxes (hero fit, zigzag cap, layout-family
 repetition, copy self-audit, div-fake-screenshots, bento rhythm).
 
@@ -455,7 +454,7 @@ Each box = a pass/fail check; the rule detail lives in the cited section. Thresh
 - [ ] **Bento rhythm + exact cell count**, no empty cells (§4.7)?
 - [ ] **Long lists** use right UI component, not `<ul>`/`divide-y` for > 5 (§4.9)?
 - [ ] **Real images** — gen-tool → Picsum → placeholder; NO div fake-screenshots, NO hand-rolled decorative SVG, NO pure-text minimalism (§4.8)?
-- [ ] **No §9.F production tells** — pills/labels on images · photo-credit captions as decoration · version footers on marketing pages · micro-meta-sentences under eyebrows · decoration text strip at hero bottom · floating top-right sub-text in section headings · scoring/progress bars with filled tracks · locale/city/time/weather strips (unless place-focused) · scroll cues · hero version labels (unless launch) · section-numbering eyebrows · decorative dots · `border-t`+`border-b` on every row. Full catalog + why → `reference/ai-tells.md`.
+- [ ] **No §9.F production tells** — pills/labels on images · photo-credit captions as decoration · version footers on marketing pages · micro-meta-sentences under eyebrows · decoration text strip at hero bottom · floating top-right sub-text in section headings · scoring/progress bars with filled tracks · locale/city/time/weather strips (unless place-focused) · scroll cues · hero version labels (unless launch) · section-numbering eyebrows · decorative dots · `border-t`+`border-b` on every row. Full catalog + why → `reference/design-ai-tells.md`.
 - [ ] **Content density** sane — no 20-row tables, no fake-precise specs, ≤ 25-word subs (§4.9)?
 - [ ] **Quotes ≤ 3 lines** body, attribution clean (§4.10)?
 - [ ] **Motion claimed = shown** if `MOTION_INTENSITY > 4` (§5)?
@@ -469,7 +468,7 @@ Each box = a pass/fail check; the rule detail lives in the cited section. Thresh
 - [ ] **Icons** one family, no hand-rolled SVG (§3.C)? *(script greps `lucide-react`)*
 - [ ] **Motion** isolated in `'use client'` leaf, memoized (§3.A)?
 - [ ] **No AI Tells** — AI-purple, three-equal cards, generic avatars, filler verbs (§9)? *(script greps Inter / Jane Doe / Acme / "Quietly in use at")*
-- [ ] **Core Web Vitals** — meet `web-standards` §3 thresholds (§6.D)?
+- [ ] **Core Web Vitals** — meet `reference/web.md` §3 thresholds (§6.D)?
 - [ ] **One design system** per project (§2)?
 
 If a single checkbox cannot be honestly ticked, the page is not done. Fix it before delivering.
@@ -477,14 +476,14 @@ If a single checkbox cannot be honestly ticked, the page is not done. Fix it bef
 ---
 
 # APPENDICES — reference material, load only when relevant
-- `reference/redesign-protocol.md` — §11.B-11.F audit/preservation/levers, only in a redesign mode
-- `reference/design-directives.md` — §4 font pools, palette alternatives + banned hexes, spec-sheet + copy-audit detail
-- `reference/ai-tells.md` — §9.A-9.F banned-pattern catalog + examples
-- `reference/pattern-vocabulary.md` — §10 hero/nav/grid/card/motion naming
-- `reference/motion-skeletons.md` — §5 sticky-stack / horizontal-pan / scroll-reveal code
-- `reference/install-commands.md` — §2 install commands per design system
-- `reference/canonical-sources.md` — §2 canonical official doc links per system
-- `reference/liquid-glass.md` — §5 Apple Liquid Glass honest web approximation
-- `reference/block-library-schema.md` — §10 authoring schema, only when adding a block
+- `reference/design-redesign-protocol.md` — §11.B-11.F audit/preservation/levers, only in a redesign mode
+- `reference/design-design-directives.md` — §4 font pools, palette alternatives + banned hexes, spec-sheet + copy-audit detail
+- `reference/design-ai-tells.md` — §9.A-9.F banned-pattern catalog + examples
+- `reference/design-pattern-vocabulary.md` — §10 hero/nav/grid/card/motion naming
+- `reference/design-motion-skeletons.md` — §5 sticky-stack / horizontal-pan / scroll-reveal code
+- `reference/design-install-commands.md` — §2 install commands per design system
+- `reference/design-canonical-sources.md` — §2 canonical official doc links per system
+- `reference/design-liquid-glass.md` — §5 Apple Liquid Glass honest web approximation
+- `reference/design-block-library-schema.md` — §10 authoring schema, only when adding a block
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN (factual uncertainty — is a package still official/maintained, does an API still work as documented; brief ambiguity stays under §0.C, ask one question) / AFTER THE TASK / LANGUAGE.
