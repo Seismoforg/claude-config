@@ -46,6 +46,9 @@ Mandatory. One row per cause, no exceptions.
   plan or reclassify the row.
 - Cause accepted instead of mitigated → third cell reads `accepted risk: <reason>`. Never delete the
   row. An unnamed accepted risk is indistinguishable from an overlooked one.
+- A mitigation the TASK LIST cannot satisfy is not one. Check the row against `# Tasks` before writing
+  it: a constraint that a task must VIOLATE to do its job is a guaranteed miss, and it surfaces at the
+  validation gate instead of being decided here. Downgrade it to `accepted risk` now.
 - Edit the spec before writing the row. The table records edits already made, not intentions.
 
 # 3. WHAT LEAVES THE STEP
