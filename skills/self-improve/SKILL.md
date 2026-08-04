@@ -1,6 +1,6 @@
 ---
 name: self-improve
-description: Retrospective that turns observed failures into skill-file edits, and proposes deletions of text that no longer earns its place. Runs at the end of a skill-driven workflow, and on demand when the user asks for learnings, a retro, or how a skill could be better. A FIX needs a failure quotable from the transcript — a failed tool call, retry loop, permission denial, red build, skipped gate, a correction the user had to make, a capability that does not exist, or two skills in conflict. A CUT needs no failure, only text that is dead, duplicated, contradicted, or mere justification. Every addition names what it removes. At most 4 proposals per run, each confirmed by multiple choice. Stays silent when nothing qualifies.
+description: Retrospective that turns observed failures into skill-file edits, and proposes deletions of text that no longer earns its place. Runs at the end of a skill-driven workflow, and on demand when the user asks for learnings, a retro, or how a skill could be better. A FIX needs a failure quotable from the transcript — a failed tool call, retry loop, permission denial, red build, skipped gate, a correction the user had to make, a capability that does not exist, or two skills in conflict. A CUT needs no failure, only text that is dead, duplicated, contradicted, mere justification, or a rule already withdrawn twice. Every addition names what it removes. At most 4 proposals per run, each confirmed by multiple choice. Stays silent when nothing qualifies.
 ---
 
 # SELF-IMPROVE
@@ -13,11 +13,11 @@ its place. Only with the user's multiple-choice approval. Only on evidence you c
 - **End of a skill-driven workflow** — scan the transcript against FIX EVIDENCE. Other skills point here at their end. A clean-looking run still gets the scan — failures don't announce themselves.
 - **Cut pass — every run.** Scan against CUT EVIDENCE. Corpus: the skills used in this run PLUS their `reference/` files, loaded this run or not — unread addenda are where text piles up. Never the whole repo; reading every rule file on every run is the context waste this pass exists to prevent.
 
-Hard gate: **nothing meets a bar → do nothing, say nothing.** Silence is the default for fixes and cuts alike.
+Hard gate: **nothing meets a bar → do nothing, say nothing.** Silence is the default for fixes and cuts alike. ONE exception: a subagent FRICTION report that matched no class is still RELAYED (step 6), even on a run that proposes nothing. Relaying is not proposing.
 
 # WHAT COUNTS
 
-## FIX EVIDENCE — eight classes, every one observable
+## FIX EVIDENCE — every class observable
 A finding qualifies only if you can QUOTE the transcript moment. Cite the exact call or step.
 - **User correction** — the user had to correct something a skill should have gotten right.
 - **Failed tool call** — `Edit` old_string not found / not unique; `Read` on missing path; Write-before-Read rejection; `Bash` non-zero exit.
@@ -29,13 +29,13 @@ A finding qualifies only if you can QUOTE the transcript moment. Cite the exact 
 - **Rule collision** — two skills gave conflicting instructions; picked arbitrarily.
 
 **Subagent `FRICTION:` report** — a dispatched agent closed with a non-`none` FRICTION line. It enters here because an agent cannot run this skill itself (no transcript, no gate, no write), so its report is the only channel it has. Cite the agent + line.
-- Maps to one of the eight → an ordinary finding; the FRICTION line is its quote.
-- Maps to NONE of them — an agent reporting a rule that "misfired" is the usual case — → it becomes no proposal, but it is **surfaced to the user in the remainder line** (step 3), never silently dropped. Agents are told to report broadly and not to filter (`agents/AGENTS.md`, The FRICTION channel); discarding what they send would make that instruction dead. A relayed judgment is not evidence enough to edit a rule, and is far too much to throw away.
+- Maps to a class above → an ordinary finding; the FRICTION line is its quote.
+- Maps to NONE of them — an agent reporting a rule that "misfired" is the usual case — → it becomes no proposal, but it is **RELAYED to the user verbatim at step 6**, on every run, including one that proposes nothing. Agents are told to report broadly and not to filter (`agents/AGENTS.md`, The FRICTION channel); discarding what they send would make that instruction dead. A relayed judgment is not evidence enough to edit a rule, and is far too much to throw away.
 
 Bar: the signal must trace to a SKILL defect. Failure the skill's own wording led you into = finding.
 Failure from your typo or a transient env issue = noise.
 
-## CUT EVIDENCE — six kinds, no failure needed
+## CUT EVIDENCE — no failure needed
 Text qualifies for deletion when it:
 - names a path, file, command, flag or field that does not exist
 - contradicts another rule — name both
@@ -45,7 +45,7 @@ Text qualifies for deletion when it:
 - is a rule whose FIX ROUND was itself withdrawn twice. Two withdrawn rounds is evidence the rule cannot be stated correctly at that site, not that the wording was unlucky. **Count the withdrawals from the FEATURE RECORDS and the commit log, never from session memory** — this trigger spans sessions by construction, and a transcript cannot see past the current one. It is the one signal here you go looking for on disk.
 
 ## Does NOT count (never manufacture)
-- Anything whose evidence is your own inference rather than a quotable moment or one of the six cut kinds. This is the whole filter — a class is easy to assert, a quote is not.
+- Anything whose evidence is your own inference rather than a quotable moment or a listed cut kind. This is the whole filter — a class is easy to assert, a quote is not.
 - Normal work, no friction.
 - One-off project specifics → project docs/memory, not a skill.
 - Style hunches.
@@ -63,8 +63,8 @@ Text qualifies for deletion when it:
    - Grep the rule repo-wide BEFORE the gate (`grep -rn` a distinctive phrase). Copy count is NOT knowable by inspection. Every copy is part of the same edit — a scoped edit leaving a stale copy ships a defeated change.
    - Rule states a CONVENTION (path shape, form, naming) → also grep for sites that VIOLATE it, not just copies of it. A convention with existing violators ships already-defeated; the same commit that writes the rule can break it. Fix the violators in that pass, or the rule is fiction.
 3. **Rank, then write each proposal.**
-   - **At most 4 per run**, fixes and cuts together. More qualify → NAME the remainder in one line ("3 further findings not proposed"). A silently dropped finding is indistinguishable from one nobody found. The remainder line also carries every subagent FRICTION report that matched no class.
-   - **A FIX always outranks a CUT.** A cut never displaces a fix, whatever its apparent severity. Cuts carry six evidence kinds against a fix's single quoted moment, so one shared ranking sorts the cheap findings to the top and pushes the real defect into the remainder.
+   - **At most 4 per run**, fixes and cuts together. More qualify → NAME the remainder in one line ("3 further findings not proposed"). A silently dropped finding is indistinguishable from one nobody found.
+   - **A FIX always outranks a CUT.** A cut never displaces a fix, whatever its apparent severity. A cut has several evidence kinds open to it against a fix's single quoted moment, so one shared ranking sorts the cheap findings to the top and pushes the real defect into the remainder.
    - **Rejected this session → not re-proposed this session.** Across sessions it may return; nothing on disk persists the rejection.
    - Four lines per proposal, in the USER's language (`simple-language`), no internal jargon without a plain gloss in the same sentence:
      1. **What happened** — the moment, QUOTED literally. **This line is the bar, not formatting.** No quote → DROP the finding; never reword it to fit. A cut proposal quotes the text being cut.
@@ -74,13 +74,13 @@ Text qualifies for deletion when it:
    Quoted skill text and the edit itself stay English (ENGLISH + SIMPLE ARTIFACTS in `skills/_shared/blocks.md`).
 4. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per proposal, labelled with target skill + one-line summary; description holds the four lines. User picks. Never edit a skill file without this.
 5. **Apply** only selected, minimal surgical edits, to every copy step 2's grep found. Leave the rest. Before saving: check the new wording doesn't contradict an existing rule.
-6. **Report** which skills changed, in one or two lines.
+6. **Report** which skills changed, in one or two lines. Then RELAY, verbatim, every subagent FRICTION report that matched no FIX EVIDENCE class — always, including on a run that proposed nothing and on one that was stopped at step 1.
 
 # HARD RULES
 - General, not project-specific — top rule. A project "lesson" → project docs/memory, not a skill edit.
 - Minimal diffs; match the target skill's structure, tone, headings.
 - Keep skills tight — every line loads into context. Concise, unambiguous, no repetition. Shorter-same-meaning always wins; every addition names what it removes, and net growth is a labelled decision, never a side effect.
-- **Evidence-based only.** A fix needs a QUOTED transcript moment; a cut needs one of the six CUT EVIDENCE kinds. No quote and no kind → no finding. Never invent weaknesses.
+- **Evidence-based only.** A fix needs a QUOTED transcript moment; a cut needs a listed CUT EVIDENCE kind. No quote and no kind → no finding. Never invent weaknesses.
 - **At most 4 proposals per run, and a fix always outranks a cut.** Name what you did not propose.
 - Multiple-choice approval mandatory before any skill edit.
 - Don't touch skills unrelated to the observed weakness.
