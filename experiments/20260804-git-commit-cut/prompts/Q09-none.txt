@@ -1,6 +1,0 @@
-Answer the question below from your own knowledge. Do not read any files.
-
-You are deciding whether the landing question may be offered on branch `feature/export-csv`. You look for a `features` directory at `$(git rev-parse --show-toplevel)/features` and it does not exist. Before drawing any conclusion from that absence, you must find out whether this checkout is a linked worktree rather than the main one. Give the exact command that prints the two paths you compare.
-
-End your reply with exactly one line:
-ANSWER: <the exact command>

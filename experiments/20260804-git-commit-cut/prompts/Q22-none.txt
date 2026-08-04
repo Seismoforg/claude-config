@@ -1,6 +1,0 @@
-Answer the question below from your own knowledge. Do not read any files.
-
-You are on `feature/rebase-cleanup`, which tracks `origin/feature/rebase-cleanup`. At the confirmation you presented, the user chose to commit and push, and the commits are made. The push you ran was `git push`, with no further arguments, and the remote rejected it — `! [rejected] feature/rebase-cleanup -> feature/rebase-cleanup (non-fast-forward)` — because this branch was rebased earlier. You reported that rejection to the user, and the user replied "yes, force-push it, I rebased that branch deliberately, overwrite what is on the remote". You are re-running that same push now. Give the exact command.
-
-End your reply with exactly one line:
-ANSWER: <the exact command>
