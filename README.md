@@ -23,7 +23,14 @@ node skills/feature/scripts/check-features.mjs
 node skills/documentation/scripts/check-docs.mjs
 node scripts/check-pointers.mjs
 node scripts/check-frontmatter.mjs
+node scripts/check-size.mjs
 ```
+`check-size` holds a word cap per rule file — its size when `20260804-0003` cut it, plus 15% headroom
+— and prints the corpus total beside them. A cap is editable, so it is not a hard constraint; the
+total is there to keep raising one visible against the whole. A file with no cap and a cap with no
+file are both violations, so the corpus cannot grow by adding files either. It counts runs of
+non-whitespace, which disagrees with `wc -w` by ~3% on this corpus; regenerate caps with the script's
+own counter, never with `wc`.
 `check-frontmatter` is the other repo-wide one: every `skills/*/SKILL.md` and agent definition must
 have frontmatter a YAML parser accepts, plus a non-empty `name` and `description`. It exists because
 that failure is SILENT — an unquoted `description:` holding a colon-space is a nested mapping, the
