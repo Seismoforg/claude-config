@@ -173,9 +173,12 @@ wrote is exactly what those two gates exist to question and to critique. Hand ba
   through them, and step 2's summary carries whatever survives to the gate, where the user can still
   say no.
 
-Do NOT run step 2 yourself. It moves the file to `pending/`, sets `NEEDS_APPROVAL`, summarises and
-asks the four-option approval question — that is `feature`'s job, and it acts on the answer
-(steps 3–8) in ways this skill is forbidden to.
+Do NOT run step 2 yourself — that is `feature`'s job, and it acts on the answer in ways this skill is
+forbidden to.
+
+**More than one DRAFT** (`feature` STRUCTURE splits a bundled request) → hand back EVERY path and NAME
+the one entering 1.4 now. Only that one does; the rest stay in `draft/` and run their own gates when
+they start. Order by DEPENDENCY, not by the order you wrote them.
 
 There is no hook and no label to set. This repo's gates are skill prose plus `AskUserQuestion`;
 nothing fires by itself.
