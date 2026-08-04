@@ -123,10 +123,13 @@ to watch the thing that keeps running, and read its output when it dies.
 - **Visible and captured is not a tradeoff — pipe through `tee`.** Long command whose output you still need:
   `... 2>&1 | tee '<logfile>'` inside the visible window, then read the logfile. The user watches it live,
   you get the full output. Verified working.
-  - **PowerShell's `tee` writes UTF-16, and byte tools then match NOTHING.** `grep` — including `grep -a` —
-    and any wait loop polling that logfile for a done-marker find nothing in a run that has already
-    finished, so it reads as still running until the timeout. Strip the NULs before reading
-    (`tr -d '\000' < log`), or wait on the PROCESS rather than on the file.
+  - **PowerShell: redirect under `cmd`, never `Tee-Object` — `cmd /c "<cmd> > <log> 2>&1"`.** Two traps
+    it avoids at once. `Tee-Object` captures STDOUT ONLY, so a crash leaves a logfile holding the banner
+    and nothing else, and the cause is gone; and it writes UTF-16, so `grep` — including `grep -a` — and
+    any wait loop polling for a done-marker match NOTHING in a run that already finished. `cmd`'s
+    redirection is byte-level: both streams, plain bytes, no `tr -d '\000'` needed. It also settles the
+    collision with the PowerShell tool's own "avoid `2>&1` on native executables", which applies to
+    PowerShell's redirection and not to `cmd`'s.
 - Keep the window open after exit (`-NoExit` / `--hold always`). A crashed process must leave its error on
   screen, not vanish with the window.
 - **Capture the PID at launch** — `-PassThru` in PowerShell, `ps -W` in bash (the 4th column is the WINPID
