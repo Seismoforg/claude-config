@@ -134,8 +134,12 @@ with a stated reason, never a bullet naming one feature.
 4. Build the tasks. Apply `coding-standards` and whichever surface skills the feature implies. Tick
    each task as it lands.
 5. Run `feature` step 6's validation checks in full — including the fresh-model prose trace where the
-   feature changed prose a model executes; you can dispatch, so that requirement stands. Then move to
-   `ready-for-done/`, status READY_FOR_DONE, taking *Leave open for now*.
+   feature changed prose a model executes; you can dispatch, so that requirement stands. **One
+   exception, and it is the no-commit rule below, not a skipped check:** step 6 asks for one commit per
+   fix round so its blast-radius count can read a real diff. You commit nothing, so take that rule's
+   own fallback — state the diff EXPLICITLY, file and line ranges. Never report a count as mechanical
+   when you assembled it by hand. Then move to `ready-for-done/`, status READY_FOR_DONE, taking
+   *Leave open for now*.
 6. One line to the report. Next feature.
 
 **A limit this design cannot remove:** nothing is committed, so every feature's build stacks in one
