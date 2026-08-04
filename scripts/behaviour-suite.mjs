@@ -61,7 +61,9 @@ if (!existsSync(QUESTIONS)) die(`no questions.md in ${dir}`)
 // Line-based, no YAML library — matching check-frontmatter.mjs, which documents why this repo
 // hand-rolls it. A value runs from its key to the next key at column 0 or the next question.
 
-const KEYS = ['section', 'source', 'form', 'calibration', 'scenario', 'expect']
+// `note` is optional and carries a per-question caveat. It is in this list because an unknown key
+// is NOT ignored — it would be swallowed as a continuation of the previous value and corrupt it.
+const KEYS = ['section', 'source', 'form', 'calibration', 'scenario', 'expect', 'note']
 const FORMS = ['command', 'choice', 'yesno']
 
 const src = readFileSync(QUESTIONS, 'utf8')
@@ -167,8 +169,12 @@ const scoreOne = (form, expect, given) => {
   return `${m[1].toLowerCase()}|${m[2]}` === e.toLowerCase().replace(/\s*\|\s*/, '|')
 }
 
+// A passing NONE arm means the model was right WITHOUT THIS FILE — not necessarily from general
+// knowledge. A subagent still inherits the repo's always-on instructions, so a rule duplicated
+// there also passes. Both readings point the same way: this file's copy earns nothing. Which of the
+// two it is decides how the deletion is justified, so the per-rule gate is told, not guessed.
 const VERDICT = {
-  'ok,ok,ok': 'DELETE — common knowledge, the rule earns nothing',
+  'ok,ok,ok': 'DELETE — right without this file, so its copy earns nothing',
   'no,ok,ok': 'KEEP THE CUT — the short form carries it',
   'no,no,ok': 'RESTORE — the prose was load-bearing',
   'no,no,no': 'DEFECT — absent or already broken in today\'s text',
