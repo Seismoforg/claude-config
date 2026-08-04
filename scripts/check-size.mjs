@@ -61,7 +61,7 @@ const CAPS = {
   'skills/feature/reference/open-questions.md': 988,
   'skills/feature/reference/premortem.md': 596,
   'skills/feature/reference/trace.md': 655,
-  'skills/git-commit/SKILL.md': 6414,
+  'skills/git-commit/SKILL.md': 5888,
   'skills/security-review/SKILL.md': 536,
   'skills/self-improve/SKILL.md': 3344,
   'skills/simple-language/SKILL.md': 1056,

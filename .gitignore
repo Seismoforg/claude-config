@@ -11,3 +11,7 @@ features/
 # Generated GitHub Copilot translation. Derived from skills/, agents/ and CLAUDE.md — rebuild with
 # `node scripts/build-copilot.mjs .`. See docs/adr/0003 for why it is no longer committed.
 github_build/
+
+# Measurement runs over the rule corpus — questions, raw answers, candidate cuts, matrices. Local
+# working data, not part of the config the harness loads. Untracked from 20260804-0005 on.
+experiments/
