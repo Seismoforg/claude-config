@@ -75,8 +75,9 @@ limit is prose, and the check demands the briefing be present:
 ## The FRICTION channel
 Each agent's report closes with a `FRICTION:` line — a defect in the SKILLS, not the audited code
 (tool it lacked, rule it could not apply, rule that misfired). An agent cannot run `self-improve`
-itself (no transcript, no gate, no write), so this is the only channel back; the main loop feeds it to
-`self-improve` as evidence.
+itself (no transcript, no gate, no write), so this is the only channel back. Report broadly — the main
+loop carries the line to `self-improve`, and its FIX EVIDENCE classes decide whether it qualifies.
+Filtering is not your job; staying silent about it is the only real failure.
 Exception: `pm` closes with `OPEN:` instead, because everything it surfaces at plan time is a question
 for the USER, not yet a skill defect. The dispatcher still has to split that list — a genuine skill
 defect hiding in it (a rule source that applied but was never handed over) is `self-improve` evidence
