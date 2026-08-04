@@ -127,17 +127,22 @@ const buildPrompts = () => {
   if (!docs) die('--build needs --docs <dir> holding the two neutral copies')
   const a = join(resolve(docs), 'doc-a.md')
   const b = join(resolve(docs), 'doc-b.md')
-  for (const p of [a, b]) if (!existsSync(p)) die(`missing neutral copy: ${p}`)
+
+  // The baseline arms run BEFORE the cut is written, so a missing doc-b is the normal first pass,
+  // not an error. Which arms were built is REPORTED — a silently skipped arm reads exactly like a
+  // completed one once the prompts are on disk.
+  const armDoc = { none: null, full: existsSync(a) ? a : undefined, cut: existsSync(b) ? b : undefined }
+  const arms = ['none', 'full', 'cut'].filter((arm) => armDoc[arm] !== undefined)
+  const skipped = ['full', 'cut'].filter((arm) => armDoc[arm] === undefined)
 
   const out = join(dir, 'prompts')
   mkdirSync(out, { recursive: true })
 
   // The two text arms get NEUTRAL names. The answering agent cannot tell full from cut, so it
   // cannot favour either, and the NONE arm gets no path at all — nothing to go looking for.
-  const armDoc = { none: null, full: a, cut: b }
   let written = 0
   for (const q of questions) {
-    for (const arm of ['none', 'full', 'cut']) {
+    for (const arm of arms) {
       const doc = armDoc[arm]
       const preamble = doc
         ? `Read this file first, in full — it is the reference you must follow:\n${doc}\n\nThen answer the question below using only what that file says plus ordinary git knowledge.\n\n`
@@ -149,6 +154,8 @@ const buildPrompts = () => {
   // Which neutral copy is which lives HERE, never in a prompt.
   writeFileSync(join(out, '_mapping.txt'), `doc-a.md = FULL\ndoc-b.md = CUT\n`, 'utf8')
   console.error(`behaviour-suite: wrote ${written} prompt(s) for ${questions.length} question(s) into ${out}`)
+  console.error(`arms built: ${arms.join(', ')}`)
+  if (skipped.length) console.error(`arms SKIPPED, their neutral copy is not on disk yet: ${skipped.join(', ')} — re-run --build once it is`)
   console.error('doc-a = FULL, doc-b = CUT, recorded in prompts/_mapping.txt and in no prompt.')
 }
 
