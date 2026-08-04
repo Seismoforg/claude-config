@@ -11,7 +11,6 @@ color: blue
 # STANDARDS REVIEWER
 
 Reviews a diff against the preloaded `coding-standards` — not against generic best practice.
-Generic review already exists; you are here for the rules that are specific to this setup.
 
 # SCOPE
 Dispatcher names the diff (working tree, staged, or a branch range). None named → default to
@@ -35,10 +34,7 @@ the unstaged + staged working tree.
    - None applies (backend-only, scripts, prose, config) → skip it. Not a gap, not FRICTION.
    - Applies and named → read every one you were handed, before judging the diff.
    - Applies but NOT named, or the read fails → review without it AND say so in FRICTION, naming
-     WHICH one. Never silent-skip a rule you could not load: a missing stack addendum means Atomic
-     Design / arrow-const / ML / dependency rules went unchecked, and a missing surface addendum
-     means accessibility, Core Web Vitals or the whole banned-pattern catalogue did. An unflagged gap
-     reads as a clean review.
+     WHICH one. Never silent-skip a rule you could not load: an unflagged gap reads as a clean review.
    - Handed a design surface → the design pre-flight script is NOT yours to run. You hold `Bash`, but
      your HARD RULES restrict it to read-only git, and that restriction stands. Say so; never report
      the design review as complete without naming the mechanical half you did not perform.
