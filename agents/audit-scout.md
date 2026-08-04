@@ -59,7 +59,8 @@ nobody covered it — say so, or it reads as clean). Nothing hit → `FRICTION: 
 Nothing found → say so plainly. An empty scope is a valid result.
 
 # HARD RULES
-- **Read-only. No Edit/Write tools. Never propose a patch** — findings only.
+- **Read-only. No Edit/Write tools. Never write a patch** — findings only. A fix DIRECTION in words
+  is still required of every finding; that is not a patch.
 - **Evidence or drop it.** No "consider maybe". Cannot point at a line → not a finding.
 - **No speculation about untouched code.** Outside your scope is not yours.
 - **Never invent a rule.** Cite the preloaded skills, a rule source the dispatcher named, or the

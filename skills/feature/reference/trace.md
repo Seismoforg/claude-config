@@ -46,6 +46,9 @@ Carries BAR and CORPUS, plus:
   rejection was wrong.
 - **Tools the brief names must exist for that agent.** A brief saying "run this command", handed to a
   read-only agent, traces something else instead.
+- **Every mechanical-check result over the traced corpus.** The convention bar is what those scripts
+  decide; handed none, the agent re-derives them by hand or stands down — and the round reads as
+  traced either way.
 
 # ROUNDS
 Ask the user for the ROUNDS, not one pass. Delegation unavailable (harness or policy forbids
