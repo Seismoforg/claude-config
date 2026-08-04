@@ -6,6 +6,7 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills + custom s
 - `CLAUDE.md` — global user instructions (behavioral guidelines).
 - `skills/`   — custom skills (coding-standards, feature, feature-brainstorming, crew, autopilot, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
 - `agents/`   — custom subagents. Analysis (read-only): audit-scout, security-auditor, standards-reviewer, pm, tester. Executor (write, worktree): dev.
+- `experiments/` — measurement runs over the rule corpus, one directory each. DATA, not rules, so it is outside every check script's corpus; see "Measuring a cut" below.
 
 Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/` (load on demand,
 never at the skill root). Check scripts → `<skill>/scripts/`. Shared rule text → `skills/_shared/blocks.md`.
@@ -41,6 +42,34 @@ auto-delegation. It owns YAML validity for both areas; `check-agents` keeps agen
 live rule prose at exact on-disk case, and enforces the `design-` prefix on design addenda. Its corpus
 is an ALLOWLIST (`skills/`, `agents/`, `CLAUDE.md`, `README.md`) — a new top-level directory joins it
 only by being added to `CORPUS_DIRS`, never silently.
+
+## Measuring a cut
+Shortening a rule file used to be a guess: nobody could tell what a cut COST, so every cut stopped
+at the first line that felt risky. `scripts/behaviour-suite.mjs` measures it instead.
+
+The same scenario is put to three fresh models — NONE sees no text, CUT sees the shortened file,
+FULL sees today's file — and the three results decide, per rule, whether its prose is load-bearing:
+common knowledge (delete it), carried by the short form (keep the cut), load-bearing (restore it),
+or actively misleading in short form (over-compressed).
+
+```
+node scripts/behaviour-suite.mjs <experiment-dir> --build --docs <dir>   # write the arm prompts
+node scripts/behaviour-suite.mjs <experiment-dir> --score                # matrix + per-rule verdict
+node scripts/behaviour-suite.mjs <experiment-dir> --coverage             # is the cut actually tested?
+```
+- **No model runs in the script.** Like `build-copilot`, it is deterministic text assembly and
+  scoring, so a result can be re-derived and diffed. Dispatching the arms is the caller's job.
+- **Nothing about a particular file is hardcoded** — target, frozen anchors and invariants come from
+  the experiment's own `questions.md` frontmatter. The experiment directory is the argument.
+- **`--build` hands the two text arms NEUTRAL copies** (`doc-a` / `doc-b`), so an answering model
+  cannot tell the cut from the original, and the NONE arm gets no path at all.
+- **`--score` is mechanical or it is nothing.** Answers take one of three forms — an exact command,
+  a lettered choice, or yes/no plus a numbered reason. Anything else is reported UNSCORABLE and
+  blocks the result; hand-scoring puts the expected answer back in front of the scorer's eyes.
+- **`--coverage` guards the blind spots**: every changed hunk needs ≥2 questions citing lines inside
+  it, every frozen section anchor must survive, and a numbered procedure another file cites by step
+  NUMBER must keep its count. That last one catches a cut that merges two steps while every heading
+  still matches and every other check stays green.
 
 ## GitHub Copilot export
 Copilot reads the same `SKILL.md` format this repo writes, so a skill translates one for one.
