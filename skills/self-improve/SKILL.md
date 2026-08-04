@@ -72,7 +72,7 @@ Text qualifies for deletion when it:
      3. **What changes** — before → after.
      4. **Where** — `file:line`.
    Quoted skill text and the edit itself stay English (ENGLISH + SIMPLE ARTIFACTS in `skills/_shared/blocks.md`).
-4. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per proposal, labelled with target skill + one-line summary; description holds the four lines. User picks. Never edit a skill file without this.
+4. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per proposal, labelled with target skill + one-line summary; description holds the four lines. User picks. Never edit a skill file without this. **Exactly ONE proposal → the harness REJECTS a single-option question** (`expected array to have >=2 items`); ask "Apply" / "Don't apply" instead. Under this bar one proposal is the common case, not an edge one.
 5. **Apply** only selected, minimal surgical edits, to every copy step 2's grep found. Leave the rest. Before saving: check the new wording doesn't contradict an existing rule.
 6. **Report** which skills changed, in one or two lines. Then RELAY, verbatim, every subagent FRICTION report that matched no FIX EVIDENCE class — always, including on a run that proposed nothing and on one that was stopped at step 1.
 
