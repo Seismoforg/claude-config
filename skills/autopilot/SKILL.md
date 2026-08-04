@@ -134,7 +134,10 @@ with a stated reason, never a bullet naming one feature.
 4. Build the tasks. Apply `coding-standards` and whichever surface skills the feature implies. Tick
    each task as it lands.
 5. Run `feature` step 6's validation checks in full — including the fresh-model prose trace where the
-   feature changed prose a model executes; you can dispatch, so that requirement stands. **One
+   feature changed prose a model executes; you can dispatch, so that requirement stands. Brief that
+   trace from `feature/reference/trace.md` — another skill's pointer again, so resolve it against the
+   SKILLS ROOT, the same way. Step 6 declares a trace briefed without that file's BAR and CORPUS
+   INVALID, and you never stop to ask, so an unresolved read here would fail the whole run. **One
    exception, and it is the no-commit rule below, not a skipped check:** step 6 asks for one commit per
    fix round so its blast-radius count can read a real diff. You commit nothing, so take that rule's
    own fallback — state the diff EXPLICITLY, file and line ranges. Never report a count as mechanical

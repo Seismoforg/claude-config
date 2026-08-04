@@ -66,13 +66,8 @@ Text qualifies for deletion when it:
    - **At most 4 per run**, fixes and cuts together. More qualify → NAME the remainder in one line ("3 further findings not proposed"). A silently dropped finding is indistinguishable from one nobody found.
    - **A FIX always outranks a CUT.** A cut never displaces a fix, whatever its apparent severity. A cut has several evidence kinds open to it against a fix's single quoted moment, so one shared ranking sorts the cheap findings to the top and pushes the real defect into the remainder.
    - **Rejected this session → not re-proposed this session.** Across sessions it may return; nothing on disk persists the rejection.
-   - Four lines per proposal, in the USER's language (`simple-language`), no internal jargon without a plain gloss in the same sentence:
-     1. **What happened** — the moment, QUOTED literally. **This line is the bar, not formatting.** No quote → DROP the finding; never reword it to fit. A cut proposal quotes the text being cut.
-     2. **Why that is bad** — the consequence, in everyday words.
-     3. **What changes** — before → after.
-     4. **Where** — `file:line`.
-   Quoted skill text and the edit itself stay English (ENGLISH + SIMPLE ARTIFACTS in `skills/_shared/blocks.md`).
-4. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per proposal, labelled with target skill + one-line summary; description holds the four lines. User picks. Never edit a skill file without this. **Exactly ONE proposal → the harness REJECTS a single-option question** (`expected array to have >=2 items`); ask "Apply" / "Don't apply" instead. Under this bar one proposal is the common case, not an edge one.
+   - Write each proposal in the FINDING SHAPE (`skills/_shared/blocks.md`). A cut proposal quotes the text being cut.
+4. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per proposal, labelled with target skill + one-line summary; description holds the finding. User picks. Never edit a skill file without this. **Exactly ONE proposal → the harness REJECTS a single-option question** (`expected array to have >=2 items`); ask "Apply" / "Don't apply" instead. Under this bar one proposal is the common case, not an edge one.
 5. **Apply** only selected, minimal surgical edits, to every copy step 2's grep found. Leave the rest. Before saving: check the new wording doesn't contradict an existing rule.
 6. **Report** which skills changed, in one or two lines. Then RELAY, verbatim, every subagent FRICTION report that matched no FIX EVIDENCE class — always, including on a run that proposed nothing and on one that was stopped at step 1.
 
