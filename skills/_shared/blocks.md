@@ -80,6 +80,16 @@ it (`features/` is git-ignored), and an edit aimed at the main checkout is REJEC
 agent — MEASURED, see `crew` DISPATCH BRIEF. So neither a new file nor an append to the spec is open
 to you. Name the debt in your final message; the dispatcher files it.
 
+# FOUR-LINE FINDING
+Presenting a finding to the user — a `self-improve` proposal, a fresh-model trace result. Four lines,
+in the USER's language, no internal jargon without a plain gloss in the same sentence:
+1. **What happened** — the moment, QUOTED literally. **This line is the bar, not formatting.** No
+   quote → DROP the finding; never reword it to fit. A finding about text quotes the text.
+2. **Why that is bad** — the consequence, in everyday words.
+3. **What changes** — before → after.
+4. **Where** — `file:line`.
+Quoted artifact text and the edit itself stay English (ENGLISH + SIMPLE ARTIFACTS below).
+
 # APPROVAL GATES
 Any point marked "STOP. Ask" / "CONFIRM ... (REQUIRED)" → `AskUserQuestion`, multiple choice,
 never free text. Don't proceed until answered.
