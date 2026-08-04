@@ -10,7 +10,11 @@ reads, the body is the agent's brief.
 
 # File Structure
 - `<name>.md`            — one agent definition; filename must equal its `name:` field
-- `scripts/check-agents.mjs` — mechanical check over every definition here
+- `scripts/check-agents.mjs` — mechanical check over every definition here: agent SEMANTICS
+- `../scripts/check-frontmatter.mjs` — the other half: that the frontmatter is valid YAML at all, and
+  carries a non-empty `name` and `description`. Ownership splits by QUESTION, not by file — the reader
+  in `check-agents.mjs` is deliberately lenient and stays that way, because the same rules living in
+  two scripts is how they drift. Name-matches-filename stays here; that is semantics
 
 `AGENTS.md` and `CLAUDE.md` in this folder are docs, not definitions. Both
 `scripts/check-agents.mjs` and `../scripts/build-copilot.mjs` skip them by name; without that they

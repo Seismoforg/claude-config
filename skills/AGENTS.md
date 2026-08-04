@@ -2,6 +2,11 @@
 The skills this config defines. One folder per skill; `SKILL.md` is the body a model loads, and the
 frontmatter `description:` is what decides whether it loads at all.
 
+Because it decides that, `../scripts/check-frontmatter.mjs` checks it: the block must be valid YAML
+and carry a non-empty `name` and `description`, and `name` must equal the folder. The failure it
+catches is silent — an unquoted value holding `": "` is a nested mapping, so the block is dropped, the
+file still loads, and the skill simply stops matching anything.
+
 # Responsibilities
 - Hold each skill's workflow, gates and hard rules
 - Keep on-demand material out of the always-loaded body, in `reference/`

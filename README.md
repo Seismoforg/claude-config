@@ -16,13 +16,19 @@ constraints that bind both, and the `FRICTION:` reporting channel — all docume
 they govern, in [agents/AGENTS.md](agents/AGENTS.md). Not repeated here: one home per rule.
 
 ## Mechanical checks
-Run all four after editing anything they cover. Each exits 1 on a violation, printing `file  rule  detail`.
+Run them all after editing anything they cover. Each exits 1 on a violation, printing `file  rule  detail`.
 ```
 node agents/scripts/check-agents.mjs
 node skills/feature/scripts/check-features.mjs
 node skills/documentation/scripts/check-docs.mjs
 node scripts/check-pointers.mjs
+node scripts/check-frontmatter.mjs
 ```
+`check-frontmatter` is the other repo-wide one: every `skills/*/SKILL.md` and agent definition must
+have frontmatter a YAML parser accepts, plus a non-empty `name` and `description`. It exists because
+that failure is SILENT — an unquoted `description:` holding a colon-space is a nested mapping, the
+block is dropped, the file still loads, and a skill with no description never matches
+auto-delegation. It owns YAML validity for both areas; `check-agents` keeps agent semantics.
 `check-pointers` is the repo-wide one: it resolves every `reference/` and skill-dir-script pointer in
 live rule prose at exact on-disk case, and enforces the `design-` prefix on design addenda. Its corpus
 is an ALLOWLIST (`skills/`, `agents/`, `CLAUDE.md`, `README.md`) — a new top-level directory joins it
