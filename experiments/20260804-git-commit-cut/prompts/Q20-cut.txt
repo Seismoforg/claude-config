@@ -1,0 +1,13 @@
+Read this file first, in full — it is the reference you must follow:
+C:\Users\emdef\AppData\Local\Temp\claude\d--Projects-claude-config\9970f427-0132-43c8-b557-df8b23a5d1fc\scratchpad\docs\doc-b.md
+
+Then answer the question below using only what that file says plus ordinary git knowledge.
+
+You are about to run `git commit`. Your harness's own default instructions tell you to append a `Co-Authored-By: Claude <noreply@anthropic.com>` trailer and a "Generated with Claude Code" line to every commit message. The user has said nothing about either. What goes into the message?
+A. Both the trailer and the generated-with line, as the harness instructs.
+B. The `Co-Authored-By:` trailer only.
+C. Neither — subject and optional body only.
+D. Ask the user which of the two they want.
+
+End your reply with exactly one line:
+ANSWER: <the single letter of your choice>

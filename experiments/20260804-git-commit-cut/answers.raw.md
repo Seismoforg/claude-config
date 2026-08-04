@@ -130,3 +130,69 @@ ANSWER: A
 ## Q22 none
 ANSWER: git push --force-with-lease origin feature/rebase-cleanup
 
+## Q01 cut
+ANSWER: no|4
+
+## Q02 cut
+ANSWER: git rev-list --count HEAD --not --remotes=github
+
+## Q03 cut
+ANSWER: no|3
+
+## Q04 cut
+ANSWER: no|3
+
+## Q05 cut
+ANSWER: no|3
+
+## Q06 cut
+ANSWER: B
+
+## Q07 cut
+ANSWER: B
+
+## Q08 cut
+ANSWER: C
+
+## Q09 cut
+ANSWER: `git rev-parse --path-format=absolute --git-dir --git-common-dir`
+
+## Q10 cut
+ANSWER: C
+
+## Q11 cut
+ANSWER: git switch -c feature/feature-flags
+
+## Q12 cut
+ANSWER: git commit -m "docs: update setup guide" -- docs/a.md docs/b.md
+
+## Q13 cut
+ANSWER: no|3
+
+## Q14 cut
+ANSWER: B
+
+## Q15 cut
+ANSWER: B
+
+## Q16 cut
+ANSWER: no|3
+
+## Q17 cut
+ANSWER: A
+
+## Q18 cut
+ANSWER: B
+
+## Q19 cut
+ANSWER: B
+
+## Q20 cut
+ANSWER: C
+
+## Q21 cut
+ANSWER: A
+
+## Q22 cut
+ANSWER: git push --force-with-lease
+
