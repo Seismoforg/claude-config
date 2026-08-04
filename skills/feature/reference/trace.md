@@ -5,7 +5,7 @@ step 6, which owns the trigger.
 
 **A trace briefed without the BAR and the CORPUS below is INVALID: discard its findings.**
 
-# THE BAR — three categories, nothing else
+# THE BAR — what counts as a defect
 A defect is exactly one of these, cited `file:line`:
 
 1. **Reachability** — a rule, branch or step that can never execute. Offered but unreachable · routed
@@ -13,7 +13,7 @@ A defect is exactly one of these, cited `file:line`:
 2. **Coherence** — two statements that cannot both be obeyed, AND a run that behaves wrong because of
    it. Quote both statements and name the run: which instruction is followed, which branch is taken,
    what the executor does that it should not. Statements that disagree while every run behaves
-   identically are NOT a defect. Category 1 is exempt from this test — a rule that never executes IS
+   identically are NOT a defect. Reachability is exempt from this test — a rule that never executes IS
    a run behaving wrong.
 3. **Convention** — the text violates a rule the repo itself states. Cite `file:line` for BOTH the
    rule and the violation. **Only MECHANICAL rules qualify**: the rule names a forbidden or required
@@ -60,5 +60,5 @@ Convergence — two consecutive rounds finding only defects inside the preceding
 `feature` step 6's blast-radius rule, not this file's.
 
 # REPORTING TO THE USER
-FOUR-LINE FINDING in `skills/_shared/blocks.md`. The agent returns the facts; the main loop presents
+FINDING SHAPE in `skills/_shared/blocks.md`. The agent returns the facts; the main loop presents
 them in that shape.
