@@ -39,7 +39,7 @@ Brief each scout with: the dimension name, the module map from Step 1, the rule-
 **The pressure that breaks this rule is FAN-OUT GROWTH.** Every dimension added makes the brief longer, and trimming the 2a block "just for the last couple" is what it looks like from the inside. The last couple are the newest dimensions, and `Effectiveness` is the one that cannot survive it — its entire method is holding a rule's claim against a measurement, so a trimmed brief leaves it standing down while its dimension reads as swept and clean. Scouts return findings + a FRICTION line; they never fix, never gate.
 **Every FACT in a brief is DERIVED, not recalled** — STEP 1's enumerate rule binds the brief too, and reaches past the file map: section counts, block names, which document a quotation came from. A wrong count costs little because a scout reads the source anyway; a wrong ATTRIBUTION sends it to the wrong file to check a claim that is not there. **Then read the brief against itself before dispatch.** A scope line excluding what a later paragraph tells the scout to measure leaves it picking which half to obey, and nothing in its report tells you which it picked.
 Main loop dedupes, ranks, and owns Steps 3-8: **subagents cannot call AskUserQuestion, so every gate stays in the main loop.**
-Scout reports FRICTION (missing tool, rule it could not apply) → carry it to Step 8, it is self-improve evidence.
+Scout reports FRICTION (missing tool, rule it could not apply) → carry it to Step 8; `self-improve` decides whether it qualifies.
 
 Investigation changes nothing. Dimension clean → say so.
 
@@ -87,7 +87,7 @@ Apply only approved findings, per the composed skills:
 - Report faithfully: fixed / deferred / remaining, and any check that failed or couldn't run (say why). Don't claim a fix works if you couldn't verify it.
 
 # STEP 8 — SELF-IMPROVE
-Run `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Audit-specific evidence to hand it: every scout FRICTION line from Step 2b, plus any weakness the audit surfaced in a skill itself (missing check, misfired rule).
+Run `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Audit-specific evidence to hand it: every scout FRICTION line from Step 2b, plus any weakness the audit surfaced in a skill itself. Hand it over; that skill's FIX EVIDENCE and CUT EVIDENCE decide what qualifies.
 
 # HARD RULES
 Non-obvious, high-severity only. The dimension list (STEP 2) and the workflow (STEPS 3-8) are not repeated here.
