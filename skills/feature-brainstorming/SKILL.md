@@ -19,9 +19,7 @@ approval, and resumes at step 1.4, the implementation-questions gate.
 FULL first — the real thing, not this summary. Two of its outcomes stop you here:
 - **a file for this feature already exists in any non-terminal folder** → you are NOT writing a new
   DRAFT. ON ACTIVATION's "state the status + the single allowed next action" applies: hand back to
-  `feature` and let it run that action. A second DRAFT for a feature already sitting in `pending/`
-  breaks no mechanical check — the id collision rule quietly renumbers it — and splits one feature
-  into two files that then drift.
+  `feature` and let it run that action.
 - **folder ≠ status anywhere** → STOP and report. Never auto-fix.
 
 Otherwise come back here, and treat `feature` as the caller for the return in §7.
@@ -46,8 +44,7 @@ Scan before the first question:
   `coding-standards/reference/design.md` on landing/marketing/portfolio surfaces); auth, sessions, input
   handling, external payloads → `security-review`; any code at all → `coding-standards`. Invoke each
   SKILL via the Skill tool — you are in the main loop, so you have it — and READ the addenda; PLAN
-  against all of them. A spec written blind to its surface
-  rules gets approved, then fights them during implementation.
+  against all of them.
 
 Anything derivable from code or docs is NOT asked; it becomes an assumption to confirm (§2).
 
@@ -142,7 +139,7 @@ Read the file you just wrote. Check, in order:
 - No two statements that contradict each other.
 - Scope bounded: the out-of-scope list exists and is non-empty, or says "none" on purpose.
 - Every answer from every batch appears somewhere. An answer you collected and did not use → write
-  it in. You HAVE it; filing it as an assumption would record a settled decision as a guess.
+  it in.
 - A genuine GAP — never asked, not derivable — does NOT reopen the interview (§4 closed it) → write
   it in as `Open assumption: ...` and carry on.
 
@@ -159,14 +156,11 @@ Read the OUTPUT, not just the exit code:
   first, and that is usually the older one.
 - **exit 1 naming the file you just wrote** → your own typo. Fix it, re-run.
 - **exit 1 naming any other file** → pre-existing, and not yours to touch mid-interview. STOP and
-  report; `feature` ON ACTIVATION owns what happens next. Not because every violation is unfixable —
-  `tasks-not-current` is fixed in place — but because another feature's file is outside the DRAFT you
-  were asked to write.
+  report; `feature` ON ACTIVATION owns what happens next.
 
 ## 7. Return — never gate
 Return to `feature` workflow **step 1.4, the implementation-questions gate**, and let the workflow run
-on from there — 1.4, then the premortem at 1.5, then step 2. Never jump to step 2: the DRAFT you just
-wrote is exactly what those two gates exist to question and to critique. Hand back two things, not one:
+on from there — 1.4, then the premortem at 1.5, then step 2. Never jump to step 2. Hand back two things, not one:
 - the DRAFT's path, and that step 1 is done
 - **every `Open assumption:` line, said out loud.** They are the only requirements nobody confirmed,
   and they are step 1.4's candidate list. Left inside the file they get approved unread — 1.4 works
@@ -180,18 +174,15 @@ forbidden to.
 the one entering 1.4 now. Only that one does; the rest stay in `draft/` and run their own gates when
 they start. Order by DEPENDENCY, not by the order you wrote them.
 
-There is no hook and no label to set. This repo's gates are skill prose plus `AskUserQuestion`;
-nothing fires by itself.
-
 # WORDING RULES
 - Short questions. Short option labels.
 - Default or recommendation FIRST, marked `(recommended)`, with a half-sentence reason.
 - Yes/no beats an open question whenever yes/no is enough.
 - Answer derivable from repo context → never ask it open. Put the assumption in the question and
   offer two options: "Fits" / "Different".
-- One decision per question. A question bundling two decisions gets one answer and loses the other.
+- One decision per question.
 - LANGUAGE of the question follows `simple-language`: chat matches the user's, quoted artifact
-  content stays English. Named here because this is where questions get authored, not there.
+  content stays English.
 
 # HARD RULES
 - No spec before the question pass is finished.

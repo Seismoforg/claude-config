@@ -44,11 +44,9 @@ ask the user. Never invent scope; never pick silently between interpretations.
    not what it points at. `coding-standards` sends you to `coding-standards/reference/frontend.md`
    for frontend/TS-JS, `coding-standards/reference/python-ml.md` for Python/ML,
    `coding-standards/reference/dependencies.md` for a dependency change; `documentation` sends you to
-   `documentation/reference/agents-md-template.md` for a new module doc. OBSERVED 20260803, on ONE
-   dispatch: a preloaded skill announced its base directory — the block opened with
-   `Base directory for this skill: <absolute path>` — so joining a pointer onto it is worth
-   ATTEMPTING before you declare the rule unreachable. One run, so not a guarantee. Prefer the
-   ABSOLUTE path the Teamleiter hands you; it is unambiguous and costs nothing. Neither works → plan
+   `documentation/reference/agents-md-template.md` for a new module doc. A preloaded skill may
+   announce its base directory, so joining a pointer onto it is worth ATTEMPTING before you declare
+   the rule unreachable. Prefer the ABSOLUTE path the Teamleiter hands you. Neither works → plan
    without it and note it in OPEN. A Technical Plan shaped without the addendum that governs the
    stack sends the devs the wrong layout.
    Mechanical check scripts your preloaded skills mandate (`documentation`'s check-docs, and any other)

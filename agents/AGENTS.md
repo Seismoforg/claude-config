@@ -51,17 +51,10 @@ write-capable executors are still safe.
   SKILL.md body ALONE — not the `reference/...` files it points at — so a needed addendum is handed
   over as an absolute path (`crew` DISPATCH RULES owns that). An agent's cwd is the target repo, so
   hand it ABSOLUTE paths.
-  **OBSERVED 20260803 — a preloaded skill is not necessarily base-directory-less, which this line
-  used to assert flatly.** On ONE `pm` dispatch, the preloaded block opened with
-  `Base directory for this skill: <absolute path>` and the skill-dir placeholder inside that body
-  arrived already substituted. Probed by having the agent read its own context, not the disk.
-  **Scope it honestly:** one run, a generative target, and an agent with no shell — so it shows the
-  token is substituted, not that a worker can successfully RUN what it points at. `coding-standards`
-  HARD RULES calls a single run against a non-deterministic target an observation, not a measurement.
-  The hand-off rule above stands regardless: unambiguous, free, and the only option for a HANDED
-  file, which announces no base directory and whose own pointers really are dead. What changed is
-  that this line no longer asserts the opposite of what was seen — an instruction resting on a false
-  reason gets deleted as redundant by the next reader.
+  **A PRELOADED skill may announce its base directory**, with the skill-dir placeholder inside that
+  body already substituted — so a preloaded pointer is worth attempting. The hand-off rule stands
+  regardless: it is unambiguous, free, and the only option for a HANDED file, which announces no base
+  directory and whose own pointers really are dead.
 
 ## A `tools:` list narrows the blast radius; it is not a sandbox
 `Bash`/`PowerShell` write too (`rm`, `>`, `git reset`); the check cannot catch that statically. So the

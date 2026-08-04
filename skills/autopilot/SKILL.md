@@ -30,13 +30,7 @@ Four gates take no decision at all. These ARE the carve-outs, and **a fifth is a
    features strictly want N asks. Autopilot asks once and spends that consent across the run. Said
    plainly because it is a widening, not compliance.
 
-The run's value rests on the record being honest about what was decided without the user. A run that
-drains the queue and hides its decisions turns "unbuilt" into "built, and nobody knows on what
-basis" — worse than not running.
-
 # DECIDING A QUESTION
-The core mechanic, and the reason auto-approve is survivable.
-
 At any point `feature` would ask, **construct the question you would have asked** — the real options,
 each with the half-sentence reason the interview convention requires, recommendation FIRST. Then:
 - **A defensible recommended answer exists → take it.** Record the question, the options, the answer
@@ -47,11 +41,9 @@ each with the half-sentence reason the interview convention requires, recommenda
   against, a preference only the user holds.
   **Anything the user judges by LOOK or FEEL is always this case** — layout, composition, interaction
   shape, visual direction. `feature` step 2 is explicit that such a choice is never recorded as
-  decided, and auto-approve does not get to overrule that. An internally-made visual choice ships,
-  gets rejected on sight, and costs a full rework.
+  decided, and auto-approve does not get to overrule that.
 
-Mark every autopilot-decided row so it is distinguishable from one a human answered. A decision that
-reads afterwards like the user's own is the single worst output of this skill.
+Mark every autopilot-decided row so it is distinguishable from one a human answered.
 
 # ON ACTIVATION
 1. **Build the queue, once.** `in-progress/` first, then `approved/`, then `draft/`; oldest id first
@@ -70,7 +62,7 @@ reads afterwards like the user's own is the single worst output of this skill.
    **Nothing buildable → say so, emit THE REPORT, and stop.** Do not ask for resource consent that
    buys nothing. An empty or fully-skipped queue is a valid, common outcome, not a failure.
 4. **Then ask the resource question, once.** Builds, typecheck and tests cross LOCAL RESOURCE RUNS.
-   Asking AFTER the queue report is deliberate: the user authorizes the spend knowing what it buys.
+  
    Declined → do not start.
    A **different kind** of run — an install, or anything touching a GPU or a local model — is not
    covered, cannot be asked for mid-run, and stops the run under ON FAILURE.
@@ -89,8 +81,7 @@ continue.
    - `skills/_shared/blocks.md`, `coding-standards`, `feature`, `autopilot`
    - the surface rules a build applies: `coding-standards`' `reference/` addenda, `security-review`, `documentation`
    - the always-on `simple-language` and `fableize`
-   Read the spec's Impact Analysis, not just its title. In a repo that is not this config, almost
-   nothing matches — here, most skill work does, and that is correct rather than unfortunate.
+   Read the spec's Impact Analysis, not just its title.
 4. **Spec drifted from the tree** — a path or `file:line` it cites is gone or now says something
    else. Its own category so a report line names the real cause.
    Judge the anchors of unticked tasks AND of any `# Technical Plan` line citing a file an EARLIER

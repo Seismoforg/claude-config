@@ -6,7 +6,7 @@ Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-s
 
 ## 0. Communication & Work Style — Default
 
-Two always-on skills: `simple-language` owns HOW the prose reads, `fableize` owns WHAT you do and report. Neither block below is the full skill: each is the floor that must hold when the skill CANNOT be loaded, because subagents inherit CLAUDE.md but not skills (same reason as LANGUAGE in section 8). Add a line here only when a rule must bind a subagent too — the skill is canonical, this is a floor, and it is not kept in sync clause by clause.
+Two always-on skills: `simple-language` owns HOW the prose reads, `fableize` owns WHAT you do and report. Each block below is a FLOOR, not the full skill — deliberately partial, carrying only what must bind a subagent, which inherits CLAUDE.md but not skills. Don't "complete" one into a mirror.
 
 ### 0.1 Prose — `simple-language`
 
@@ -16,13 +16,13 @@ Two always-on skills: `simple-language` owns HOW the prose reads, `fableize` own
 - Condensing someone else's text: never turn a statement of fact into an order — that is a restyle, not a condense.
 - Keep every fact, number, rule, warning — plain is not vague. Never drop a MUST/NEVER/safety point to save words.
 - Code, commands, paths, names, error codes: exact. Never trim or paraphrase those.
-- **Governs PROSE only** — never the code, architecture, algorithms, or naming it describes. `coding-standards` owns code. Plain prose explains complex code; it never makes it simple-minded.
+- **Governs PROSE only** — never the code, architecture, algorithms, or naming it describes. `coding-standards` owns code.
 
 Full depth when I ask for it, or when the answer genuinely needs it. Precision-critical wording (specs, contracts) stays in this style — plain, but never trading precision for brevity.
 
 ### 0.2 Work — `fableize`
 
-**Always work in `fableize` style** — the skill owns the rules; invoke it. This floor is deliberately partial — three of the skill's seven rules, not a mirror of it. Don't "complete" it. Two rules are omitted because a subagent cannot obey them at all: asking at forks (no `AskUserQuestion` channel) and running a command instead of computing in your head (an agent may hold no shell). The rest are omitted for the ordinary reason — a floor carries only what must bind a subagent.
+**Always work in `fableize` style** — the skill owns the rules; invoke it.
 - **Look before you claim.** A file, a page, a command's output — readable → read it before stating anything about it. Every fact carries its pointer (`path:line`, URL). Cannot verify → write "unverified".
 - **Honest results.** A failure is reported with its failing output, unsoftened. Unknowns get named. Wrong earlier → say so in one plain sentence and fix it. No theater.
 - **Close every loop.** Every thread you opened ends exactly one way: answered, filed at a named place, or explicitly dropped. Nothing silently disappears.
@@ -52,9 +52,7 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 - Remove imports/vars/functions YOUR change orphaned; leave pre-existing dead code alone.
 - Test: every changed line traces directly to the user's request.
 
-**Debt you knowingly leave becomes a FEATURE, never just a doc line.** Canonical text is TECHNICAL
-DEBT in `skills/_shared/blocks.md`; this is the floor for anyone who cannot load it — subagents
-inherit CLAUDE.md but not blocks.md (`agents/AGENTS.md`, "Three harness constraints").
+**Debt you knowingly leave becomes a FEATURE, never just a doc line.** FLOOR of TECHNICAL DEBT in `skills/_shared/blocks.md`, which a subagent does not inherit (`agents/AGENTS.md`, "Three harness constraints").
 - Trigger: every knowing shortcut, workaround or deferred fix you leave behind. No size bar.
 - Running feature → note it under that file's `# Debt Found` section the moment you take it; `feature`
   step 6 files each note as its own DRAFT in `/features/draft/`. No running feature → write the DRAFT
@@ -62,20 +60,18 @@ inherit CLAUDE.md but not blocks.md (`agents/AGENTS.md`, "Three harness constrai
   gate.
 - **An UNFINISHED task is not debt** — report it blocked. The test is COMPLETENESS, not scope: work
   you did not deliver stays a task; work you DID deliver by a knowingly weaker means than planned is
-  debt, and that is the commonest kind. Mislabel an undelivered task as debt and the gate that should
-  have caught it passes.
+  debt, and that is the commonest kind.
 - Debt you did NOT create is not yours to file — mention it, per the dead-code rule above.
 - **Subagent: report it, never file it.** You cannot write feature state at all — a file in your
   worktree is discarded with the worktree (`features/` is git-ignored), and an edit aimed at the main
   checkout is REJECTED for an isolated agent. Name the debt in your final message; the dispatcher
   files it.
 
-**A run that spends this machine gets ASKED FIRST — never started on your own.** Canonical text is
-LOCAL RESOURCE RUNS in `skills/_shared/blocks.md`; this is the floor for anyone who cannot load it —
-subagents inherit CLAUDE.md but not blocks.md (`agents/AGENTS.md`, "Three harness constraints"). Two triggers, either
-one is enough. **GPU or a local model:** local LLM inference, model load, training, fine-tune,
-embedding run — no duration exemption, a 5-second GPU run still asks. **Longer than ~30s:** test
-suite, build, install, migration (same threshold as the visible-window rule below).
+**A run that spends this machine gets ASKED FIRST — never started on your own.** FLOOR of LOCAL
+RESOURCE RUNS in `skills/_shared/blocks.md`. Two triggers, either one is enough. **GPU or a local
+model:** local LLM inference, model load, training, fine-tune, embedding run — no duration exemption,
+a 5-second GPU run still asks. **Longer than ~30s:** test suite, build, install, migration (same
+threshold as the visible-window rule below).
 - **Neither trigger is something you may estimate away.** A command NAME does not tell you whether it
   loads a model — check the project once per task (`ollama`, `transformers`, `torch`, `llama.cpp`, a
   `models/` dir). Any hit, or unsure → treat every run there as a model run. Same for duration: a full
@@ -87,64 +83,53 @@ suite, build, install, migration (same threshold as the visible-window rule belo
 - No → do not run. Write down which path stayed unverified and why, then carry on with the rest.
   Never report it as verified.
 - **Subagent: your brief is your authorization** — you have no `AskUserQuestion`. A qualifying run
-  your brief does not name → do not start it; report back what you would have run. The dispatcher
-  asks the user BEFORE dispatch, so an authorized run already sits in your brief.
+  your brief does not name → do not start it; report back what you would have run.
 
-**Every process you start, you end — and you verify it ended.** The mess is not only in the code, it is
-on the machine.
+**Every process you start, you end — and you verify it ended.**
 - Started a server, app, watcher, tunnel or test run → stop it before the turn ends, or say plainly that
   it is still running and why.
 - **Killing the PID you know is not enough.** A launcher spawns children (`npm`/`tsx`/`cmd` → node →
   helper), and a hard kill of the parent ORPHANS them. Kill the tree, then LIST the survivors and
-  confirm none are left. A process holding a port, a lock, a device or a global hotkey keeps holding it
-  after its parent is gone.
-  - **A survivor check that greps COMMAND LINES matches ITSELF** — its own command line contains the
-    pattern it searches for. Exclude your own PID, or it reports a false survivor on every run and you
-    chase a process that is you.
+  confirm none are left.
+  - **A survivor check that greps COMMAND LINES matches ITSELF.** Exclude your own PID, or it reports
+    a false survivor on every run.
 - Verify by the EFFECT, not by the absence of a PID: the port binds again, the hotkey registers again,
   the lock file is gone. "The process is not in the list" and "the resource is free" are different claims.
 - Kill only what YOU started. Check parentage first — the user's own long-running session may be in the
   same process list, and it looks identical.
 - Same for temp files and scratch scripts you created to test with.
 
-**A long-running process you start gets a VISIBLE window — never a hidden child.** The user must be able
-to watch the thing that keeps running, and read its output when it dies.
+**A long-running process you start gets a VISIBLE window — never a hidden child.**
 - Two triggers, either one is enough. **Lifetime:** server, app, watcher, tunnel, REPL — anything meant to
   outlive the command that launched it. **Duration:** any command you expect to run longer than ~30s —
-  install, build, migration, full test suite — even when it ends inside the same turn. The user should not
-  stare at a frozen prompt wondering whether it hung.
-- Short commands whose output you consume stay captured. Do NOT wrap those; you need their stdout and a
-  window per `ls` is noise.
+  install, build, migration, full test suite — even when it ends inside the same turn.
+- Short commands whose output you consume stay captured. Do NOT wrap those; you need their stdout.
 - Applies to EVERY shell you can reach, not just the one you happen to prefer. PowerShell and bash both.
 - PowerShell: `Start-Process powershell -ArgumentList '-NoExit','-Command','<cmd>' -PassThru`.
 - bash: `nohup mintty --title '<name>' --hold always /usr/bin/bash -lc '<cmd>' >/dev/null 2>&1 &`.
   `--hold always` is bash's `-NoExit`. Git Bash ships mintty at `/usr/bin/mintty`; check before relying on
   it, and fall back to `powershell.exe -Command "Start-Process ..."` if it is missing.
-- **Visible and captured is not a tradeoff — pipe through `tee`.** Long command whose output you still need:
-  `... 2>&1 | tee '<logfile>'` inside the visible window, then read the logfile. The user watches it live,
-  you get the full output. Verified working.
+- **Visible and captured is not a tradeoff.** Long command whose output you still need: redirect inside
+  the visible window, then read the logfile. bash: `... 2>&1 | tee '<logfile>'`.
   - **PowerShell: redirect under `cmd`, never `Tee-Object` — `cmd /c "<cmd> > <log> 2>&1"`.** Two traps
     it avoids at once. `Tee-Object` captures STDOUT ONLY, so a crash leaves a logfile holding the banner
-    and nothing else, and the cause is gone; and it writes UTF-16, so `grep` — including `grep -a` — and
-    any wait loop polling for a done-marker match NOTHING in a run that already finished. `cmd`'s
-    redirection is byte-level: both streams, plain bytes, no `tr -d '\000'` needed. It also settles the
-    collision with the PowerShell tool's own "avoid `2>&1` on native executables", which applies to
-    PowerShell's redirection and not to `cmd`'s.
+    and nothing else; and it writes UTF-16, so `grep` — including `grep -a` — and any wait loop polling
+    for a done-marker match NOTHING in a run that already finished. `cmd`'s redirection is byte-level:
+    both streams, plain bytes. It also settles the collision with the PowerShell tool's own "avoid
+    `2>&1` on native executables", which applies to PowerShell's redirection and not to `cmd`'s.
 - Keep the window open after exit (`-NoExit` / `--hold always`). A crashed process must leave its error on
   screen, not vanish with the window.
 - **Capture the PID at launch** — `-PassThru` in PowerShell, `ps -W` in bash (the 4th column is the WINPID
   you need for a Windows-side kill). These children are detached; without the PID you cannot honour the
-  kill-the-tree rule above. A visible window is still your mess to clean up.
-  - **That PID is the WINDOW's, not the WORK's.** `-NoExit` / `--hold always` — mandated two bullets
-    up — keeps the shell alive after the command finishes, so waiting on that PID to detect completion
-    blocks until the user closes the window. Watch the CHILD process, or a marker the command writes.
-    The window PID is for cleanup only.
+  kill-the-tree rule above.
+  - **That PID is the WINDOW's, not the WORK's.** `-NoExit` / `--hold always` keeps the shell alive after
+    the command finishes, so waiting on that PID blocks until the user closes the window. Watch the CHILD
+    process, or a marker the command writes.
 - Do not trust `MainWindowHandle` to confirm visibility — for console apps the window belongs to `conhost`
   or Windows Terminal, so the handle reads 0 on a window that is plainly visible. Confirm by enumerating
   visible top-level windows, or just ask the user.
-- **Limit, state it rather than pretend otherwise:** your own tool calls run in a captured subprocess with
-  no window. That is harness behaviour and no rule here changes it. This rule governs processes you
-  launch, not the shell you were handed.
+- **Limit, stated rather than pretended away:** your own tool calls run in a captured subprocess with no
+  window. This rule governs processes you launch, not the shell you were handed.
 
 ## 4. Goal-Driven Execution
 
