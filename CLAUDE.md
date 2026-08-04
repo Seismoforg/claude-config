@@ -52,7 +52,7 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 - Remove imports/vars/functions YOUR change orphaned; leave pre-existing dead code alone.
 - Test: every changed line traces directly to the user's request.
 
-**Debt you knowingly leave becomes a FEATURE, never just a doc line.** FLOOR of TECHNICAL DEBT in`skills/_shared/blocks.md`, which a subagent does not inherit (`agents/AGENTS.md`, "Three harness constraints").
+**Debt you knowingly leave becomes a FEATURE, never just a doc line.** FLOOR of TECHNICAL DEBT in `skills/_shared/blocks.md`, which a subagent does not inherit (`agents/AGENTS.md`, "Three harness constraints").
 - Trigger: every knowing shortcut, workaround or deferred fix you leave behind. No size bar.
 - Running feature → note it under that file's `# Debt Found` section the moment you take it; `feature`
   step 6 files each note as its own DRAFT in `/features/draft/`. No running feature → write the DRAFT
