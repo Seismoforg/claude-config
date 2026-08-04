@@ -1,6 +1,6 @@
 ---
 name: self-improve
-description: Retrospective that turns observed failures into skill-file edits, and proposes deletions of text that no longer earns its place. Runs at the end of a skill-driven workflow, and on demand when the user asks for learnings, a retro, or how a skill could be better. A FIX needs a failure quotable from the transcript — a failed tool call, retry loop, permission denial, red build, skipped gate, a correction the user had to make, a capability that does not exist, or two skills in conflict. A CUT needs no failure, only text that is dead, duplicated, contradicted, mere justification, or a rule already withdrawn twice. Every addition names what it removes. At most 4 proposals per run, each confirmed by multiple choice. Stays silent when nothing qualifies.
+description: Retrospective that turns observed failures into skill-file edits, and proposes deletions of text that no longer earns its place. Runs at the end of a skill-driven workflow, and on demand when the user asks for learnings, a retro, or how a skill could be better. A FIX needs a failure quotable from the transcript — a failed tool call, retry loop, permission denial, red build, skipped gate, a correction the user had to make, a capability that does not exist, or two skills in conflict. A CUT needs no failure, only text that is dead, duplicated, contradicted, mere justification, or a rule already withdrawn twice. Every addition names what it removes. At most 4 proposals per run, each confirmed by multiple choice.
 ---
 
 # SELF-IMPROVE
