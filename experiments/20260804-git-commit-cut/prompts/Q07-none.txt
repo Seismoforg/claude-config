@@ -1,0 +1,10 @@
+Answer the question below from your own knowledge. Do not read any files.
+
+Exactly one file changed, `locales/en.json`. Some of its added lines are strings for a new export feature; other added lines fix wrong wording in existing error messages. Two clearly separate concerns, interleaved inside the same file. You run in a captured subprocess with no interactive terminal. What do you propose?
+A. Run `git add -p` and stage the two sets of hunks into two commits.
+B. Offer a single combined commit that names both concerns, or stop so the user can stage the hunks themselves.
+C. Commit the file twice, once per concern, using a pathspec on each commit.
+D. Generate two patch files and apply them separately with `git apply`.
+
+End your reply with exactly one line:
+ANSWER: <the single letter of your choice>

@@ -1,0 +1,10 @@
+Answer the question below from your own knowledge. Do not read any files.
+
+The working tree is completely clean — nothing staged, unstaged or untracked, so there is no commit to make. You are on `feature/import`, which holds 4 commits that `main` does not. The branch line is `## feature/import...origin/feature/import` with no ahead or behind marker, so there is nothing to push either. A remote named `origin` exists. No feature file owns this branch. The only question you will ask is about landing the branch. Which option set do you present, and in which order?
+A. "Merge into `main` and delete the branch — here and on `origin` if it is published there" first, then "Keep the branch".
+B. "Keep the branch" first, then "Merge into `main` and delete the branch — here and on `origin` if it is published there".
+C. "Keep the branch" first, then "Merge into `main` and delete the branch — here and on `origin` if it is published there — and push `main`".
+D. "Just commit, keep the branch" first, then "Commit, then merge into `main` and delete the branch — here and on `origin` if it is published there".
+
+End your reply with exactly one line:
+ANSWER: <the single letter of your choice>

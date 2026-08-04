@@ -1,0 +1,13 @@
+Read this file first, in full — it is the reference you must follow:
+C:\Users\emdef\AppData\Local\Temp\claude\d--Projects-claude-config\9970f427-0132-43c8-b557-df8b23a5d1fc\scratchpad\docs\doc-a.md
+
+Then answer the question below using only what that file says plus ordinary git knowledge.
+
+Earlier in the conversation the user asked you to open a pull request, and at the confirmation they chose to commit, push and open one. The push succeeded. The change restyles a settings page. You ran no tests — you issued no command in this run beyond git itself. What do you pass as the pull request's body?
+A. Nothing — pass `--fill` so the pull request reuses the commit message.
+B. A summary of what and why, a testing section stating plainly that nothing was run, screenshots of the restyled page, the linked issue, and a breaking-change callout if any.
+C. A summary of what and why, plus "Tests: all passing", since no test failed.
+D. The full diff, so reviewers do not have to open the files.
+
+End your reply with exactly one line:
+ANSWER: <the single letter of your choice>

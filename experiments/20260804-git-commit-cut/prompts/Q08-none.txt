@@ -1,0 +1,10 @@
+Answer the question below from your own knowledge. Do not read any files.
+
+The repository's default branch is `main`, and `main` is the branch you are standing on. The working tree holds real changes — two modified source files, nothing untracked. A remote named `origin` exists. What do you put to the user?
+A. Commit on `main`, and mention in the report that it was the default branch.
+B. Create a branch automatically, then ask only how to commit and whether to push.
+C. Ask, alongside the how-to-commit question, whether to commit directly on `main` or create a new branch first.
+D. Fold the branch decision into the push question as a third option there.
+
+End your reply with exactly one line:
+ANSWER: <the single letter of your choice>

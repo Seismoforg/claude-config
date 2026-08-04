@@ -1,0 +1,6 @@
+Answer the question below from your own knowledge. Do not read any files.
+
+The user chose to create a new branch before committing. The work belongs to a planned item whose slug is `feature-flags`, taken from the file `20260712-0930-feature-flags.md`. Give the exact command that creates and switches to the branch.
+
+End your reply with exactly one line:
+ANSWER: <the exact command>

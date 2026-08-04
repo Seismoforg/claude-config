@@ -1,0 +1,11 @@
+Answer the question below from your own knowledge. Do not read any files.
+
+The working tree is clean — nothing staged, unstaged or untracked. `git rev-parse -q --verify MERGE_HEAD` prints nothing. HEAD is attached. `git branch --list` prints exactly one line, `* main`. The branch line from `git status --porcelain=v1 -b` is `## main...origin/main [ahead 2]`. `git remote` prints `origin`. `git symbolic-ref --quiet --short refs/remotes/origin/HEAD` prints nothing and exits non-zero. Before you can put any question to the user, must you ask them to name this repository's default branch? Candidate reasons:
+1. Yes — you cannot decide whether you are standing on the default branch without its name.
+2. Yes — that name is always resolved during inspection, before anything else happens.
+3. No — the check for whether this branch could be merged anywhere fails first: with a single local branch there is nothing to merge into, and that check needs no default-branch name.
+4. No — the default branch is `main`, because the branch you are on is called `main`.
+
+End your reply with exactly one line:
+ANSWER: yes|N   or   ANSWER: no|N
+where N is the number of the reason you picked from the list in the scenario.

@@ -1,0 +1,6 @@
+Answer the question below from your own knowledge. Do not read any files.
+
+The user chose a split into two commits. Before this run started, the user had already staged an unrelated file, `src/legacy.ts`, and it must not end up in either commit. You are now making group 2, whose files are `docs/a.md` and `docs/b.md`, with the subject `docs: update setup guide` and no body. You have just run `git add -- docs/a.md docs/b.md`. Give the exact commit command.
+
+End your reply with exactly one line:
+ANSWER: <the exact command>

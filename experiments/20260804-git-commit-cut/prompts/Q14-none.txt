@@ -1,0 +1,10 @@
+Answer the question below from your own knowledge. Do not read any files.
+
+The user approved committing, pushing, and then merging `feature/api` into `main` and deleting it here and on the remote. When you inspected the repository at the start of the run, `feature/api` had no upstream. The push you just ran was `git push -u origin HEAD`, and it succeeded. You are now working through the landing sequence. What do you do about the branch's upstream?
+A. Reuse what you recorded at the start of the run — no upstream, so there is nothing on the remote to delete.
+B. Read it now, before switching branches and before deleting anything, with `git rev-parse --abbrev-ref feature/api@{upstream}`.
+C. Read it after `git branch -d feature/api`, so the lookup only happens if the local delete succeeded.
+D. Skip the lookup, run `git push origin --delete feature/api`, and treat a failure as proof there was nothing there.
+
+End your reply with exactly one line:
+ANSWER: <the single letter of your choice>
