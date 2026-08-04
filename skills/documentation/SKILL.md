@@ -87,7 +87,7 @@ date: YYYY-MM-DD
 # Rationale
 # Consequences
 ```
-Write an ADR for any major/hard-to-reverse architectural decision. Application repos: framework, data store, auth model, API style, build pipeline. Those are EXAMPLES, not the test — other repo shapes have their own hard-to-reverse decisions. The test is "hard to reverse AND shapes everything after it", never whether it matches an example. Supersede — never silently edit — an accepted ADR: add a new one, set the old to `superseded`. Only PART of an accepted ADR went stale (one bullet, a renamed symbol) while its decision still holds → don't supersede the whole record. Append `**Amended by NNNN:**` at that point, naming what changed and what still stands. Superseding a live decision loses it; leaving the stale line documents code that no longer exists.
+Write an ADR for any major/hard-to-reverse architectural decision. Application repos: framework, data store, auth model, API style, build pipeline. Those are EXAMPLES, not the test — other repo shapes have their own hard-to-reverse decisions. The test is "hard to reverse AND shapes everything after it", never whether it matches an example. Supersede — never silently edit — an accepted ADR: add a new one, set the old to `superseded`. Only PART of an accepted ADR went stale (one bullet, a renamed symbol) while its decision still holds → don't supersede the whole record. Append `**Amended by NNNN:**` at that point, naming what changed and what still stands.
 Dates (ADR `date:`) are ALWAYS today's date from context — never guessed or fabricated.
 
 # TECHNICAL DEBT
@@ -129,7 +129,7 @@ by hand.
 # HARD RULES
 Non-obvious, high-severity only — the sections above are not repeated here.
 - **Never document trivial fixes, refactors, or styling.** ON ACTIVATION above owns the under-document bias.
-- **Never document a rule the code does not enforce.** Writing "X always happens" / "component Y uses Z" → check the code DOES it; don't infer from intent or from another doc. A doc describing unimplemented behaviour reads as a guarantee and is worse than no doc.
+- **Never document a rule the code does not enforce.** Writing "X always happens" / "component Y uses Z" → check the code DOES it; don't infer from intent or from another doc.
 - **ALWAYS invoke the `simple-language` skill** when drafting or condensing any doc text — mandatory, not optional. Keep every fact/name/path/constraint. Verbose prose is a defect to condense.
 - This skill's checklist gates the `feature` workflow's documentation validation.
 
