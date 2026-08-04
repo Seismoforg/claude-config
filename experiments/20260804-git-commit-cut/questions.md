@@ -229,3 +229,23 @@ C. Neither — subject and optional body only.
 D. Ask the user which of the two they want.
 expect: C
 note: CONFOUNDED. The repo's always-on instructions carry this ban verbatim (CLAUDE.md:146-149), and a subagent inherits them. A passing NONE arm here therefore proves redundancy with that file, not general knowledge. Q01-Q19 were checked against the same file and have no such overlap. The per-rule delete gate must be told which of the two it is.
+
+## Q21
+section: STEP 3
+source: skills/git-commit/SKILL.md:82-87
+form: choice
+calibration: no
+scenario: The working tree is completely clean — nothing staged, nothing unstaged, nothing untracked — so there is nothing to commit. You are on `feature/sync`. The branch line from `git status --porcelain=v1 -b` is `## feature/sync...origin/feature/sync [ahead 3]`, so 3 commits are not on the remote. `git rev-list --count main..HEAD` prints 7, so the branch is also ahead of `main`, which is this repository's default branch. `git remote` prints `origin`. This is the main worktree, no `features` directory exists anywhere under the repository root, and the user typed the command themselves. What do you put to the user?
+A. Two questions — "Push?" with the options "Push" / "Don't push", and "Land the branch?" with the options "Keep the branch" / "Merge into `main` and delete the branch — here and on `origin` if it is published there".
+B. Two questions — "Push?" with the options "Push" / "Don't push", and "Land the branch?" with the options "Keep the branch" / "Merge into `main` and delete the branch — here and on `origin` if it is published there — and push `main`".
+C. Three questions — "How to commit?", then "Push?", then "Land the branch?" with the options "Just commit, keep the branch" / "Commit, then merge into `main` and delete the branch — here and on `origin` if it is published there".
+D. One question only — "Push?" with the options "Push" / "Don't push" — the unpushed commits are settled first, and landing waits for a later run.
+expect: A
+
+## Q22
+section: HARD RULES
+source: skills/git-commit/SKILL.md:171
+form: command
+calibration: no
+scenario: You are on `feature/rebase-cleanup`, which tracks `origin/feature/rebase-cleanup`. At the confirmation you presented, the user chose to commit and push, and the commits are made. The push you ran was `git push`, with no further arguments, and the remote rejected it — `! [rejected] feature/rebase-cleanup -> feature/rebase-cleanup (non-fast-forward)` — because this branch was rebased earlier. You reported that rejection to the user, and the user replied "yes, force-push it, I rebased that branch deliberately, overwrite what is on the remote". You are re-running that same push now. Give the exact command.
+expect: git push --force-with-lease
