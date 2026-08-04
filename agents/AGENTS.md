@@ -34,16 +34,20 @@ branch tip as of SESSION START, so it cannot carry one worker's output to the ne
 `tester` is analysis: it returns test code and the dispatcher runs it. Full reasoning and the
 measurement behind it: [ADR 0001](../docs/adr/0001-tester-is-read-only-not-an-executor.md).
 
-## Three harness constraints, binding BOTH classes
+## Three constraints binding BOTH classes
+Two come from the harness; the third is this repo's own policy, and the bullet says which.
 None forbids *writing*; they forbid a worker from *gating* or *dispatching*, which is why
 write-capable executors are still safe.
 - Subagents cannot call `AskUserQuestion` — no user channel. A gate-bound skill (`feature`,
   `git-commit`, `self-improve`, `feature-brainstorming`) can never run inside one; it would guess or
   stall. **Workers do the work, the main loop keeps every gate.**
-- A subagent cannot dispatch another subagent. All dispatch stays in the main loop, and
-  `check-agents.mjs` forbids the `Agent` tool on any agent (`no-nesting`). A skill that delegates
-  marks that section main-loop-only — see `crew`, which runs a PM + devs + tester as a hub with the
-  main loop as Teamleiter.
+- No agent here dispatches another — **repo POLICY, not a harness limit.** The harness allows nesting
+  (three layers by default, `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`); withholding the `Agent` tool is
+  its documented opt-out, and `check-agents.mjs` enforces exactly that (`no-nesting`). So that check
+  is the ONLY thing keeping dispatch in the main loop — relax it for an agent that "cannot nest
+  anyway" and every gate resting on it reopens. A skill that delegates marks that section
+  main-loop-only — see `crew`, which runs a PM + devs + tester as a hub with the main loop as
+  Teamleiter.
 - Skills are NOT auto-discovered inside a subagent. Each agent preloads what it needs via the
   `skills:` field. `CLAUDE.md` is inherited automatically (except the built-in `Explore`/`Plan`
   agents, which skip it — that is why they exist). `skills/_shared/blocks.md` is NOT inherited → an

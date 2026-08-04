@@ -75,8 +75,8 @@ const TOOL_MAP = {
 // TOOL_MAP, and this is not a style preference — the first version of that assertion read both
 // sides out of TOOL_MAP and was therefore tautological: corrupt a row and BOTH sides moved
 // together, so it passed. Measured, not reasoned about: mapping Read→edit built 47 files at
-// exit 0. `coding-standards` HARD RULES names the shape — two consumers of shared code asserted
-// to agree cannot fail on a defect in that shared code.
+// exit 0. `feature` STEP 6's validation gate names the shape — two consumers of shared code
+// asserted to agree cannot fail on a defect in that shared code.
 // Left column: Claude tool names that cannot modify anything. Right: Copilot targets that can.
 const CLAUDE_READ_ONLY = new Set(['Read', 'Grep', 'Glob']);
 const COPILOT_WRITE_CAPABLE = new Set(['edit', 'runCommands']);

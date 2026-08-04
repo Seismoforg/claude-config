@@ -3,6 +3,8 @@
 // Judgment boxes (hero fit, zigzag cap, layout-family repetition, copy self-audit,
 // div-fake-screenshots) are NOT here: they need eyes, not grep. See §14.
 // Usage: node preflight.mjs <file|dir> [...]   Exit 1 = at least one violation.
+// Exit 2 = the run was INVALID and nothing was checked: no target, an unreadable path, or zero files
+// with an extension this script reads. Never read a 2 as a pass.
 
 import { readFileSync, statSync, readdirSync } from 'node:fs';
 import { join, extname, relative } from 'node:path';
@@ -91,6 +93,15 @@ try {
   files = targets.flatMap((t) => walk(t));
 } catch (e) {
   console.error(`preflight: ${e.message}`);
+  process.exit(2);
+}
+
+// Targets resolved but matched nothing this script reads: an empty set is not a pass. This gate is
+// mandatory before shipping design code, so "clean — 0 file(s)" is the one output it must never
+// give — a mistyped path would otherwise certify unwritten code as checked.
+if (!files.length) {
+  console.error(`preflight: no matching files under ${targets.join(', ')} — nothing checked`);
+  console.error(`extensions read: ${[...EXTS].sort().join(' ')}`);
   process.exit(2);
 }
 

@@ -9,7 +9,7 @@ Requirements interview. Turns an underspecified request into a complete DRAFT sp
 keystrokes from the user.
 
 **Main loop only.** It lives on `AskUserQuestion`, and a subagent has no user channel
-(`agents/AGENTS.md`, "Three harness constraints"). Never run this inside a worker.
+(`agents/AGENTS.md`, "Three constraints binding BOTH classes"). Never run this inside a worker.
 
 Scope: it performs `feature` workflow step 1 — writes the DRAFT into `/features/draft/` — and
 returns. It runs NO state transition and NO gate. `feature` owns the state machine and every

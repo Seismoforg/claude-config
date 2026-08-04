@@ -75,6 +75,8 @@ line lives HERE, never in the addendum:
 node ${CLAUDE_SKILL_DIR}/scripts/preflight.mjs <changed files or dir>
 ```
 Exit 1 = violations as `file:line:col  rule (§)  detail`. Fix every hit, re-run until exit 0.
+**Exit 2 = the run was INVALID and checked nothing** (no target, unreadable path, zero matching
+files). Fix the invocation and re-run; a 2 is never a pass.
 
 **Who runs it: whoever wrote the code, if they hold a shell — the dispatcher otherwise.** Holding no
 shell at all (`pm`, `tester`, `audit-scout`) or only a restricted one (`standards-reviewer`'s HARD
@@ -122,7 +124,7 @@ External only for: third-party APIs · framework/SDK updates · version-specific
 Adding/upgrading a dependency → also read `reference/dependencies.md`.
 
 # INDEPENDENT REVIEW — main loop only
-**You are a subagent → skip this section entirely; you cannot dispatch another agent.**
+**You are a subagent → skip this section entirely; you hold no `Agent` tool.**
 **A DESIGN SURFACE ALWAYS QUALIFIES**, however small the diff — `reference/design.md` §14 pass 2
 requires this dispatch. The size test below does not apply to it.
 Main loop, diff worth a second pair of eyes (broad, structural, or pre-commit) → delegate the

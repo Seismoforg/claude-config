@@ -2,8 +2,8 @@
 // agents — mechanical checks for subagent definitions.
 // Enforces what is deterministic: frontmatter parses, name matches filename, declared tools are
 // known to THIS checker's list (see KNOWN_TOOLS — best-effort, not the harness's truth),
-// analysis agents hold no write tools while executor agents may, no agent holds Agent (a subagent
-// cannot nest), preloaded skills exist, some skill dispatches the agent.
+// analysis agents hold no write tools while executor agents may, no agent holds Agent (repo policy:
+// no nesting — the harness itself allows it), preloaded skills exist, some skill dispatches the agent.
 // Two classes (frontmatter `class:`): analysis (default, read-only) and executor (may write, runs
 // in an isolated worktree). Absent = analysis, so the existing read-only agents are unaffected.
 // Whether an agent LAUNCHES and whether `skills:` actually preloads is NOT here — that needs a
@@ -194,9 +194,11 @@ for (const file of files) {
         violations.push(`${rel(path)}  unknown-tool  "${t}" not in this checker's known-tool list — verify against the harness; a name it does not accept prevents launch`);
       }
     }
-    // No agent nests — a subagent cannot dispatch another subagent (agents/AGENTS.md). Both classes.
+    // No agent nests. This is repo POLICY, not a harness limit: the harness allows nesting, and
+    // withholding Agent is its own documented opt-out (agents/AGENTS.md). Both classes. Read that
+    // before relaxing this — the check is the only thing keeping dispatch in the main loop.
     if (tools.includes('Agent')) {
-      violations.push(`${rel(path)}  no-nesting  holds Agent; a subagent cannot dispatch another — dispatch stays in the main loop`);
+      violations.push(`${rel(path)}  no-nesting  holds Agent; this repo keeps ALL dispatch in the main loop, and this check is the only thing enforcing it — the harness would permit nesting`);
     }
     // Write tools: analysis agents are read-only; executors write by design, so skip them.
     if (!isExecutor) {

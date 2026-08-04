@@ -24,8 +24,8 @@ changes). Verified: the name resolves to THIS skill; the built-in is unreachable
   INVESTIGATING, never print a secret's VALUE — not from a config file, not from an env file,
   not from a command's output. Report presence, location and a hash. A transcript is a copy.
 
-**Independent pass — main loop only.** *Subagent reading this → skip; you cannot dispatch another
-agent.* Before a release, or when you want a review not anchored on the implementation's own
+**Independent pass — main loop only.** *Subagent reading this → skip; you hold no `Agent` tool.*
+Before a release, or when you want a review not anchored on the implementation's own
 reasoning, delegate the `security-auditor` agent (read-only, isolated context). You wrote the code
 → you are primed to miss your own gap. It returns findings + FRICTION; you own remediation and
 every gate. Scope it so the out-of-scope line does not exclude what your own questions need — a
@@ -40,7 +40,7 @@ Non-obvious, high-severity only — the checks above are not repeated here.
   the same gap usually sits on the endpoints you did not touch.
 - **Never print a secret's VALUE while investigating** — not from a config file, not from an env
   file, not from a command's output. Presence, location and a hash only. A transcript is a copy.
-- **A subagent cannot run the independent pass.** It cannot dispatch, so that section is main-loop
-  only; reading it from inside one means skipping it, not improvising it.
+- **A subagent cannot run the independent pass.** No agent here holds `Agent`, so that section is
+  main-loop only; reading it from inside one means skipping it, not improvising it.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE.

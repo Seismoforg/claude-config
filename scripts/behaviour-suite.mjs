@@ -248,7 +248,10 @@ const countNumbered = (lines, from) => {
   const seen = new Set()
   for (let i = from + 1; i < lines.length; i++) {
     if (/^#/.test(lines[i])) break
-    const m = lines[i].match(/^\s{1,6}(\d+)\.\s/)
+    // {0,6}, not {1,6}: this corpus writes its procedures at column 0 (26 of the 27 rule files with
+    // numbered lists do). Requiring a leading space returned 0 for all of them, so every declared
+    // numbered_list reported step-count-changed on every run — the check could never pass.
+    const m = lines[i].match(/^\s{0,6}(\d+)\.\s/)
     if (m) seen.add(Number(m[1]))
   }
   return seen.size
