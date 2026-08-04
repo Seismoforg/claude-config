@@ -115,5 +115,5 @@ if (violations.length) {
   process.exit(1)
 }
 console.error(`check-size: clean — ${examined} file(s), corpus ${total}/${TOTAL_CAP} words`)
-console.error(`A cap is editable, so it is not a hard constraint. The corpus total is printed beside`)
-console.error(`the per-file lines so raising one cap stays visible against the whole.`)
+console.error(`A cap is editable, so it is not a hard constraint. The TOTAL is enforced too — exceeding`)
+console.error(`it exits 1 — so raising per-file caps cannot quietly grow the corpus past the ceiling.`)
