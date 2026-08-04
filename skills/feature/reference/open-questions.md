@@ -6,8 +6,7 @@ what you cannot start without.
 Loaded by `feature` workflow step 1.4, the implementation-questions gate. That step owns the trigger
 and the carve-outs — this file is the prompt, not the trigger.
 
-Why this framing: "is anything unclear?" returns "no", every time. "You are starting tomorrow — what
-blocks you?" forces you to walk the build and hit the thing you would have had to invent.
+Frame it as "you are starting tomorrow — what blocks you?", never "is anything unclear?".
 
 # 1. THE CANDIDATE LIST — start here, not from a blank page
 
@@ -17,9 +16,7 @@ writes one for everything its interview could not settle, an inline spec writer 
 are the only producers — the premortem writes none, so do not go looking for premortem-authored
 assumptions on a revision.
 
-This is the mechanism behind "never re-ask what the user already answered". Generate categories from
-scratch instead and you will re-ask a settled question — the interview's answers are in the spec, and
-you did not read them.
+Generating categories from scratch instead re-asks a question the user already answered.
 
 Then walk the five categories below for what the assumption list missed.
 
@@ -35,15 +32,13 @@ Every one gets an outcome. Never blank.
 5. **Order & dependency** — what must land before what, and what breaks if one part ships alone.
 
 **Look and feel is NOT a category here.** `feature` step 2 already offers those options at the
-approval gate. Ask in both places and one question collects two answers.
+approval gate; asked in both places, one question collects two answers.
 
 # 3. WHAT COUNTS AS A QUESTION
 
 **The cost test: a wrong answer must cost rework.** That is the whole bar, and it applies at every
-count — not only when you have more candidates than you can ask.
-
-Below the bar it is not a question. Naming, wording, and anything you would shrug at either way are
-filler, and filler is what teaches the reader to answer the round without reading it.
+count — not only when you have more candidates than you can ask. Naming, wording, and anything you
+would shrug at either way are below it.
 
 **Answerable by reading = not a question.** Read it, settle it.
 
@@ -52,12 +47,10 @@ Each candidate ends in exactly one of three forms — never a fourth, and never 
 - `settled by <evidence>` — a repo `file:line`, an earlier answer from the user, or, when nothing
   turns on it, `no consequence either way`, or
 - `deferred` — it qualified but lost the ranking in §4. Five categories can each yield a qualifying
-  question against a cap of four, so this form is routine, not an edge case. Without it the fifth
-  question has no legal home and the cheap exit is a fabricated `settled by` line, which §3 bans.
+  question against a cap of four, so this form is routine, not an edge case.
 
 **Evidence may NEVER be the spec you are writing.** A spec that settles its own open question is
-circular and always succeeds. That produces a section which is always present, always complete, and
-carries nothing the user ever saw.
+circular and always succeeds.
 
 # 4. ASKING
 
@@ -67,32 +60,27 @@ One round. One `AskUserQuestion` call, max 4 questions — the harness caps it t
 question needs 2-4 choices. A question whose answer structurally cannot be an option (an exact format,
 a name, a path) still gets options — the plausible candidates, with the one you would otherwise have
 assumed listed first and marked as such. The user's own "Other" covers the rest. Never fall back to a
-free-text question in prose; `feature-brainstorming`'s CORE RULE is the same constraint for the same
-reason.
+free-text question in prose.
 
 More than 4 qualify → rank by cost of a wrong answer, ask the top 4. The rest go into the section as
-deferred, each naming what it would have asked. A silently dropped question cannot be told apart from
-one nobody thought of.
+deferred, each naming what it would have asked.
 
 Nothing qualifies → ask nothing. The gate still ran; five evidence lines are its record.
 
 # 5. THE SECTION
 
 Append `# Open Questions` at the END of the feature file — after `# Validation` on a first run, since
-no `# Premortem` can exist yet (1.5 has not run). Re-running on a revision → EXTEND that section,
-never append a second one.
+no `# Premortem` can exist yet. Re-running on a revision → EXTEND that section, never append a second.
 
 One row per category, and one row PER QUESTION where a category yields more than one — the answer and
-the "what changed" cell have to read back against a single question, and two crushed into one cell
-cannot:
+the "what changed" cell have to read back against a single question:
 
 ```
 | Category | Question / settled by | Answer | What changed in the spec |
 |---|---|---|---|
 ```
 
-- Edit the spec BEFORE writing the row. The last cell records edits already MADE, never intentions —
-  same discipline as the premortem's mitigation table.
+- Edit the spec BEFORE writing the row. The last cell records edits already MADE, never intentions.
 - Answer that changed nothing → say so in that cell, with why. Never leave it empty.
 - User declined to decide, or answered "Other" without settling it → it becomes an `Open assumption:`
   line under `# Technical Plan`, and step 2's summary carries it to the gate.
@@ -102,8 +90,7 @@ cannot:
 # 6. WHAT LEAVES THE STEP
 
 - **Feature file** — the `# Open Questions` section, plus every spec edit the answers forced.
-- **Chat** — nothing on its own. Step 2's summary carries the answers to the approval gate, alongside
-  the premortem's table.
+- **Chat** — nothing on its own. Step 2's summary carries the answers to the approval gate.
 
 Self-check before going on to 1.5: did any answer change the plan? None did, and none was even
 asked → re-read categories 1 and 3. Data shape and the contract with code you are not touching are

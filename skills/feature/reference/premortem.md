@@ -6,11 +6,9 @@ Loaded by `feature` workflow step 1.5. That step owns the threshold and the carv
 is the prompt, not the trigger.
 
 Step 1.4, the implementation-questions gate, ran first: the spec you critique already carries the
-user's answers under `# Open Questions`. Read them — a plan built on an answer you did not see is one
-you will critique for the wrong reasons.
+user's answers under `# Open Questions`. Read them.
 
-Why this framing: "what could go wrong" returns hedged lists that change no plan. "It failed — why"
-forces one causal account with a mechanism in it.
+Frame it as "it failed — why", never "what could go wrong".
 
 # 1. THE REPORT
 
@@ -47,19 +45,17 @@ Mandatory. One row per cause, no exceptions.
 - Cause accepted instead of mitigated → third cell reads `accepted risk: <reason>`. Never delete the
   row. An unnamed accepted risk is indistinguishable from an overlooked one.
 - A mitigation that BOUNDS the work (sites, files, steps) NAMES its members; it never states their
-  COUNT. The named list survives the work legitimately needing one more; the count does not, and a
-  violated count reads as scope creep when it was only ever a miscount.
+  COUNT. A violated count reads as scope creep when it was only ever a miscount.
 - A mitigation the TASK LIST cannot satisfy is not one. Check the row against `# Tasks` before writing
-  it: a constraint that a task must VIOLATE to do its job is a guaranteed miss, and it surfaces at the
-  validation gate instead of being decided here. Downgrade it to `accepted risk` now.
+  it: a constraint that a task must VIOLATE to do its job is a guaranteed miss. Downgrade it to
+  `accepted risk` now.
 - Edit the spec before writing the row. The table records edits already made, not intentions.
 
 # 3. WHAT LEAVES THE STEP
 
 - **Feature file** — report and table appended as a new `# Premortem` section, after `# Validation`.
-- **Chat** — the table and the plan edits. Not the report: the step-2 summary sits right next to it.
+- **Chat** — the table and the plan edits. Not the report.
 
 Self-check before returning to step 2: did the plan actually change? A premortem that changed
 nothing either found nothing real (say that in one line) or was written to be comfortable. In the
-second case re-read categories 3 and 5 — integration and usage reality are the two that fail late,
-long after the code looked done.
+second case re-read categories 3 and 5 — integration and usage reality are the two that fail late.
