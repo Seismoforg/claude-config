@@ -46,6 +46,9 @@ Mandatory. One row per cause, no exceptions.
   plan or reclassify the row.
 - Cause accepted instead of mitigated → third cell reads `accepted risk: <reason>`. Never delete the
   row. An unnamed accepted risk is indistinguishable from an overlooked one.
+- A mitigation that BOUNDS the work (sites, files, steps) NAMES its members; it never states their
+  COUNT. The named list survives the work legitimately needing one more; the count does not, and a
+  violated count reads as scope creep when it was only ever a miscount.
 - A mitigation the TASK LIST cannot satisfy is not one. Check the row against `# Tasks` before writing
   it: a constraint that a task must VIOLATE to do its job is a guaranteed miss, and it surfaces at the
   validation gate instead of being decided here. Downgrade it to `accepted risk` now.
