@@ -1,6 +1,6 @@
 ---
 name: self-improve
-description: Retrospective that turns observed failures into skill-file edits, and proposes deletions of text that no longer earns its place. Runs at the end of a skill-driven workflow, and on demand when the user asks for learnings, a retro, or how a skill could be better. Fires only on a failure quotable from the transcript — a failed tool call, retry loop, permission denial, red build, skipped gate, a correction the user had to make, a capability that does not exist, or two skills in conflict. Every addition names what it removes. At most 4 proposals per run, each confirmed by multiple choice. Stays silent when nothing qualifies.
+description: Retrospective that turns observed failures into skill-file edits, and proposes deletions of text that no longer earns its place. Runs at the end of a skill-driven workflow, and on demand when the user asks for learnings, a retro, or how a skill could be better. A FIX needs a failure quotable from the transcript — a failed tool call, retry loop, permission denial, red build, skipped gate, a correction the user had to make, a capability that does not exist, or two skills in conflict. A CUT needs no failure, only text that is dead, duplicated, contradicted, or mere justification. Every addition names what it removes. At most 4 proposals per run, each confirmed by multiple choice. Stays silent when nothing qualifies.
 ---
 
 # SELF-IMPROVE
@@ -28,7 +28,9 @@ A finding qualifies only if you can QUOTE the transcript moment. Cite the exact 
 - **Capability error** — skill named a tool/flag/path/field/command that does not exist, or that the actor it instructed cannot reach. A brief telling a read-only agent to run a command is this class, not a judgment call.
 - **Rule collision** — two skills gave conflicting instructions; picked arbitrarily.
 
-**Subagent `FRICTION:` report** — a dispatched agent closed with a non-`none` FRICTION line. It enters here because an agent cannot run this skill itself (no transcript, no gate, no write), so its report is the only channel it has. But WHAT IT REPORTS must be one of the eight above; anything else is noise. Cite the agent + line.
+**Subagent `FRICTION:` report** — a dispatched agent closed with a non-`none` FRICTION line. It enters here because an agent cannot run this skill itself (no transcript, no gate, no write), so its report is the only channel it has. Cite the agent + line.
+- Maps to one of the eight → an ordinary finding; the FRICTION line is its quote.
+- Maps to NONE of them — an agent reporting a rule that "misfired" is the usual case — → it becomes no proposal, but it is **surfaced to the user in the remainder line** (step 3), never silently dropped. Agents are told to report broadly and not to filter (`agents/AGENTS.md`, The FRICTION channel); discarding what they send would make that instruction dead. A relayed judgment is not evidence enough to edit a rule, and is far too much to throw away.
 
 Bar: the signal must trace to a SKILL defect. Failure the skill's own wording led you into = finding.
 Failure from your typo or a transient env issue = noise.
@@ -61,7 +63,7 @@ Text qualifies for deletion when it:
    - Grep the rule repo-wide BEFORE the gate (`grep -rn` a distinctive phrase). Copy count is NOT knowable by inspection. Every copy is part of the same edit — a scoped edit leaving a stale copy ships a defeated change.
    - Rule states a CONVENTION (path shape, form, naming) → also grep for sites that VIOLATE it, not just copies of it. A convention with existing violators ships already-defeated; the same commit that writes the rule can break it. Fix the violators in that pass, or the rule is fiction.
 3. **Rank, then write each proposal.**
-   - **At most 4 per run**, fixes and cuts together. More qualify → NAME the remainder in one line ("3 further findings not proposed"). A silently dropped finding is indistinguishable from one nobody found.
+   - **At most 4 per run**, fixes and cuts together. More qualify → NAME the remainder in one line ("3 further findings not proposed"). A silently dropped finding is indistinguishable from one nobody found. The remainder line also carries every subagent FRICTION report that matched no class.
    - **A FIX always outranks a CUT.** A cut never displaces a fix, whatever its apparent severity. Cuts carry six evidence kinds against a fix's single quoted moment, so one shared ranking sorts the cheap findings to the top and pushes the real defect into the remainder.
    - **Rejected this session → not re-proposed this session.** Across sessions it may return; nothing on disk persists the rejection.
    - Four lines per proposal, in the USER's language (`simple-language`), no internal jargon without a plain gloss in the same sentence:
