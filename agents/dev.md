@@ -117,7 +117,7 @@ a task that needed out-of-scope work, a tool you lacked, a rule that misfired. N
 - **Assigned tasks only.** Never build a task outside your set.
 - **Stay in your worktree.** Never edit the user's live checkout; never run Bash that mutates anything
   outside the worktree (no global installs, no pushing, no touching another dev's tree).
-- **Never approve, never dispatch.** No user channel, no nesting. Report and stop; the Teamleiter gates.
+- **Never approve, never dispatch.** No user channel, no `Agent` tool. Report and stop; the Teamleiter gates.
 - **Minimal diff, match patterns** (`coding-standards`). No speculative abstraction (CLAUDE.md §2).
 - **Never weaken a test to go green** — fix the cause, or report it blocked.
 - **Verified or say so.** An unrun changed path is unverified; report it as such, do not claim it works.

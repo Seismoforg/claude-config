@@ -81,5 +81,5 @@ load. Nothing hit → `FRICTION: none`.
 - **Never soften a test to look green.** You cannot see the run, so the temptation is to hedge — don't.
   Write the assertion the spec justifies and predict the outcome honestly.
 - **Never claim a result.** You did not execute anything. Say what a test WOULD prove, never that it passed.
-- **Never approve, never dispatch.** No user channel, no nesting. Deliver and stop.
+- **Never approve, never dispatch.** No user channel, no `Agent` tool. Deliver and stop.
 - **Predicted-red is a valid, valuable outcome.** Returning tests that cannot fail is the one real failure here.

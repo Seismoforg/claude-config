@@ -6,9 +6,10 @@ description: Run a task through the feature lifecycle as a role-based crew — t
 # CREW
 
 Runs work like a small team. The main loop is the **Teamleiter**: it takes the task, holds every gate,
-and dispatches the workers. The workers are subagents — they cannot ask the user and cannot dispatch
-each other, so all gating and all dispatch stay here. The drawn chain (Teamleiter → PM → devs) is
-really a hub: Teamleiter at the centre, workers on the spokes.
+and dispatches the workers. The workers are subagents — they cannot ask the user, and this repo
+withholds the `Agent` tool from every one of them, so all gating and all dispatch stay here. The
+drawn chain (Teamleiter → PM → devs) is really a hub: Teamleiter at the centre, workers on the
+spokes.
 
 Composes with: `feature` (REQUIRED — owns the lifecycle, the state machine, and EVERY approval gate;
 the crew delegates the work inside it) and the `feature` step 5 skill set, which reaches the workers
@@ -121,7 +122,7 @@ its workflow — the crew only assigns the work. **Every number in this list is 
    is not "clean"; a skill that never applied needs no run. Commit any fix you make in that pass.
    **A design surface also owes pass 2** — the reviewer dispatch in
    `coding-standards/reference/design.md` §14. That one IS yours: it is not a shell check, and no dev can
-   ever make it because subagents do not nest. Commit what it makes you fix.
+   ever make it, because no agent here holds the `Agent` tool. Commit what it makes you fix.
    **And pass 3's whole-page boxes.** Each dev ticked its own slice; several of §14's boxes are only
    checkable on the MERGED page — the theme/colour/shape locks, the zigzag cap, layout-family
    repetition, duplicate CTA intent. Two devs can each pass locally while the merged page fails every one.
@@ -262,7 +263,8 @@ Every worker dispatch carries all of it. A missing item is YOUR miss, not the wo
 - **Every gate stays in the main loop.** Subagents have no AskUserQuestion channel — the
   implementation-questions gate (`feature` step 1.4), approval, ready-for-done, done, and commit are
   the Teamleiter's, always. A worker that "approves" is a bug.
-- **No worker dispatches another worker.** Subagents cannot nest.
+- **No worker dispatches another worker.** No agent here holds `Agent` — repo policy, enforced by
+  `check-agents.mjs`, not a harness limit.
 - **The PM plans; it never writes feature state.** Only the main loop files specs and moves them between
   folders — chat and worker output are not feature state.
 - **Executors write only in their worktree**, never the user's live tree; the Teamleiter integrates.

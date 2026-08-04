@@ -27,11 +27,26 @@
 // (agents/AGENTS.md:16 records that check-agents.mjs and build-copilot.mjs skip them by name, for
 // the same reason). skills/_shared/ holds no SKILL.md and so contributes nothing on its own.
 // Usage: node check-frontmatter.mjs [root]   Exit 1 = at least one violation.
+// Exit 2 = the run was INVALID and nothing was examined: bad root, a missing skills/ or agents/, or
+// a corpus that resolved to zero files. Never read a 2 as a pass — [root] defaults to this script's
+// own repo, not the shell CWD.
 
-import { readFileSync, readdirSync, existsSync } from 'node:fs';
-import { join, resolve, relative, sep } from 'node:path';
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
+import { dirname, join, resolve, relative, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = resolve(process.argv[2] ?? '.');
+// Default to the repo this script ships in — never the shell CWD, which drifts. Same rule as
+// check-pointers.mjs; this file sits at <repo>/scripts/, so the root is one level up.
+const here = dirname(fileURLToPath(import.meta.url));
+const root = resolve(process.argv[2] ?? join(here, '..'));
+
+// A bad root must be a named error, never a quiet "nothing to check" — the two look identical in a
+// log otherwise. isDirectory() as well as existsSync: a FILE passed as root reaches readdirSync and
+// dies on a raw ENOTDIR stack trace.
+if (!existsSync(root) || !statSync(root).isDirectory()) {
+  console.error(`check-frontmatter: not a directory: ${root}`);
+  process.exit(2);
+}
 const rel = (p) => relative(root, p).split(sep).join('/');
 
 // Values starting with one of these are not the string the author meant: flow collections, aliases,
@@ -40,19 +55,32 @@ const INDICATORS = '[{*&!|>%@`';
 
 const corpus = [];
 const skillsDir = join(root, 'skills');
-if (existsSync(skillsDir)) {
-  for (const d of readdirSync(skillsDir, { withFileTypes: true })) {
-    if (!d.isDirectory()) continue;
-    const p = join(skillsDir, d.name, 'SKILL.md');
-    if (existsSync(p)) corpus.push({ path: p, kind: 'skill', expect: d.name });
+const agentsDir = join(root, 'agents');
+
+// A corpus root that vanished must ABORT, not shrink the corpus in silence. A renamed skills/ would
+// otherwise leave this check with nothing to parse and still print "clean" — the same silent
+// nothing-happened failure it exists to catch inside a frontmatter block.
+for (const [label, p] of [['skills', skillsDir], ['agents', agentsDir]]) {
+  if (!existsSync(p) || !statSync(p).isDirectory()) {
+    console.error(`check-frontmatter: corpus root missing: ${label}/ under ${root}`);
+    process.exit(2);
   }
 }
-const agentsDir = join(root, 'agents');
-if (existsSync(agentsDir)) {
-  for (const f of readdirSync(agentsDir)) {
-    if (!f.endsWith('.md') || f === 'AGENTS.md' || f === 'CLAUDE.md') continue;
-    corpus.push({ path: join(agentsDir, f), kind: 'agent', expect: null });
-  }
+
+for (const d of readdirSync(skillsDir, { withFileTypes: true })) {
+  if (!d.isDirectory()) continue;
+  const p = join(skillsDir, d.name, 'SKILL.md');
+  if (existsSync(p)) corpus.push({ path: p, kind: 'skill', expect: d.name });
+}
+for (const f of readdirSync(agentsDir)) {
+  if (!f.endsWith('.md') || f === 'AGENTS.md' || f === 'CLAUDE.md') continue;
+  corpus.push({ path: join(agentsDir, f), kind: 'agent', expect: null });
+}
+
+// Both roots exist and still yielded nothing: an empty set is not a pass.
+if (corpus.length === 0) {
+  console.error(`check-frontmatter: no SKILL.md or agent definition found under ${root} — nothing checked`);
+  process.exit(2);
 }
 
 const violations = [];

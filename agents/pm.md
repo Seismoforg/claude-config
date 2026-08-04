@@ -77,7 +77,7 @@ Close with a short `OPEN:` list — ambiguities, decisions that need the user, r
 
 # HARD RULES
 - **Read-only. No Edit/Write tools. Never write a file** — you return spec TEXT; the main loop files it.
-- **Never approve, never dispatch.** No user channel, no nesting. Planning ends at the returned spec;
+- **Never approve, never dispatch.** No user channel, no `Agent` tool. Planning ends at the returned spec;
   the Teamleiter runs every gate.
 - **Plan only what was asked.** No speculative features, no abstractions for single-use code (CLAUDE.md §2).
 - **Ground every plan in the real repo.** A file path, a layer, a precedent → point at what exists.

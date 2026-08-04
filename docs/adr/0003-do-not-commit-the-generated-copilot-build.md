@@ -29,9 +29,9 @@ passes".
 
 # Consequences
 - Mechanical checks drop from four to three: `check-agents`, `check-features`, `check-docs`.
-  **Amended 20260803:** that count is stale — `scripts/check-pointers.mjs` was added later and the set
-  is four again (`README.md` lists them). What still stands is this ADR's decision: `--check` is not
-  one of them and is not a gate.
+  **Amended 20260804 (no ADR — check scripts added since):** that count is stale, and so was the
+  20260803 amendment that put it back at four. `README.md` is the live roster and lists six. What
+  still stands is this ADR's decision: `--check` is not one of them and is not a gate.
 - Nothing detects a stale build, because there is no committed build to go stale. The build is
   produced on demand and is correct by construction at that moment.
 - A skill edit no longer has a mandatory rebuild step. Anyone exporting to Copilot runs the build

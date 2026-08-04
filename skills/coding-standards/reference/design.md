@@ -403,7 +403,7 @@ Mode resolved to either **Redesign** → load it now, before touching anything. 
 
 Three passes, in order, before outputting code. This is the last filter. **NOT OPTIONAL.**
 The ordering is per-ACTOR, not per-clock. Where a WORKER outputs the code it cannot run pass 2 at all
-(no subagent dispatches another), so pass 2 moves to the INTEGRATED result and the dispatcher owns it
+(no agent here holds `Agent`), so pass 2 moves to the INTEGRATED result and the dispatcher owns it
 — `crew` step 5 assigns it. **Pass 3 SPLITS, it does not move:** you still tick every box your own
 slice can answer; only the ones needing the whole merged page (the theme/colour/shape locks, the
 zigzag cap, layout-family repetition, duplicate CTA intent) go with pass 2. Read "the dispatcher owns
@@ -418,11 +418,12 @@ Exit 1 = violations as `file:line:col  rule (§)  detail`. Covers: em-dash · ey
 ceil(sections/3) · scroll listener · viewport stability · flex-math · banned serif · banned
 premium-consumer palette · icon library · pure #000/#fff · Inter default · marquee count ·
 AI-tell strings. Rules about what the user SEES (em-dash, serif, Inter, AI-tell) skip comment-only
-lines; code rules fire everywhere. Fix every hit, re-run until exit 0. A model self-checking 60 boxes
-misses some; grep does not.
+lines; code rules fire everywhere. Fix every hit, re-run until exit 0. **Exit 2 = the run was INVALID
+and checked nothing** (no target, unreadable path, zero matching files) — never read it as a pass. A
+model self-checking 60 boxes misses some; grep does not.
 
 **2. Judgment — dispatch the `standards-reviewer` agent** (main loop only; *subagent reading this as a
-rule source → skip, you cannot dispatch another agent*), fresh context, over the changed files. Name
+rule source → skip, you hold no `Agent` tool*), fresh context, over the changed files. Name
 it: an unnamed "reviewer agent" gets dispatched by nobody.
 **Hand it ABSOLUTE paths — three of them:** this file, `coding-standards/reference/web.md`, and
 `coding-standards/reference/design-ai-tells.md`. Join each onto `coding-standards`' announced base

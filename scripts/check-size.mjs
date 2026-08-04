@@ -7,10 +7,22 @@
 // 3% (measured: 61273 vs 59323 over the same 48 files) because JS also splits on Unicode spaces,
 // and this corpus is full of them. Caps are generated with THIS counter; regenerate them with
 // `wc -w` and every cap ships ~3% too tight.
-import { readdirSync, readFileSync, statSync } from 'node:fs'
-import { join, relative, sep } from 'node:path'
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
+import { dirname, join, relative, resolve, sep } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const root = process.argv[2] ?? '.'
+// Default to the repo this script ships in — never the shell CWD, which drifts. Same rule as
+// check-pointers.mjs; this file sits at <repo>/scripts/, so the root is one level up. CAPS below is
+// hardcoded to THIS repo's file list, so a CWD-relative root was never meaningful anyway.
+const here = dirname(fileURLToPath(import.meta.url))
+const root = resolve(process.argv[2] ?? join(here, '..'))
+
+// A bad root must be a named error. Without this, walk() below dies on a raw ENOENT stack trace
+// instead of the exit 2 every sibling check gives for the same mistake.
+if (!existsSync(root) || !statSync(root).isDirectory()) {
+  console.error(`check-size: not a directory: ${root}`)
+  process.exit(2)
+}
 
 // Corpus is an ALLOWLIST. A new top-level directory joins it only by being added here.
 const CORPUS_DIRS = ['skills', 'agents']
@@ -79,7 +91,16 @@ const walk = (dir) => {
     else if (e.endsWith('.md')) files.push(p)
   }
 }
-for (const d of CORPUS_DIRS) walk(join(root, d))
+// An allowlisted root that vanished must ABORT, not shrink the corpus in silence — same rule as
+// check-pointers.mjs. stale-cap below would flag it eventually, but only as 48 confusing entries.
+for (const d of CORPUS_DIRS) {
+  const p = join(root, d)
+  if (!existsSync(p) || !statSync(p).isDirectory()) {
+    console.error(`check-size: allowlisted corpus root missing: ${d}/ under ${root}`)
+    process.exit(2)
+  }
+  walk(p)
+}
 for (const f of CORPUS_FILES) files.push(join(root, f))
 
 const violations = []

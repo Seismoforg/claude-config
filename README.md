@@ -12,12 +12,18 @@ Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/
 never at the skill root). Check scripts → `<skill>/scripts/`. Shared rule text → `skills/_shared/blocks.md`.
 
 ## Agents
-Two classes (`analysis`, read-only · `executor`, writes in an isolated worktree), three harness
-constraints that bind both, and the `FRICTION:` reporting channel — all documented beside the code
-they govern, in [agents/AGENTS.md](agents/AGENTS.md). Not repeated here: one home per rule.
+Two classes (`analysis`, read-only · `executor`, writes in an isolated worktree), three constraints
+that bind both — two from the harness, one this repo's own policy — and the `FRICTION:` reporting
+channel. All documented beside the code they govern, in [agents/AGENTS.md](agents/AGENTS.md). Not
+repeated here: one home per rule.
 
 ## Mechanical checks
 Run them all after editing anything they cover. Each exits 1 on a violation, printing `file  rule  detail`.
+A bad ROOT exits 2 in all six — a broken invocation, never a pass. An EMPTY corpus splits them, and the
+split is deliberate: `check-frontmatter` and `check-size` exit 2, because their corpus IS this repo and
+its absence means nothing was examined; `check-agents`, `check-features` and `check-docs` exit 0 with an
+explicit "nothing to check" line, because another repo may legitimately have no `features/` and no
+`AGENTS.md`. So read the COUNT each prints, not just the code — exit 0 over an empty corpus is not a pass.
 ```
 node agents/scripts/check-agents.mjs
 node skills/feature/scripts/check-features.mjs
@@ -118,7 +124,7 @@ First session shows a one-time external-import approval dialog — approve it.
 
 ## Related Modules
 - [skills/](skills/AGENTS.md) — the skills: layout, what loads when, pointer style, naming
-- [agents/](agents/AGENTS.md) — the subagents: two classes, three harness constraints, the FRICTION channel
+- [agents/](agents/AGENTS.md) — the subagents: two classes, three binding constraints, the FRICTION channel
 
 Neither edge is counted by `check-docs.mjs` — it only builds edges between AGENTS.md files, and this
 is a README. The child ends link back to each other, which is the pair the script does verify.
