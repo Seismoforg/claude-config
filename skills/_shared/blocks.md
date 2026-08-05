@@ -76,7 +76,7 @@ agent — MEASURED, see `crew` DISPATCH BRIEF. So neither a new file nor an appe
 to you. Name the debt in your final message; the dispatcher files it.
 
 # FINDING SHAPE
-Presenting a finding to the user — a `self-improve` proposal, a fresh-model trace result. In the
+Presenting a finding to the user — a `self-improve` proposal. In the
 USER's language, no internal jargon without a plain gloss in the same sentence:
 1. **What happened** — the moment, QUOTED literally. **This line is the bar, not formatting.** No
    quote → DROP the finding; never reword it to fit. A finding about text quotes the text.
