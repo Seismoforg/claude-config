@@ -23,9 +23,9 @@ Four gates take no decision at all. These ARE the carve-outs, and **a fifth is a
 2. **`feature` step 6's closing question** ("Move to DONE?") — always answered *Leave open for now*,
    one of that gate's own offered answers. Step 6's VALIDATION runs in full; only its question is
    answered for you.
-3. **`feature` step 8, `self-improve`** — never run. Its approval gate cannot be answered
-   unattended, and it edits skills. The report says it is owed; the user runs it over the whole
-   batch, which is the better scope anyway.
+3. **`feature` step 8, `self-improve`** — never run, not even its log-only MODE 1. One entry per
+   TASK across N features would either bury the batch in entries or silently pick one. The report
+   says it is owed; the user runs it over the whole batch, which is the better scope anyway.
 4. **LOCAL RESOURCE RUNS consent is widened.** `blocks.md` defines a task as ONE feature file, so N
    features strictly want N asks. Autopilot asks once and spends that consent across the run. Said
    plainly because it is a widening, not compliance.
@@ -124,16 +124,8 @@ with a stated reason, never a bullet naming one feature.
      feature a human actually approved.
 4. Build the tasks. Apply `coding-standards` and whichever surface skills the feature implies. Tick
    each task as it lands.
-5. Run `feature` step 6's validation checks in full — including the fresh-model prose trace where the
-   feature changed prose a model executes; you can dispatch, so that requirement stands. Brief that
-   trace from `feature/reference/trace.md` — another skill's pointer again, so resolve it against the
-   SKILLS ROOT, the same way. Step 6 declares a trace briefed without that file's BAR and CORPUS
-   INVALID, and you never stop to ask, so an unresolved read here would fail the whole run. **One
-   exception, and it is the no-commit rule below, not a skipped check:** step 6 asks for one commit per
-   fix round so its blast-radius count can read a real diff. You commit nothing, so take that rule's
-   own fallback — state the diff EXPLICITLY, file and line ranges. Never report a count as mechanical
-   when you assembled it by hand. Then move to `ready-for-done/`, status READY_FOR_DONE, taking
-   *Leave open for now*.
+5. Run `feature` step 6's validation checks in full. Then move to `ready-for-done/`, status
+   READY_FOR_DONE, taking *Leave open for now*.
 6. One line to the report. Next feature.
 
 **A limit this design cannot remove:** nothing is committed, so every feature's build stacks in one

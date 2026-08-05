@@ -85,51 +85,21 @@ threshold as the visible-window rule below).
 - **Subagent: your brief is your authorization** — you have no `AskUserQuestion`. A qualifying run
   your brief does not name → do not start it; report back what you would have run.
 
-**Every process you start, you end — and you verify it ended.**
-- Started a server, app, watcher, tunnel or test run → stop it before the turn ends, or say plainly that
-  it is still running and why.
-- **Killing the PID you know is not enough.** A launcher spawns children (`npm`/`tsx`/`cmd` → node →
-  helper), and a hard kill of the parent ORPHANS them. Kill the tree, then LIST the survivors and
-  confirm none are left.
-  - **A survivor check that greps COMMAND LINES matches ITSELF.** Exclude your own PID, or it reports
-    a false survivor on every run.
-- Verify by the EFFECT, not by the absence of a PID: the port binds again, the hotkey registers again,
-  the lock file is gone. "The process is not in the list" and "the resource is free" are different claims.
-- Kill only what YOU started. Check parentage first — the user's own long-running session may be in the
-  same process list, and it looks identical.
-- Same for temp files and scratch scripts you created to test with.
+**Every process you start, you end — and you verify it ended.** Kill the TREE, not just the PID you
+know; a launcher orphans its children. Verify by the EFFECT — the port binds again, the lock file is
+gone — never by a PID's absence from a list. Kill only what YOU started; the user's own session looks
+identical in that list. Same for temp files and scratch scripts. Still running when the turn ends →
+say so plainly, and why.
 
-**A long-running process you start gets a VISIBLE window — never a hidden child.**
-- Two triggers, either one is enough. **Lifetime:** server, app, watcher, tunnel, REPL — anything meant to
-  outlive the command that launched it. **Duration:** any command you expect to run longer than ~30s —
-  install, build, migration, full test suite — even when it ends inside the same turn.
-- Short commands whose output you consume stay captured. Do NOT wrap those; you need their stdout.
-- Applies to EVERY shell you can reach, not just the one you happen to prefer. PowerShell and bash both.
-- PowerShell: `Start-Process powershell -ArgumentList '-NoExit','-Command','<cmd>' -PassThru`.
-- bash: `nohup mintty --title '<name>' --hold always /usr/bin/bash -lc '<cmd>' >/dev/null 2>&1 &`.
-  `--hold always` is bash's `-NoExit`. Git Bash ships mintty at `/usr/bin/mintty`; check before relying on
-  it, and fall back to `powershell.exe -Command "Start-Process ..."` if it is missing.
-- **Visible and captured is not a tradeoff.** Long command whose output you still need: redirect inside
-  the visible window, then read the logfile. bash: `... 2>&1 | tee '<logfile>'`.
-  - **PowerShell: redirect under `cmd`, never `Tee-Object` — `cmd /c "<cmd> > <log> 2>&1"`.** Two traps
-    it avoids at once. `Tee-Object` captures STDOUT ONLY, so a crash leaves a logfile holding the banner
-    and nothing else; and it writes UTF-16, so `grep` — including `grep -a` — and any wait loop polling
-    for a done-marker match NOTHING in a run that already finished. `cmd`'s redirection is byte-level:
-    both streams, plain bytes. It also settles the collision with the PowerShell tool's own "avoid
-    `2>&1` on native executables", which applies to PowerShell's redirection and not to `cmd`'s.
-- Keep the window open after exit (`-NoExit` / `--hold always`). A crashed process must leave its error on
-  screen, not vanish with the window.
-- **Capture the PID at launch** — `-PassThru` in PowerShell, `ps -W` in bash (the 4th column is the WINPID
-  you need for a Windows-side kill). These children are detached; without the PID you cannot honour the
-  kill-the-tree rule above.
-  - **That PID is the WINDOW's, not the WORK's.** `-NoExit` / `--hold always` keeps the shell alive after
-    the command finishes, so waiting on that PID blocks until the user closes the window. Watch the CHILD
-    process, or a marker the command writes.
-- Do not trust `MainWindowHandle` to confirm visibility — for console apps the window belongs to `conhost`
-  or Windows Terminal, so the handle reads 0 on a window that is plainly visible. Confirm by enumerating
-  visible top-level windows, or just ask the user.
-- **Limit, stated rather than pretended away:** your own tool calls run in a captured subprocess with no
-  window. This rule governs processes you launch, not the shell you were handed.
+**A long-running process gets a VISIBLE window, never a hidden child** — anything meant to outlive the
+command that launched it, or any command you expect to run over ~30s. Short commands whose output you
+consume stay captured; don't wrap those, you need their stdout. Visible and captured is not a
+tradeoff: redirect to a logfile inside the window and read that.
+
+**Read `docs/process-management.md` BEFORE launching one** — the exact PowerShell and bash launch,
+redirect and PID mechanics, and the traps that make a naive version fail silently. It sits beside the
+`CLAUDE.md` this session imported. Cannot reach it (subagent, no such path) → launch nothing that
+needs a window; report what you would have run.
 
 ## 4. Goal-Driven Execution
 

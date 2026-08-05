@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 // pointers — repo-wide check that every rule-prose pointer resolves, and that the two skills
 // ADR 0005 folded into coding-standards leave nothing pointing at them.
-// Enforces what is deterministic: the three sanctioned pointer forms (skills/self-improve/SKILL.md
-// :90-94) resolve to a file that EXISTS, at its exact on-disk spelling; the retired skill
+// Enforces what is deterministic: the three sanctioned pointer forms (skills/self-improve/SKILL.md,
+// SKILL LIFECYCLE) resolve to a file that EXISTS, at its exact on-disk spelling; the retired skill
 // directories are gone; no live rule prose still names them as a path; every design addendum under
 // coding-standards/reference/ carries the design- prefix; README's published skill roster equals
 // the roster on disk.
@@ -47,7 +47,7 @@ const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'ou
 
 const RETIRED = ['web-standards', 'taste'];
 // `web-standards` is never an English word, so any spelling of it is a live reference.
-// `taste` IS one — skills/self-improve/SKILL.md:90 ("not by taste") and
+// `taste` IS one — skills/self-improve/SKILL.md, SKILL LIFECYCLE ("not by taste") and
 // skills/coding-standards/reference/design.md:27 ("not your taste") are both correct English and
 // must stay green — so it counts only in a PATH or skill-name position: `taste/`, `/taste`,
 // backticked `taste`, or the all-caps heading form the deleted SKILL.md used.
@@ -65,7 +65,7 @@ const RETIRED_PATTERNS = [
 // once, in writing, instead of a tenth design file landing as motion.md while nothing errors.
 const NON_DESIGN_REFS = new Set(['dependencies.md', 'design.md', 'frontend.md', 'python-ml.md', 'web.md']);
 
-// The two sanctioned markdown pointer forms (skills/self-improve/SKILL.md:91-92):
+// The two sanctioned markdown pointer forms (self-improve SKILL LIFECYCLE, the addendum bullet):
 // `reference/<f>.md` inside the owning skill, `<skill>/reference/<f>.md` across skills, either
 // optionally spelled from the repo root as `skills/<skill>/reference/<f>.md`.
 // The lookbehind excludes `<` and `/`, so the TEMPLATE spellings in self-improve itself
@@ -78,10 +78,10 @@ const NON_DESIGN_REFS = new Set(['dependencies.md', 'design.md', 'frontend.md', 
 // miscased `reference/` segment itself is still invisible, and widening that literal would start
 // matching ordinary prose.
 const POINTER_RE = /(?<![\w<>./-])(?:skills\/)?(?:([A-Za-z0-9-]+)\/)?reference\/([A-Za-z0-9._-]+\.md)/g;
-// The third form (self-improve:93): the skill-dir placeholder + /scripts/<file>.mjs, optionally
+// The third form (same bullet): the skill-dir placeholder + /scripts/<file>.mjs, optionally
 // hopping to a sibling skill (`/../feature/scripts/...`). Matched by SHAPE, never by the
 // placeholder's name — spelling that token would be teaching a token that substitutes itself
-// (self-improve:96-99).
+// (self-improve SKILL LIFECYCLE, the substitution bullet).
 const SCRIPT_RE = /\$\{[A-Za-z_][A-Za-z0-9_]*\}((?:\/\.\.)*(?:\/[A-Za-z0-9-]+)*\/scripts\/[A-Za-z0-9._-]+\.mjs)/g;
 
 const rel = (p) => relative(root, p).split('\\').join('/') || '.';
@@ -239,7 +239,7 @@ for (const file of corpus) {
       pointers++;
       const skill = m[1] ?? owning;
       if (!skill) {
-        violations.push(`${relPath}  unresolvable-pointer  line ${n}: "${m[0]}" — a bare reference/ pointer resolves inside the WRITER's skill dir, and this file belongs to no skill. Use <skill>/reference/<file>.md (self-improve:91-92), or an absolute path if a subagent reads it`);
+        violations.push(`${relPath}  unresolvable-pointer  line ${n}: "${m[0]}" — a bare reference/ pointer resolves inside the WRITER's skill dir, and this file belongs to no skill. Use <skill>/reference/<file>.md (self-improve SKILL LIFECYCLE), or an absolute path if a subagent reads it`);
         continue;
       }
       if (!existsExact(join(skillsDir, skill, 'reference', m[2]))) {

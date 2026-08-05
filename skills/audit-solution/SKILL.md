@@ -82,7 +82,7 @@ Apply only approved findings, per the composed skills:
 - Report faithfully: fixed / deferred / remaining, and any check that failed or couldn't run (say why). Don't claim a fix works if you couldn't verify it.
 
 # STEP 8 — SELF-IMPROVE
-Run `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Audit-specific evidence to hand it: every scout FRICTION line from Step 2b, plus any weakness the audit surfaced in a skill itself. Hand it over; that skill's FIX EVIDENCE and CUT EVIDENCE decide what qualifies.
+Run `self-improve` (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Audit-specific evidence to hand it: every scout FRICTION line from Step 2b, plus any weakness the audit surfaced in a skill itself. Hand it over; that skill's FIX EVIDENCE decides what gets logged.
 
 # HARD RULES
 Non-obvious, high-severity only. The dimension list (STEP 2) and the workflow (STEPS 3-8) are not repeated here.
