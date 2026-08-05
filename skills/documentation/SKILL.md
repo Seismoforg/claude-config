@@ -34,7 +34,7 @@ In-code docs are documentation too (invoked from `coding-standards`).
 ## Editing an existing doc
 Before an in-place edit of ANY prose or rule file, confirm exact current text on disk by reading/grepping the target lines — a snapshot/recalled copy drifts in whitespace/wording, and an inexact match fails the edit. A read from earlier in the SAME session is a snapshot once intervening edits have shifted the file.
 
-Documenting a control byte or an escape sequence → the write may insert the CHARACTER instead of the text describing it. Re-read the saved bytes; a doc about a NUL can contain one. Re-typing the escape fails the SAME way — the corruption is in the channel, not the keystroke. Build the text from character codes, or write the bytes with a script, then confirm with a byte-visible read.
+Documenting a control byte or an escape sequence → the write may insert the CHARACTER instead of the text describing it. Confirm with a byte-visible read.
 
 ## When to create a local AGENTS.md
 Create one when ANY holds:
