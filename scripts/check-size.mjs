@@ -28,6 +28,15 @@ if (!existsSync(root) || !statSync(root).isDirectory()) {
 const CORPUS_DIRS = ['skills', 'agents']
 const CORPUS_FILES = ['CLAUDE.md']
 
+// Files under those roots that are DATA this config WRITES, not rule prose a model loads. Named one
+// by one, never by pattern, so each exclusion is a written decision. A word cap is meaningless for an
+// append-only log, and counting one toward TOTAL_CAP would let it push rule prose off the ceiling.
+// Symmetrical with stale-cap below: an entry naming a file that is not on disk is itself a violation.
+const DATA_FILES = new Set([
+  'skills/self-improve/findings.md',
+  'skills/self-improve/findings-archive.md',
+])
+
 const CAPS = {
   'CLAUDE.md': 2714,
   'agents/AGENTS.md': 1098,
@@ -108,6 +117,7 @@ let examined = 0
 
 for (const f of files.sort()) {
   const rel = relative(root, f).split(sep).join('/')
+  if (DATA_FILES.has(rel)) continue
   const n = words(readFileSync(f, 'utf8'))
   total += n
   examined++
@@ -123,6 +133,9 @@ for (const f of files.sort()) {
 const seen = new Set(files.map((f) => relative(root, f).split(sep).join('/')))
 for (const rel of Object.keys(CAPS)) {
   if (!seen.has(rel)) violations.push(`${rel}\tstale-cap\tcapped but not on disk — remove the entry`)
+}
+for (const rel of DATA_FILES) {
+  if (!seen.has(rel)) violations.push(`${rel}\tstale-data-exclusion\texcluded from the corpus but not on disk — remove the entry`)
 }
 
 if (total > TOTAL_CAP) {

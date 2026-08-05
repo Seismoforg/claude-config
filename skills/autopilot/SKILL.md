@@ -23,9 +23,9 @@ Four gates take no decision at all. These ARE the carve-outs, and **a fifth is a
 2. **`feature` step 6's closing question** ("Move to DONE?") — always answered *Leave open for now*,
    one of that gate's own offered answers. Step 6's VALIDATION runs in full; only its question is
    answered for you.
-3. **`feature` step 8, `self-improve`** — never run. Its approval gate cannot be answered
-   unattended, and it edits skills. The report says it is owed; the user runs it over the whole
-   batch, which is the better scope anyway.
+3. **`feature` step 8, `self-improve`** — never run, not even its log-only MODE 1. One entry per
+   TASK across N features would either bury the batch in entries or silently pick one. The report
+   says it is owed; the user runs it over the whole batch, which is the better scope anyway.
 4. **LOCAL RESOURCE RUNS consent is widened.** `blocks.md` defines a task as ONE feature file, so N
    features strictly want N asks. Autopilot asks once and spends that consent across the run. Said
    plainly because it is a widening, not compliance.

@@ -252,7 +252,7 @@ Only on an explicit yes. **`git-commit` STEP 4's "Land the branch" list owns the
 **You report the landing, because nobody else can.** `git-commit`'s STEP 5 either already ran — before this ask — or never ran at all. State the merge commit, what was deleted locally and remotely, and whether `<default>` was pushed or left local. A delete that failed is reported as failed. **A `git-commit` STEP 5 that already ran can be CONTRADICTED by yours — say which is current.** Where a declined Q2 left its STEP 5 reporting commits as unpushed, and you then land and push `<default>`, those same commits reached the remote inside the merge. Supersede that count out loud.
 
 ## 8. Retrospective — `self-improve`
-After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `self-improve` via the Skill tool (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). Scope it to this + the skills applied during implementation.
+After a resting point (DONE, or user leaves it in READY_FOR_DONE / discards), invoke `self-improve` via the Skill tool (AFTER THE TASK in `skills/_shared/blocks.md` owns the rule). It LOGS what went wrong; it does not edit a skill here.
 
 # HARD RULES
 Non-obvious, high-severity only — the state machine and workflow above are not repeated here.
