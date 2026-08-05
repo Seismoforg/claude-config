@@ -37,9 +37,11 @@ node scripts/check-size.mjs
 a hard constraint on its own; the total is what stops raised caps from growing the corpus past the
 ceiling, and exceeding it exits 1. A file with no cap and a cap with no
 file are both violations, so the corpus cannot grow by adding files either. Files that are DATA this
-config WRITES rather than rule prose it loads — `self-improve`'s findings log and its archive — are
-excluded by NAME in `DATA_FILES`, one entry each, and an entry naming a missing file is a violation
-too. It counts runs of
+config WRITES rather than rule prose it loads — the templates seeding `self-improve`'s findings log
+and its archive — are excluded by NAME in `DATA_FILES`, one entry each, and an entry naming a missing
+file is a violation too. The two gitignored files those templates seed sit in `RUNTIME_DATA_FILES`
+instead: excluded the same way, but never stale-checked, because a fresh clone has neither until the
+skill writes one. It counts runs of
 non-whitespace, which disagrees with `wc -w` by ~3% on this corpus; regenerate caps with the script's
 own counter, never with `wc`.
 `check-frontmatter` is the other repo-wide one: every `skills/*/SKILL.md` and agent definition must

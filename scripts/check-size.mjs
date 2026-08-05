@@ -33,6 +33,14 @@ const CORPUS_FILES = ['CLAUDE.md']
 // append-only log, and counting one toward TOTAL_CAP would let it push rule prose off the ceiling.
 // Symmetrical with stale-cap below: an entry naming a file that is not on disk is itself a violation.
 const DATA_FILES = new Set([
+  'skills/self-improve/findings.template.md',
+  'skills/self-improve/findings-archive.template.md',
+])
+
+// The two files those templates seed. Gitignored, written per machine, so — unlike DATA_FILES —
+// absence is NORMAL: a fresh clone has neither until the skill first writes one. Excluded from the
+// corpus on the same grounds, but never stale-checked, or every clone would fail this script.
+const RUNTIME_DATA_FILES = new Set([
   'skills/self-improve/findings.md',
   'skills/self-improve/findings-archive.md',
 ])
@@ -117,7 +125,7 @@ let examined = 0
 
 for (const f of files.sort()) {
   const rel = relative(root, f).split(sep).join('/')
-  if (DATA_FILES.has(rel)) continue
+  if (DATA_FILES.has(rel) || RUNTIME_DATA_FILES.has(rel)) continue
   const n = words(readFileSync(f, 'utf8'))
   total += n
   examined++

@@ -28,7 +28,9 @@ Scan the transcript against FIX EVIDENCE below.
 
 `findings.md` and `findings-archive.md` sit at this skill's ROOT. They are DATA this skill writes,
 not rule prose a model loads, so SKILL LIFECYCLE's `reference/` rule does not reach them and
-`check-size` names them outside its word corpus.
+`check-size` names them outside its word corpus. Both are gitignored — only their empty base ships,
+as `findings.template.md` and `findings-archive.template.md` beside them. **Either file missing →
+copy its template to that name, then write.** A fresh clone has neither.
 
 Limits on this mode:
 - **Never edit a SKILL.md, CLAUDE.md or AGENTS.md here.** It writes `findings.md` and nothing else.
