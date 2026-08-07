@@ -70,8 +70,7 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 **A run that spends this machine gets ASKED FIRST — never started on your own.** FLOOR of LOCAL
 RESOURCE RUNS in `skills/_shared/blocks.md`. Two triggers, either one is enough. **GPU or a local
 model:** local LLM inference, model load, training, fine-tune, embedding run — no duration exemption,
-a 5-second GPU run still asks. **Longer than ~30s:** test suite, build, install, migration (same
-threshold as the visible-window rule below).
+a 5-second GPU run still asks. **Longer than ~30s:** test suite, build, install, migration.
 - **Neither trigger is something you may estimate away.** A command NAME does not tell you whether it
   loads a model — check the project once per task (`ollama`, `transformers`, `torch`, `llama.cpp`, a
   `models/` dir). Any hit, or unsure → treat every run there as a model run. Same for duration: a full
@@ -90,16 +89,6 @@ know; a launcher orphans its children. Verify by the EFFECT — the port binds a
 gone — never by a PID's absence from a list. Kill only what YOU started; the user's own session looks
 identical in that list. Same for temp files and scratch scripts. Still running when the turn ends →
 say so plainly, and why.
-
-**A long-running process gets a VISIBLE window, never a hidden child** — anything meant to outlive the
-command that launched it, or any command you expect to run over ~30s. Short commands whose output you
-consume stay captured; don't wrap those, you need their stdout. Visible and captured is not a
-tradeoff: redirect to a logfile inside the window and read that.
-
-**Read `docs/process-management.md` BEFORE launching one** — the exact PowerShell and bash launch,
-redirect and PID mechanics, and the traps that make a naive version fail silently. It sits beside the
-`CLAUDE.md` this session imported. Cannot reach it (subagent, no such path) → launch nothing that
-needs a window; report what you would have run.
 
 ## 4. Goal-Driven Execution
 

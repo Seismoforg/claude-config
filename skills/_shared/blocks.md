@@ -27,8 +27,7 @@ on your own. Ask when EITHER holds:
   not reveal this — check the PROJECT once per task (`ollama`, `transformers`, `torch`, `llama.cpp`,
   a `models/` dir, a test path naming embed/infer/model). Any hit, or unsure → every run there is
   this arm.
-- **Longer than ~30s** — test suite, build, install, migration. Same threshold as CLAUDE.md §3.s
-  visible-window rule. Do not estimate — a full suite, a full
+- **Longer than ~30s** — test suite, build, install, migration. Do not estimate — a full suite, a full
   build, an install, or the FIRST run of a command you have not timed counts as over.
 Free without asking: one-shot commands under ~30s touching neither arm — lint, typecheck, a single
 unit test, git, grep, reads, mechanical check scripts.
