@@ -8,6 +8,7 @@
 
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
+import { ANNOTATED } from './_shared.mjs';
 
 // Default to the shell CWD — unlike check-agents, the thing under test lives in the USER's
 // project (features/ is per-project and usually VCS-ignored), not in the repo shipping this file.
@@ -45,13 +46,9 @@ const status = (src) => {
   return s ? (str(s[1]) ?? '') : '';
 };
 
-// An unchecked box is deliberate only if it SAYS so. These three markers are the vocabulary: the two
-// in live use plus a feature id for work that moved into its own spec.
-// DUPLICATED in tick-guard.mjs beside this file — the check scripts are standalone on purpose.
-// CHANGE BOTH IN THE SAME COMMIT: a marker added only there makes this check go green on a spec the
-// hook blocks; added only here, a legitimately-annotated box blocks every turn until someone deletes
-// the hook. Nothing enforces the pair (ADR 0006, Consequences).
-const ANNOTATED = /\bBLOCKED\b|\bNOT DONE\b|\b\d{8}-\d{4}\b/;
+// The annotation vocabulary now has ONE definition, in `_shared.mjs` beside this file, imported below.
+// It used to be duplicated here and in tick-guard.mjs with a "change both in the same commit" comment
+// that nothing enforced — ADR 0006 Consequences named the failure that invited.
 
 // Walk `# Tasks` and return violation strings. Three things a naive regex gets wrong, all of them
 // measured against real files in this repo:
