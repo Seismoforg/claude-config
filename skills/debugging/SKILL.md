@@ -27,7 +27,8 @@ for rounds.
 
 ## 3. Fix the root cause, not the symptom
 If the fix is a workaround rather than a root-cause fix, say so explicitly and explain why (upstream
-bug, time constraint) — AND file it as a feature DRAFT in `/features/draft/` before the hunt ends. A
+bug, time constraint) — AND file it as a feature DRAFT before the hunt ends, claiming the file with
+`new-feature.mjs` (`feature` STRUCTURE owns the invocation; never derive the id yourself). A
 hunt has no feature file to note it in, so the two-step deferral does not apply here: write the DRAFT
 straight away or it is gone. TECHNICAL DEBT in `skills/_shared/blocks.md` owns the rule.
 Already handed off as a feature draft (see the hand-off line below, when the user chose to keep a

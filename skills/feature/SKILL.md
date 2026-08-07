@@ -13,7 +13,7 @@ Authoritative rule: **only files inside `/features` define feature state.** Chat
 Before anything else:
 0. Bare invocation (no feature named/described) → don't guess. Show current non-terminal features (draft, pending, approved, in-progress, ready-for-done) and ask via AskUserQuestion what to do (include a "Brainstorm a new feature" option → Workflow step 0). Proceed only once a feature/intent is chosen. **Describing a candidate means READING it end to end, never grepping its Summary or Solution.** A spec's later sections can invert its earlier ones — an update, an amendment note, a gate task that says to discard it first.
 0.5. Request reads as another skill's dedicated trigger (whole-system audit, ad-hoc bug hunt) → surface the mismatch, ask before hand-rolling it inside feature.
-0.7. Request is FILING A RECORD rather than proposing work — technical debt (TECHNICAL DEBT in `skills/_shared/blocks.md`), or an audit finding the user DECLINED (`audit-solution` STEP 5) → **write-only entry**. Write the spec into `/features/draft/` with status DRAFT, minimal, and STOP. Skip steps 0, 1.4, 1.5 and 2 entirely: no brainstorm router, no implementation-questions gate, no premortem, no approval gate, no folder move. It re-enters the workflow later, when the USER picks it up out of `draft/`.
+0.7. Request is FILING A RECORD rather than proposing work — technical debt (TECHNICAL DEBT in `skills/_shared/blocks.md`), or an audit finding the user DECLINED (`audit-solution` STEP 5) → **write-only entry**. Claim the file with `new-feature.mjs` (STRUCTURE) and write the spec into it, status DRAFT, minimal, and STOP. Skip steps 0, 1.4, 1.5 and 2 entirely: no brainstorm router, no implementation-questions gate, no premortem, no approval gate, no folder move. It re-enters the workflow later, when the USER picks it up out of `draft/`.
 1. Identify which feature the request refers to (name or timestamp).
 2. Exists → open it, read `status`, confirm folder matches status (MECHANICAL CHECK below — run it, don't eyeball). Folder ≠ status → STOP and report the mismatch, don't guess.
 3. Doesn't exist → new feature, start at Workflow step 0. Step 0's first branch sends an already-specified request straight on to step 1; entering at step 1 directly skips the router.
@@ -23,8 +23,21 @@ Never plan/approve/implement/validate/change status without this check.
 
 # STRUCTURE
 Path: `/features/<state-folder>/<timestamp>-<slug>.md`
-Time: `YYYYMMDD-HHMM` — date part is ALWAYS today's date from context. Clock time unavailable → derive only the time part: newest file dated today across ALL folders (draft/pending/approved/in-progress/ready-for-done/done/discarded) → a minute just after it; else start today early (e.g. 0001). Never move the date off today; never fabricate a wall-clock time. Chosen id already exists in ANY folder → step to the next free minute.
 Slug: lowercase-kebab, no spaces. Example: `/features/pending/20260124-1530-user-auth.md`
+
+**NEVER derive the id yourself. A script does it, and it also CREATES the file:**
+```
+node ${CLAUDE_SKILL_DIR}/scripts/new-feature.mjs <slug> [--folder <state>] [--root <project>]
+```
+It prints the path it claimed, on stdout, and nothing else. Write your content into that file. `--folder` defaults to `draft`; `--root` to the shell CWD, so pass it when the CWD is not the project holding `features/`.
+**It cannot run → STOP and report.** Never fall back to deriving an id by hand: that is the exact defect this replaces, and a hand-built id looks completely normal, so the regression would be invisible.
+
+The contract it implements, stated here because a script says what it DOES and never what it is ALLOWED to do:
+- `YYYYMMDD-HHMM` is a real local clock time — both halves. A run just after midnight therefore files under tomorrow's date, which is correct.
+- The date is fixed for one run: a candidate rolling past `2359` wraps to `0000` of the SAME day, never to tomorrow.
+- Creating the file empty IS the claim, and it is atomic. Two sessions in one minute cannot collide.
+- An id is taken if it exists in ANY of the seven state folders — a feature is identified by its timestamp alone.
+- An empty spec left behind is a claim nobody wrote into: `abandoned-claim`, fixed in place.
 
 One feature per file. Chronological by filename. No index file. One request bundling multiple independent features → split into separate files; ambiguous grouping → confirm the split with the user.
 
@@ -56,7 +69,8 @@ Folder↔status and filename shape are deterministic. Run the script; never eyeb
 node ${CLAUDE_SKILL_DIR}/scripts/check-features.mjs [root]
 ```
 Exit 1 = violations as `file  rule  detail`. Unconditional, on every spec: folder-status-mismatch,
-bad-filename, unknown-folder, missing-status, no-frontmatter, duplicate-id. GATED, so read the trigger
+bad-filename, bad-timestamp, abandoned-claim, unknown-folder, missing-status, no-frontmatter,
+duplicate-id. GATED, so read the trigger
 before trusting a green run: debt-not-recorded fires only on a `ready-for-done/`/`done/` spec carrying
 BOTH gate sections; tasks-not-current and unterminated-fence share one narrower gate — the same two
 folders AND a `# Premortem` section. An unclosed fence in `draft/`, `pending/`, `approved/` or
@@ -65,6 +79,8 @@ folders AND a `# Premortem` section. An unclosed fence in `draft/`, `pending/`, 
 **Read the detail string, not this list — a violation means different things.**
 - `folder-status-mismatch`, `missing-status`, `no-frontmatter` are never auto-fixed: ON ACTIVATION says STOP and report. Which side is right is exactly what the script cannot know.
 - `tasks-not-current` IS fixed in place — tick the box if the work landed, annotate it if it did not.
+- `abandoned-claim` IS fixed in place, and it is NOT the `no-frontmatter` STOP above. An EMPTY spec is an id `new-feature.mjs` claimed for a session that died before writing: fill it or delete it. Treating it as a STOP would let one crashed session block every later state check.
+- `bad-timestamp` — `HHMM` is not a 24h time. Only reachable by an id nobody generated, since the script reads a clock. Fix the name.
 
 **The script reports repo-wide, so a red run says nothing about YOUR file on its own.** Grep the output for the filename you just wrote, and read the total only to notice it did not grow.
 
@@ -127,7 +143,7 @@ The test that picks — **to fill the spec, would you have to INVENT a decision 
 - **The idea is open AND the details under it are** → `drunken-genius` first, then `feature-brainstorming`.
 
 ## 1. Create → DRAFT
-Write the spec into `/features/draft/`. Fill all sections as far as known.
+Claim the file with `new-feature.mjs` (STRUCTURE owns the invocation), then write the spec into the path it prints. Fill all sections as far as known.
 Change mirrors an existing one (same layer, sibling module) → read that precedent FIRST and mirror its structure. A plan drafted from the file tree alone puts constants and wiring in plausible-but-wrong places.
 **A precedent that is the SOLE user of a shared mechanism proves nothing about a SECOND one.** Hook, event bus, registry, singleton slot: read the mechanism's own composition contract — does it merge, queue, or keep only the last writer? — before planning to be user number two.
 Anything the spec cannot settle becomes an `Open assumption:` line under `# Technical Plan`. An inline spec with no assumption list hands step 1.4 a blank page.
@@ -213,7 +229,7 @@ The branch rule binds EVERY commit this workflow makes: a commit carrying only f
 ## 6. Validation gate → READY_FOR_DONE
 Do NOT move to DONE. Verify and record under `# Validation`:
 - all tasks complete. A box left unchecked must say WHY on its own line or a continuation of it — `BLOCKED`, `NOT DONE`, or the id of the feature the work moved to. A bare unchecked box in `ready-for-done/` or `done/` is the `tasks-not-current` violation, and it is FIXED IN PLACE
-- every `# Debt Found` line filed as its own DRAFT in `/features/draft/` (write-only, per ON ACTIVATION 0.7; MINIMAL), its id written back onto the line. An ABSENT section is NOT proof: `# Validation` records either the filed ids or the LITERAL phrase "no debt taken" — the check greps for exactly that, so a paraphrase goes red
+- every `# Debt Found` line filed as its own DRAFT, claimed with `new-feature.mjs` (write-only, per ON ACTIVATION 0.7; MINIMAL), its id written back onto the line. An ABSENT section is NOT proof: `# Validation` records either the filed ids or the LITERAL phrase "no debt taken" — the check greps for exactly that, so a paraphrase goes red
 - docs updated if required (via `documentation` when architecture/APIs/AGENTS.md/ADRs touched)
 - code conforms to `coding-standards`
 - build succeeds (if applicable); tests pass (if available)
