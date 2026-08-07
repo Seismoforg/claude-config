@@ -161,9 +161,10 @@ its workflow — the crew only assigns the work. **Every number in this list is 
    opening new ones = not converging → report the pattern and ask. `feature` step 6 owns both rules.
 7. **Validation + finish (Teamleiter).** `feature` step 6 — fill `# Validation`, move to
    ready-for-done/, **STOP. Ask via AskUserQuestion**. Its debt bullet is yours alone: EVERY
-   `# Debt Found` line becomes its own DRAFT in `/features/draft/` — the ones you transcribed from devs
-   in step 5 AND the ones your own main-loop work produced. No worker can do it — `features/` is not in
-   any worktree. Then `feature` step 7 (DONE) and step 8 (`self-improve`), both main-loop.
+   `# Debt Found` line becomes its own DRAFT — the ones you transcribed from devs in step 5 AND the
+   ones your own main-loop work produced. Claim each with `new-feature.mjs` (`feature` STRUCTURE owns
+   the invocation; never derive the id yourself). No worker can do ANY of it — `features/` is not in
+   any worktree, so a dev cannot even run the claim, let alone write the file. Then `feature` step 7 (DONE) and step 8 (`self-improve`), both main-loop.
    The devs' work is already on the working branch as merges; the tests you wrote in step 6 and any
    main-loop fixes are still loose in the tree. Step 7's commit ask routes through `git-commit` exactly
    as `feature` step 7 requires. Never hand-roll a push or a PR.

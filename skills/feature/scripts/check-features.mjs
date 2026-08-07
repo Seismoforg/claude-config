@@ -136,12 +136,30 @@ for (const entry of readdirSync(featuresDir)) {
     } else {
       const id = file.slice(0, 13); // YYYYMMDD-HHMM — shape already guaranteed by FILENAME_RE
       byId.set(id, [...(byId.get(id) ?? []), rel(path)]);
+      // HHMM is a real clock time now — new-feature.mjs reads the clock instead of the model
+      // guessing. FILENAME_RE only proves four DIGITS, so 1265 and 2575 pass it. This catches the
+      // out-of-range values a guess produces. It cannot catch a PLAUSIBLE invented time; nothing
+      // can, because a generated and a typed 0914 are the same four characters.
+      const hh = Number(id.slice(9, 11)), mm = Number(id.slice(11, 13));
+      if (hh > 23 || mm > 59) {
+        violations.push(`${rel(path)}  bad-timestamp  "${id.slice(9)}" is not a 24h time (HH<=23, MM<=59) — ids come from new-feature.mjs, which reads the clock`);
+      }
     }
     // readFileSync throws the same ENOENT as the statSync above on a dangling junction. Same answer:
     // report the entry and keep walking, or one bad spec stops every later one being checked.
     let body;
     try { body = readFileSync(path, 'utf8'); } catch (e) {
       violations.push(`${rel(path)}  unreadable-path  ${e.code ?? e.message} — dangling symlink/junction or unreadable entry`);
+      continue;
+    }
+    // An EMPTY spec is new-feature.mjs's claim with nothing written into it yet — a session that died
+    // between claiming the id and writing the content. It MUST NOT fall through to no-frontmatter:
+    // that is a STOP-and-report violation, so one crashed session would block every later session's
+    // state check and halt an unattended autopilot run. Tested BEFORE the frontmatter read so it
+    // pre-empts rather than competes, and FIXED IN PLACE — fill it or delete it. A non-empty file
+    // missing its frontmatter is a real defect and keeps the STOP.
+    if (body.trim() === '') {
+      violations.push(`${rel(path)}  abandoned-claim  empty file — an id claimed by new-feature.mjs that was never written into. Fill it or delete it; this one is not a STOP`);
       continue;
     }
     // A spec that reached a terminal-ish state must SAY what it did about debt: the filed DRAFT ids, or

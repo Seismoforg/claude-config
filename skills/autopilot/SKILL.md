@@ -143,6 +143,12 @@ MECHANICAL CHECK) saying the mirror and `# Tasks` drifted apart. Re-sync them an
 itself, and it blocks only once per signature. Counting it as an unsatisfiable gate would halt a queue
 over the one thing the run is meant to keep current.
 
+**An `abandoned-claim` is NOT a failure either — SKIP that file and carry on.** It is an empty spec:
+an id `new-feature.mjs` claimed for a session that died before writing anything into it. There is
+nothing to build, and it is fixed in place, not stopped on. Halting here would let one crashed session
+elsewhere block an entire unattended queue over a zero-byte file. Name it in THE REPORT so it gets
+cleaned up.
+
 Still failing after it — or a blocked task, a missing dependency, a gate that cannot be satisfied, a
 run whose kind was not authorized — **stops the WHOLE run**. Never a third attempt at the same check.
 Later features often rest on the broken one, so continuing multiplies the mess.

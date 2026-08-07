@@ -94,8 +94,13 @@ This IS `feature` step 1 — read that step and obey ALL of it, never a summary 
 the 7 required sections come from `feature` FEATURE FILE FORMAT. Never invent sections.
 
 The rules you reach for first, and where each lives:
-- **path + filename** → `feature` STRUCTURE: `/features/draft/<YYYYMMDD-HHMM>-<slug>.md`, date part
-  always today's; id already taken in ANY folder → next free minute
+- **path + filename** → NEVER derive it. Claim it, and write into the path it prints:
+  ```
+  node ${CLAUDE_SKILL_DIR}/../feature/scripts/new-feature.mjs <slug> --folder draft --root <project root>
+  ```
+  A pointer into ANOTHER skill, so it hops via `/../feature/` — the same form this file already uses
+  for `check-features.mjs` below. It cannot run → STOP and report; `feature` STRUCTURE owns why there
+  is no fallback.
 - **`status: DRAFT`** → matching the `draft/` folder it lands in
 - **precedent** → step 1: the change mirrors an existing one → read that precedent FIRST
 - **the two greps that SIZE the spec** → step 1's remaining rules. Spec fixes a defect CLASS → grep

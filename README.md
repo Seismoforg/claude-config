@@ -54,6 +54,20 @@ live rule prose at exact on-disk case, and enforces the `design-` prefix on desi
 is an ALLOWLIST (`skills/`, `agents/`, `CLAUDE.md`, `README.md`) — a new top-level directory joins it
 only by being added to `CORPUS_DIRS`, never silently.
 
+## Starting a feature
+`skills/feature/scripts/new-feature.mjs` claims a feature-file id and prints the path it created.
+```
+node skills/feature/scripts/new-feature.mjs <slug> [--folder <state>] [--root <project>]
+```
+Not in the check list above — it produces, it does not check. Exit 0 = a file was claimed; exit 2 =
+invalid invocation or no free id, with nothing left behind.
+
+The id used to be derived by the model. Measured over 56 specs that produced a counter every time
+(`0001`..`0010`) and never a clock time, because a model has no clock. This reads one, so `YYYYMMDD-HHMM`
+finally means what it says. It CREATES the file empty with `wx`: that claim is atomic, so two sessions
+in the same minute get different ids instead of colliding once both have written. `check-features`
+reports an empty spec as `abandoned-claim` — fix in place, never the `no-frontmatter` STOP.
+
 ## Task-tick guard (Stop hook)
 `skills/feature/scripts/tick-guard.mjs` keeps a feature's `# Tasks` checklist and the harness todo list
 in step. It is the counterpart to `check-features.mjs`, which only ever sees a spec's FINAL state and so
