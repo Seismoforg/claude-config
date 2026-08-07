@@ -113,6 +113,11 @@ its workflow — the crew only assigns the work. **Every number in this list is 
    reports per task (`agents/dev.md` OUTPUT) and cannot write feature state at all — `features/` is in
    no worktree. A task the dev reported blocked stays unchecked and gets its reason on the line
    (`feature` step 6 owns that form).
+   **Flip its todo in the SAME act.** You seeded the mirror at CREW step 4 (`feature` step 4 owns that
+   rule); box and todo move together or neither moves. Two reasons this seat especially: a dev's report
+   dies with the round, and a worker's OWN todo list never reaches the mirror — the guard skips
+   sidechain records, so nothing a dev does can tick a box for you. Adding fix items to Tasks at CREW
+   step 6 means re-seeding, or those items sit outside the mirror.
    Then run a cross-cutting pass over the merged result with the applicable skills, plus the shell-bound
    checks for whichever skills ACTUALLY applied: `coding-standards`' pre-flight if this was a design
    surface, `documentation`'s check-docs if the change touched docs — both over the INTEGRATED whole.

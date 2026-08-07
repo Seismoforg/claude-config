@@ -15,7 +15,8 @@ file still loads, and the skill simply stops matching anything.
 # File Structure
 - `<name>/SKILL.md`        — the always-loaded body. One per skill; the folder name is the skill name
 - `<name>/reference/*.md`  — addenda, loaded ON DEMAND by an explicit pointer, never automatically
-- `<name>/scripts/*.mjs`   — that skill's mechanical checks
+- `<name>/scripts/*.mjs`   — that skill's mechanical checks, and any harness hook it owns
+                           (`feature/scripts/tick-guard.mjs` is a Stop hook, not a check you run)
 - `_shared/blocks.md`      — rule text several skills share, one block per rule
 
 Never at a skill root: an addendum or a script. `_shared/` holds no `SKILL.md` and is not a skill.

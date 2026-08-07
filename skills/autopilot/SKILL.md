@@ -122,8 +122,10 @@ with a stated reason, never a bullet naming one feature.
      Under that heading on purpose: inside `# Tasks` a dated line reads as a task annotation and
      silently suppresses a real `tasks-not-current` violation. **Draft path only** — never stamp a
      feature a human actually approved.
-4. Build the tasks. Apply `coding-standards` and whichever surface skills the feature implies. Tick
-   each task as it lands.
+4. Seed the mirror the moment the file lands in `in-progress/` — one todo per `# Tasks` item, verbatim
+   (`feature` step 4). Then build the tasks. Apply `coding-standards` and whichever surface skills the
+   feature implies. Tick each task as it lands, box and todo in one act. A task you ADD mid-build means
+   re-seeding, or it sits outside the mirror.
 5. Run `feature` step 6's validation checks in full. Then move to `ready-for-done/`, status
    READY_FOR_DONE, taking *Leave open for now*.
 6. One line to the report. Next feature.
@@ -135,6 +137,11 @@ attributed without reading the diff. Say so in the report rather than reporting 
 # ON FAILURE
 A check fails → ONE fix round, per `feature` step 6: fix the root cause and re-run. That round is
 allowed and expected; it is not a failure yet.
+
+**A `tick-guard` block is NOT a failure and never stops the run.** It is the Stop hook (`feature`
+MECHANICAL CHECK) saying the mirror and `# Tasks` drifted apart. Re-sync them and carry on — it clears
+itself, and it blocks only once per signature. Counting it as an unsatisfiable gate would halt a queue
+over the one thing the run is meant to keep current.
 
 Still failing after it — or a blocked task, a missing dependency, a gate that cannot be satisfied, a
 run whose kind was not authorized — **stops the WHOLE run**. Never a third attempt at the same check.

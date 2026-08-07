@@ -54,6 +54,24 @@ live rule prose at exact on-disk case, and enforces the `design-` prefix on desi
 is an ALLOWLIST (`skills/`, `agents/`, `CLAUDE.md`, `README.md`) — a new top-level directory joins it
 only by being added to `CORPUS_DIRS`, never silently.
 
+## Task-tick guard (Stop hook)
+`skills/feature/scripts/tick-guard.mjs` keeps a feature's `# Tasks` checklist and the harness todo list
+in step. It is the counterpart to `check-features.mjs`, which only ever sees a spec's FINAL state and so
+cannot tell ticking-as-you-go from reconciling everything at the validation gate.
+
+It runs as a **Stop hook** — at turn end, fed the hook JSON on stdin — and blocks the turn while the two
+lists disagree: a task with no todo, a `completed` todo over a still-empty box, or a ticked box whose
+todo never moved. It blocks once per signature and then only advises, so it cannot wedge a session, and
+it fails open on any internal error.
+
+It lives inside the skill, not in `scripts/`, because the feature lifecycle travels through the
+`~/.claude/skills` junction and is used in other projects and worktrees. It finds `features/` from the
+hook's own `cwd`, so one registration serves every checkout. [ADR 0006](docs/adr/0006-tick-guard-hook.md)
+has the reasoning, including why `~/.claude/settings.json` is not symlinked into this repo.
+
+**Registration is per machine and not versioned** — the same status as the junctions below. Without it
+you keep the prose rule and lose the enforcement: degraded, not broken.
+
 ## Measuring a cut
 Shortening a rule file used to be a guess: nobody could tell what a cut COST, so every cut stopped
 at the first line that felt risky. `scripts/behaviour-suite.mjs` measures it instead.
@@ -111,11 +129,16 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 - [0003](docs/adr/0003-do-not-commit-the-generated-copilot-build.md) — the Copilot build is git-ignored
 - [0004](docs/adr/0004-export-skills-as-copilot-agent-skills.md) — skills export as Copilot Agent Skills
 - [0005](docs/adr/0005-merge-surface-skills-into-coding-standards.md) — the web and design skills become coding-standards addenda
+- [0006](docs/adr/0006-tick-guard-hook.md) — a Stop hook enforces the `# Tasks` tick cadence; why it lives in the skill and is registered user-level
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
 - `~/.claude/agents` → **junction** to `agents/` here.
 - `~/.claude/CLAUDE.md` → 1-line `@import` pointer to `CLAUDE.md` here.
+- `~/.claude/settings.json` → holds the `Stop` hook registration for `tick-guard.mjs`. A real file, NOT
+  a symlink into this repo: a file symlink needs elevation on Windows (a junction does not, which is why
+  the two above are junctions), and this repo is public, so versioning personal settings would publish
+  every key added to them. ADR 0006 records both measurements.
 
 ## Restore on a new machine
 ```powershell
@@ -126,6 +149,22 @@ New-Item -ItemType Junction -Path "$HOME\.claude\agents" -Target "$repo\agents"
 [IO.File]::WriteAllText("$HOME\.claude\CLAUDE.md", "@$($repo -replace '\\','/')/CLAUDE.md", (New-Object Text.UTF8Encoding $false))
 ```
 First session shows a one-time external-import approval dialog — approve it.
+
+Fourth step, by hand: merge this into `~/.claude/settings.json` to register the task-tick guard. Spell
+the path out in full — `%USERPROFILE%` is cmd syntax and will not expand under a POSIX shell, and
+`$CLAUDE_PROJECT_DIR` points at whichever project is active, not at where the script lives.
+```json
+{
+  "hooks": {
+    "Stop": [
+      { "hooks": [ { "type": "command",
+        "command": "node \"C:/Users/<you>/.claude/skills/feature/scripts/tick-guard.mjs\"" } ] }
+    ]
+  }
+}
+```
+Hook entries MERGE across user and project settings rather than replacing each other, so do not also
+add it to a project `.claude/settings.json` — it would run twice per turn.
 
 ## Related Modules
 - [skills/](skills/AGENTS.md) — the skills: layout, what loads when, pointer style, naming

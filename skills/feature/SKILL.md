@@ -68,6 +68,18 @@ folders AND a `# Premortem` section. An unclosed fence in `draft/`, `pending/`, 
 
 **The script reports repo-wide, so a red run says nothing about YOUR file on its own.** Grep the output for the filename you just wrote, and read the total only to notice it did not grow.
 
+**The cadence half has its own guard, and it is not run by hand.** `check-features.mjs` only ever sees
+the FINAL state, so it cannot tell ticking-as-you-go from reconciling at step 6. Its counterpart:
+```
+node ${CLAUDE_SKILL_DIR}/scripts/tick-guard.mjs
+```
+It is a Stop hook, registered once in `~/.claude/settings.json` and fed the hook JSON on stdin, so it
+reaches every project and worktree. It compares `# Tasks` against the harness todo list at turn end and
+blocks while they disagree — a task with no todo, a `completed` todo over a bare box, or a ticked box
+whose todo never moved. It blocks ONCE per signature, then only advises, so nothing can wedge. It fails
+open on any internal error. Where it is not registered — another harness, the Copilot export — step 5's
+rule binds on its own. README and ADR 0006 own the wiring and the reasoning.
+
 # FEATURE FILE FORMAT
 Frontmatter (source of truth for status):
 ```
@@ -178,10 +190,11 @@ Only on explicit approval: move to `/features/approved/`.
 Before ANY code change: verify file exists AND status = APPROVED. Then move to `/features/in-progress/`.
 **A spec can be APPROVED and still have nothing to build.** A write-only record (ON ACTIVATION 0.7) ships with `# Solution` and `# Technical Plan` as placeholders. Read both sections here. Placeholder → write the plan into the spec, and put the APPROACH to the user via AskUserQuestion before any code.
 **The plan you write HERE has had no premortem.** Crosses 1.5's threshold → run it now, against this plan, and append `# Premortem`. Record the approach answer as `# Open Questions` in the same pass; that ask IS 1.4, arriving late.
+**Then SEED THE MIRROR: one todo per `# Tasks` item, `content` copied VERBATIM.** Always, at every size — a threshold is one more rule to get wrong. The mirror is what makes step 5's tick cadence observable at all, and re-seeding after a task is ADDED mid-build is part of the same rule.
 
 ## 5. Implement
 Build only the spec's tasks. Scope changes → update the spec first.
-**`# Tasks` is a live work-list.** Tick a box the MOMENT its task lands, not in one reconciling pass at step 6.
+**`# Tasks` is a live work-list.** Tick a box the MOMENT its task lands, not in one reconciling pass at step 6. The box and its todo move in ONE act, in the same turn — flipping either alone is the defect. On this harness `tick-guard.mjs` (MECHANICAL CHECK) reads both at turn end and blocks while they disagree; elsewhere the rule binds on its own, and the four sites it used to be restated at are why it needs a mechanism.
 The LIST itself changes too: a task added mid-build is added silently, but a task REMOVED or REWORDED carries a one-line reason. A task "removed" after being delivered by a knowingly weaker means is DEBT, not a removal; one never delivered stays an unfinished task.
 Knowingly leaving a shortcut → that is DEBT, and debt becomes its own feature. Note it under this file's `# Debt Found` section the MOMENT you take it; step 6 files it. TECHNICAL DEBT in `skills/_shared/blocks.md` owns the rule — including the three things that look like debt and are not: an UNDELIVERED task, debt you did not create, and an `audit-solution` finding.
 A fact found while building that INVALIDATES the premise of a decision the user already made at a gate → re-open it via AskUserQuestion, stating the new fact.
