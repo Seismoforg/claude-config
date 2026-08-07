@@ -68,23 +68,38 @@ finally means what it says. It CREATES the file empty with `wx`: that claim is a
 in the same minute get different ids instead of colliding once both have written. `check-features`
 reports an empty spec as `abandoned-claim` — fix in place, never the `no-frontmatter` STOP.
 
-## Task-tick guard (Stop hook)
-`skills/feature/scripts/tick-guard.mjs` keeps a feature's `# Tasks` checklist and the harness todo list
-in step. It is the counterpart to `check-features.mjs`, which only ever sees a spec's FINAL state and so
-cannot tell ticking-as-you-go from reconciling everything at the validation gate.
+## Task-tick hooks
+A feature's `# Tasks` checklist is not maintained by hand. Two hooks in `skills/feature/scripts/` keep it
+in step with the harness todo list, and they are the counterpart to `check-features.mjs`, which only ever
+sees a spec's FINAL state and so could never tell ticking-as-you-go from reconciling at the validation
+gate.
 
-It runs as a **Stop hook** — at turn end, fed the hook JSON on stdin — and blocks the turn while the two
-lists disagree: a task with no todo, a `completed` todo over a still-empty box, or a ticked box whose
-todo never moved. It blocks once per signature and then only advises, so it cannot wedge a session, and
-it fails open on any internal error.
+**`tick-sync.mjs` — PostToolUse, `matcher: "TodoWrite"`.** It writes the checkbox. Every time the todo
+list changes, each `in-progress/` spec has its boxes set to follow: a `completed` todo ticks its box,
+anything else clears it. So the model moves the todo and the box follows in the same turn.
 
-It lives inside the skill, not in `scripts/`, because the feature lifecycle travels through the
-`~/.claude/skills` junction and is used in other projects and worktrees. It finds `features/` from the
-hook's own `cwd`, so one registration serves every checkout. [ADR 0006](docs/adr/0006-tick-guard-hook.md)
-has the reasoning, including why `~/.claude/settings.json` is not symlinked into this repo.
+It never guesses, because a wrong tick reports work that never happened. A todo is matched to a task by
+exact text after light normalisation; no match, an annotated line (`BLOCKED`, `NOT DONE`, a feature id),
+or a task text living in two `in-progress/` specs at once, and the line is left alone. It writes
+atomically, re-reads and compares before writing so a mid-turn edit by the model is never clobbered, and
+records every write, skip and abandonment in `features/.tick-sync.log` (git-ignored with the rest of
+`features/`).
+
+**`tick-guard.mjs` — Stop hook.** One job left: block the turn while any `# Tasks` item has no todo. That
+is the input side of the auto-tick — an unmirrored task is one whose box can never move on its own. It
+blocks once per signature and then only advises, so it cannot wedge a session. It used to carry two
+divergence checks as well; with the box now following the todo, the two lists cannot diverge, so they
+were removed rather than kept as a silent self-test.
+
+Both fail open on any internal error. Both live inside the skill, not in `scripts/`, because the feature
+lifecycle travels through the `~/.claude/skills` junction and is used in other projects and worktrees.
+Both find `features/` from the hook's own `cwd`, so one registration serves every checkout. They share
+`_shared.mjs` with `check-features.mjs` — one definition of the annotation vocabulary, which used to be
+duplicated with nothing enforcing the pair. [ADR 0006](docs/adr/0006-tick-guard-hook.md) has the
+reasoning, including why `~/.claude/settings.json` is not symlinked into this repo.
 
 **Registration is per machine and not versioned** — the same status as the junctions below. Without it
-you keep the prose rule and lose the enforcement: degraded, not broken.
+you keep the prose rule and lose the enforcement: you tick the boxes yourself. Degraded, not broken.
 
 ## Measuring a cut
 Shortening a rule file used to be a guess: nobody could tell what a cut COST, so every cut stopped
@@ -143,16 +158,16 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 - [0003](docs/adr/0003-do-not-commit-the-generated-copilot-build.md) — the Copilot build is git-ignored
 - [0004](docs/adr/0004-export-skills-as-copilot-agent-skills.md) — skills export as Copilot Agent Skills
 - [0005](docs/adr/0005-merge-surface-skills-into-coding-standards.md) — the web and design skills become coding-standards addenda
-- [0006](docs/adr/0006-tick-guard-hook.md) — a Stop hook enforces the `# Tasks` tick cadence; why it lives in the skill and is registered user-level
+- [0006](docs/adr/0006-tick-guard-hook.md) — hooks enforce the `# Tasks` tick cadence: a PostToolUse hook writes the box, a Stop hook guards the mirror; why they live in the skill and are registered user-level
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
 - `~/.claude/agents` → **junction** to `agents/` here.
 - `~/.claude/CLAUDE.md` → 1-line `@import` pointer to `CLAUDE.md` here.
-- `~/.claude/settings.json` → holds the `Stop` hook registration for `tick-guard.mjs`. A real file, NOT
-  a symlink into this repo: a file symlink needs elevation on Windows (a junction does not, which is why
-  the two above are junctions), and this repo is public, so versioning personal settings would publish
-  every key added to them. ADR 0006 records both measurements.
+- `~/.claude/settings.json` → holds the `Stop` registration for `tick-guard.mjs` and the `PostToolUse`
+  one for `tick-sync.mjs`. A real file, NOT a symlink into this repo: a file symlink needs elevation on
+  Windows (a junction does not, which is why the two above are junctions), and this repo is public, so
+  versioning personal settings would publish every key added to them. ADR 0006 records both measurements.
 
 ## Restore on a new machine
 ```powershell
@@ -164,21 +179,30 @@ New-Item -ItemType Junction -Path "$HOME\.claude\agents" -Target "$repo\agents"
 ```
 First session shows a one-time external-import approval dialog — approve it.
 
-Fourth step, by hand: merge this into `~/.claude/settings.json` to register the task-tick guard. Spell
-the path out in full — `%USERPROFILE%` is cmd syntax and will not expand under a POSIX shell, and
-`$CLAUDE_PROJECT_DIR` points at whichever project is active, not at where the script lives.
+Fourth step, by hand: merge this into `~/.claude/settings.json` to register BOTH task-tick hooks. Spell
+the paths out in full — `%USERPROFILE%` is cmd syntax and will not expand under a POSIX shell, and
+`$CLAUDE_PROJECT_DIR` points at whichever project is active, not at where the scripts live.
 ```json
 {
   "hooks": {
     "Stop": [
       { "hooks": [ { "type": "command",
         "command": "node \"C:/Users/<you>/.claude/skills/feature/scripts/tick-guard.mjs\"" } ] }
+    ],
+    "PostToolUse": [
+      { "matcher": "TodoWrite",
+        "hooks": [ { "type": "command",
+          "command": "node \"C:/Users/<you>/.claude/skills/feature/scripts/tick-sync.mjs\"" } ] }
     ]
   }
 }
 ```
+**Both entries, or neither.** `tick-sync.mjs` alone loses the guard that keeps every task mirrored, which
+is what gives it something to tick. `tick-guard.mjs` alone leaves you blocked over a mirror whose only
+purpose was to drive a hook that is not there.
+
 Hook entries MERGE across user and project settings rather than replacing each other, so do not also
-add it to a project `.claude/settings.json` — it would run twice per turn.
+add them to a project `.claude/settings.json` — they would run twice per turn, and `tick-sync.mjs` writes.
 
 ## Related Modules
 - [skills/](skills/AGENTS.md) — the skills: layout, what loads when, pointer style, naming

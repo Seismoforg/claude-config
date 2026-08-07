@@ -139,9 +139,16 @@ A check fails → ONE fix round, per `feature` step 6: fix the root cause and re
 allowed and expected; it is not a failure yet.
 
 **A `tick-guard` block is NOT a failure and never stops the run.** It is the Stop hook (`feature`
-MECHANICAL CHECK) saying the mirror and `# Tasks` drifted apart. Re-sync them and carry on — it clears
-itself, and it blocks only once per signature. Counting it as an unsatisfiable gate would halt a queue
-over the one thing the run is meant to keep current.
+MECHANICAL CHECK) saying a `# Tasks` item has no todo. Add it to the mirror, content verbatim, and carry
+on — it clears itself, and it blocks only once per signature. Counting it as an unsatisfiable gate would
+halt a queue over the one thing the run is meant to keep current.
+
+**Expect the auto-tick to go quiet on repeated task wording.** This loop is the one place where several
+specs sit in `in-progress/` at once, and queued specs built to the same shape share task lines —
+`Update the docs`, `Run the checks`. `tick-sync.mjs` refuses to guess which spec such a todo belongs to
+and skips those lines in ALL of them, logging each skip to `features/.tick-sync.log`. Those boxes are
+yours to tick by hand before the batch review, or `check-features.mjs` reports them as
+`tasks-not-current` at the ready-for-done gate.
 
 **An `abandoned-claim` is NOT a failure either — SKIP that file and carry on.** It is an empty spec:
 an id `new-feature.mjs` claimed for a session that died before writing anything into it. There is

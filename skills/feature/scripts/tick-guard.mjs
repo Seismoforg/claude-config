@@ -1,10 +1,14 @@
 #!/usr/bin/env node
-// feature — Stop-hook guard keeping `# Tasks` and the harness todo list in step.
+// feature — Stop-hook guard: every `# Tasks` item must exist in the harness todo list.
 //
-// `feature` step 5 says tick a box the MOMENT its task lands. That rule was written at four sites and
-// held at none: `features/` is git-ignored, so no check can see the difference between ticking as you
-// go and reconciling in one pass at step 6. This runs at TURN END, where the difference is still
-// visible, and blocks the turn while the two lists disagree.
+// It has ONE job, and it is the input side of the auto-tick. `tick-sync.mjs` sets a box from its todo,
+// so a task with NO todo is a task nothing can ever tick. This runs at turn end and blocks while any
+// such task exists — which makes seeding the mirror, and re-seeding after a task is added mid-build,
+// the one manual step the mechanism still needs.
+//
+// It used to carry two more conditions: a `completed` todo over a bare box, and a ticked box whose todo
+// never moved. Both were DIVERGENCE checks, and with the box now following the todo automatically the
+// two lists cannot diverge. They were removed rather than left as a silent self-test of tick-sync.
 //
 // Registered in ~/.claude/settings.json (NOT a project .claude/settings.json) so it reaches every
 // project and worktree the feature lifecycle is used in. It finds `features/` from the hook's own
@@ -15,17 +19,12 @@
 import { openSync, fstatSync, readSync, closeSync, readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { tasksOf, norm } from './_shared.mjs';
 
 // FAIL OPEN, deliberately against this repo's grain. Every other check here treats "exited clean
 // having examined nothing" as a defect. Here the costs are asymmetric: a false negative is a missed
 // reminder, a false positive is a turn that cannot end. So every internal error exits 0, silent.
 const bail = () => process.exit(0);
-
-// Annotation vocabulary. DUPLICATED from check-features.mjs `ANNOTATED` on purpose — the check
-// scripts are standalone so both stay reachable through the ~/.claude junction and the real path.
-// CHANGE BOTH IN THE SAME COMMIT. Add a marker here only, and the check goes green on a spec this
-// hook blocks; add it there only, and a legitimately-annotated box blocks every turn.
-const ANNOTATED = /\bBLOCKED\b|\bNOT DONE\b|\b\d{8}-\d{4}\b/;
 
 // Tail window. A transcript grows all session and this runs at EVERY turn end, so a full read is not
 // affordable. Start small, grow ONCE, then give up rather than read an unbounded file.
@@ -89,40 +88,6 @@ const lastTodos = (lines) => {
   return null;
 };
 
-// Walk `# Tasks`. Same three traps check-features.mjs documents: an annotation may sit on a
-// CONTINUATION line, a fence inside the section would read as tasks, and an unclosed fence must not
-// silently swallow the rest. Here an unclosed fence just ends the walk — this is a nudge, not an
-// audit, and check-features.mjs already reports `unterminated-fence` as a violation.
-const tasksOf = (src) => {
-  const lines = src.split(/\r?\n/);
-  const start = lines.findIndex((l) => /^# Tasks\s*$/i.test(l));
-  if (start === -1) return [];
-  const out = [];
-  let fenced = false;
-  for (let i = start + 1; i < lines.length; i++) {
-    const line = lines[i];
-    if (/^# /.test(line)) break;
-    if (/^\s*```/.test(line)) { fenced = !fenced; continue; }
-    if (fenced) continue;
-    const m = line.match(/^- \[([ xX])\]\s*(.*)$/);
-    if (m) {
-      out.push({ line: i + 1, checked: m[1] !== ' ', text: m[2], raw: line });
-      continue;
-    }
-    if (out.length && /^\s+\S/.test(line)) out[out.length - 1].raw += '\n' + line;  // continuation
-  }
-  return out;
-};
-
-// Todos are seeded VERBATIM from the task text, so an exact compare after light normalisation is
-// enough. Backticks and ** are stripped because a model re-typing a task tends to drop the markup
-// before it drops a word.
-const norm = (s) => String(s ?? '')
-  .replace(/[`*]/g, '')
-  .replace(/\s+/g, ' ')
-  .trim()
-  .toLowerCase();
-
 const main = () => {
   const raw = readStdin();
   if (!raw.trim()) bail();
@@ -161,40 +126,28 @@ const main = () => {
     const tasks = tasksOf(body);
     if (!tasks.length) continue;
 
-    // No mirror at all is condition 1's degenerate case, not a separate rule.
-    const byText = new Map((todos ?? []).map((t) => [norm(t.content), t]));
+    // No mirror at all is the degenerate case of the same rule, not a separate one.
+    const mirrored = new Set((todos ?? []).map((t) => norm(t.content)));
 
     for (const task of tasks) {
-      const todo = byText.get(norm(task.text));
-
-      // Condition 1 — a task with no todo. Covers "never seeded" and "seeded, then a task was added
-      // mid-build", which `feature` step 5 explicitly allows. Those late tasks are the ones most
-      // likely to be forgotten, so they are exactly the ones that must not fall outside the check.
-      if (!todo) {
+      // A task with no todo. Covers "never seeded" and "seeded, then a task was added mid-build", which
+      // `feature` step 5 explicitly allows. Those late tasks are the ones most likely to be forgotten,
+      // so they are exactly the ones that must not fall outside the check — and with the auto-tick they
+      // are also the only tasks whose box can never move on its own.
+      if (!mirrored.has(norm(task.text))) {
         problems.push(`${file}:${task.line} not mirrored — "${task.text}"`);
-        continue;
-      }
-      // Condition 2 — declared done, box still bare. An annotated box is a deliberate open item.
-      if (todo.status === 'completed' && !task.checked && !ANNOTATED.test(task.raw)) {
-        problems.push(`${file}:${task.line} todo completed but box still "- [ ]" — "${task.text}"`);
-        continue;
-      }
-      // Condition 3 — box ticked, todo never moved. Catches a mirror seeded once to clear condition 1
-      // and then abandoned, which would otherwise satisfy this hook forever.
-      if (task.checked && todo.status !== 'completed') {
-        problems.push(`${file}:${task.line} box ticked but todo still "${todo.status}" — "${task.text}"`);
       }
     }
     // A todo matching no task is IGNORED. The todo list is general-purpose and legitimately holds
-    // items unrelated to any spec; condition 1 already runs the comparison the other way.
+    // items unrelated to any spec; the check above already runs the comparison the other way.
   }
 
   if (!problems.length) bail();
 
   const reason = [
-    `# Tasks and the todo list disagree (${problems.length}):`,
+    `# Tasks items missing from the todo list (${problems.length}):`,
     ...problems.map((p) => `  - ${p}`),
-    'Tick the boxes that landed and re-sync the todo list. A box open on purpose needs BLOCKED, NOT DONE, or a feature id on its line.',
+    'Add them to the todo list, content copied verbatim. Until a task is mirrored, tick-sync.mjs cannot tick its box.',
   ].join('\n');
 
   // LOOP GUARD. The Stop hook input carries no `stop_hook_active`, so a condition the model cannot
