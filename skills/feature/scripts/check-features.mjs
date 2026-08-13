@@ -173,14 +173,23 @@ for (const entry of readdirSync(featuresDir)) {
       violations.push(`${rel(path)}  debt-not-recorded  # Validation must state the filed debt ids or "no debt taken" — silence is not proof`);
     }
     // `# Tasks` is a live work-list (feature step 5). By ready-for-done/done every box is ticked, or
-    // says WHY it is not. Scoped to `# Premortem` alone, which is the WIDER of the two scopes here.
-    // RE-MEASURED 20260803: 15 of 43 specs carry `# Premortem`, and the debt-not-recorded PAIR above
-    // now matches 10 of the 38 in ready-for-done/ + done/. At build time the pair matched 0 of 26,
-    // which is why this walk was given its own scope rather than reusing it; the pair has since
-    // caught up, so the reason is now breadth, not emptiness. Keep the wider scope: `unterminated-fence`
-    // is emitted from this same walk, and narrowing it would stop catching fences on specs that never
-    // ran the 1.4 gate.
-    if ((entry === 'ready-for-done' || entry === 'done') && /^# Premortem/im.test(body)) {
+    // says WHY it is not.
+    //
+    // WIDENED 20260810: it used to require `# Premortem` as well, and that gate is why the rule was
+    // blind to every spec written before the 1.5 gate existed — which is most of the old ones. MEASURED
+    // on a real repo, the same 150 specs either way:
+    //   - premortem-gated, uncleaned corpus  -> CLEAN. 86 unchecked, unexplained boxes present.
+    //   - widened, same corpus               -> 86 violations, all of them real.
+    //   - widened, after those were settled  -> CLEAN.
+    // So the gate was not narrowing a noisy rule; it was hiding a true one, and a green run read as
+    // conformance when it meant not-checked.
+    //
+    // The cost is stated rather than avoided: the FIRST run in a repo that never did this pass surfaces
+    // its whole backlog at once. That is the correct report — every finding names a real box — and
+    // `tasks-not-current` is fix-in-place, never a STOP, so it produces a work-list and blocks nothing.
+    //
+    // `unterminated-fence` is emitted from this same walk and only gains reach from the widening.
+    if (entry === 'ready-for-done' || entry === 'done') {
       for (const v of tasksNotCurrent(body)) violations.push(`${rel(path)}  ${v}`);
     }
     const found = status(body);

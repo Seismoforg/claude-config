@@ -13,7 +13,7 @@ Authoritative rule: **only files inside `/features` define feature state.** Chat
 Before anything else:
 0. Bare invocation (no feature named/described) → don't guess. Show current non-terminal features (draft, pending, approved, in-progress, ready-for-done) and ask via AskUserQuestion what to do (include a "Brainstorm a new feature" option → Workflow step 0). Proceed only once a feature/intent is chosen. **Describing a candidate means READING it end to end, never grepping its Summary or Solution.** A spec's later sections can invert its earlier ones — an update, an amendment note, a gate task that says to discard it first.
 0.5. Request reads as another skill's dedicated trigger (whole-system audit, ad-hoc bug hunt) → surface the mismatch, ask before hand-rolling it inside feature.
-0.7. Request is FILING A RECORD rather than proposing work — technical debt (TECHNICAL DEBT in `skills/_shared/blocks.md`), or an audit finding the user DECLINED (`audit-solution` STEP 5) → **write-only entry**. Claim the file with `new-feature.mjs` (STRUCTURE) and write the spec into it, status DRAFT, minimal, and STOP. Skip steps 0, 1.4, 1.5 and 2 entirely: no brainstorm router, no implementation-questions gate, no premortem, no approval gate, no folder move. It re-enters the workflow later, when the USER picks it up out of `draft/`.
+0.7. Request is FILING A RECORD rather than proposing work — technical debt (TECHNICAL DEBT in `skills/_shared/blocks.md`), or an audit finding the user DECLINED (`audit-solution` STEP 5) → **write-only entry**. Claim the file with `new-feature.mjs` (STRUCTURE) and write the spec into it, status DRAFT, minimal, and STOP. Skip steps 0, 1.4, 1.5, 1.6 and 2 entirely: no brainstorm router, no implementation-questions gate, no premortem, no milestone cut, no approval gate, no folder move. It re-enters the workflow later, when the USER picks it up out of `draft/`.
 1. Identify which feature the request refers to (name or timestamp).
 2. Exists → open it, read `status`, confirm folder matches status (MECHANICAL CHECK below — run it, don't eyeball). Folder ≠ status → STOP and report the mismatch, don't guess.
 3. Doesn't exist → new feature, start at Workflow step 0. Step 0's first branch sends an already-specified request straight on to step 1; entering at step 1 directly skips the router.
@@ -43,7 +43,7 @@ One feature per file. Chronological by filename. No index file. One request bund
 
 # STATE MACHINE
 ```
-/features/draft/         → DRAFT          → refine, questions gate (1.4), premortem (1.5), then request approval
+/features/draft/         → DRAFT          → refine, questions gate (1.4), premortem (1.5), milestone cut (1.6), then request approval
 /features/pending/       → NEEDS_APPROVAL → wait for user
 /features/approved/      → APPROVED       → move to in-progress, then implement
 /features/in-progress/   → IN_PROGRESS    → implement, then validate
@@ -121,7 +121,8 @@ Body (all required):
 # Solution
 # Technical Plan
 # Tasks            (checklist: - [ ] ...; an unchecked box in ready-for-done/ or done/ must carry
-                  #  BLOCKED, NOT DONE, or a feature id, on its line or a continuation of it)
+                  #  BLOCKED, NOT DONE, or a feature id, on its line or a continuation of it.
+                  #  May be grouped by `## <milestone>` sub-headings — see step 1.6)
 # Impact Analysis  (affected/new/deleted files; breaking changes; overlap with other in-flight features editing the same files)
 # Validation       (filled at the READY_FOR_DONE gate)
 ```
@@ -129,10 +130,14 @@ These are added by the GATES, in the order their gate runs. Every section above 
 ```
 # Open Questions   (added by step 1.4 — one row per category: question or evidence · answer · what changed)
 # Premortem        (added by step 1.5 — failure report + mitigation table, or the one-line skip record)
+# Milestones       (added by step 1.6 — the cut and why, or the one-line skip record; then one check
+                  #  line per milestone as step 5 finishes it)
 # Debt Found       (added during step 5 — one line per shortcut: what · path:line · why you took it · the DRAFT id step 6 files it as)
 ```
 - **`# Open Questions` is present on EVERY spec that reached step 2.** 1.4 has no threshold, so absent there is a defect. Absent is CORRECT on any spec that never reaches step 2 — the audit fast-path, its queued `approved/` siblings, every ON ACTIVATION 0.7 record, and specs predating this gate.
 - **`# Premortem`** is conditional on 1.5's own threshold; absent where 1.5 never ran.
+- **`# Milestones`** — like `# Open Questions`: present on every spec that reached step 2, since 1.6
+  has no threshold either. Absent only where 1.6 never ran, the same carve-out list as 1.4's.
 - **`# Debt Found`** is conditional on a shortcut actually being taken. Absent = none was — a claim step 6 makes you state out loud, never a silence it accepts. TECHNICAL DEBT in `skills/_shared/blocks.md` owns WHEN to write it; the line above is the only definition of what a line in THAT section carries. `agents/dev.md` OUTPUT separately owns a worker's `DEBT:` REPORT line, which a dispatcher transcribes into this format — two formats on purpose.
 
 **`Open assumption:` lines** — a trailing list under `# Technical Plan`, one line each: what you assumed and why, for anything the spec could not settle. EVERY spec writer produces them: inline at step 1, `feature-brainstorming` (its §5), and the Teamleiter transcribing a `pm` agent's `OPEN:` list. They are step 1.4's candidate list, so a spec that smooths its assumptions away disarms the gate that exists to confirm them.
@@ -157,7 +162,7 @@ Change mirrors an existing one (same layer, sibling module) → read that preced
 Anything the spec cannot settle becomes an `Open assumption:` line under `# Technical Plan`. An inline spec with no assumption list hands step 1.4 a blank page.
 Spec fixes a defect CLASS (a rule missing from several files, one pattern wrong in several places) → grep every instance BEFORE writing Tasks; count from the grep, not from the report you are working off.
 Plan changes an exported SIGNATURE → count call sites by grepping the SYMBOL, not the feature's surface description; the two sets differ.
-Spec written → step 1.4, then 1.5. Never straight to step 2.
+Spec written → step 1.4, then 1.5, then 1.6. Never straight to step 2.
 
 ## 1.4 Implementation questions — ask before the critique
 Runs on EVERY spec, before the premortem — in `draft/`, or in `pending/` after a Change-spec revision that opened a new question. No threshold, no folder move, no status change.
@@ -170,7 +175,7 @@ Spec already carries an `# Open Questions` section → it ran; go to step 1.5, u
 
 Then:
 1. Read the spec — its `Open assumption:` lines FIRST, they are your candidate list — and `reference/open-questions.md`, joined onto this skill's announced base directory.
-2. Walk the five categories. Each ends in a QUESTION to the user or a `settled by <evidence>` line, never blank. A candidate is a question only if a WRONG ANSWER COSTS REWORK. Evidence is a repo `file:line`, an earlier user answer, or "no consequence either way" — never the spec you are writing.
+2. Walk the five categories. Each ends in a QUESTION to the user or a `settled by <evidence>` line, never blank. A candidate is a question only if a WRONG ANSWER COSTS REWORK. Evidence is a repo `file:line`, an earlier user answer, or "no consequence either way" — never the spec you are writing. Evidence you RUN rather than read is an instrument — step 6's INSTRUMENT rule binds it here too.
 3. Questions qualify → **STOP. Ask via AskUserQuestion** (see APPROVAL GATES, end of file), ONE round, max 4 (the harness cap). More than 4 → ask the top 4 by cost, record the rest as deferred. None qualify → ask nothing; the evidence lines are the record, and the gate still ran.
 4. Edit the spec. Then write the table, recording the edits you MADE — never intentions.
 5. Append `# Open Questions` at the END of the file. Re-running on a revision → EXTEND the existing section, never append a second.
@@ -188,20 +193,33 @@ Threshold — run it when ANY of these holds:
 
 None holds → skip it, and record the skip BOTH ways: a one-line `# Premortem` section naming the criteria you checked, and that same line in the step-2 summary. A silent skip reads identical to a forgotten one.
 Features created by the audit-remediation fast-path never run this step.
-Spec already carries a `# Premortem` section → it ran; go to step 2, unless a Change-spec revision has since crossed the threshold. That section is the ONLY record that it ran.
+Spec already carries a `# Premortem` section → it ran; go to step 1.6, unless a Change-spec revision has since crossed the threshold. That section is the ONLY record that it ran.
 
 Then:
 1. Read the spec, and `reference/premortem.md`, joined onto this skill's announced base directory.
 2. Write the failure report.
 3. Edit the spec. Then write the mitigation table, recording the edits you MADE — never intentions. `reference/premortem.md` owns both forms, and the two outcomes that legitimately change no plan.
 4. Append report + table as a new `# Premortem` section at the END of the file.
-5. Go to step 2.
+5. Go to step 1.6.
+
+## 1.6 Milestone cut — stage the build, or say why not
+Runs on EVERY spec, after the premortem, before the approval gate. No threshold, no folder move, no status change. Carve-outs — the same two as 1.4. Spec already carries a `# Milestones` section → it ran; go to step 2.
+
+Frame: **the build is half done and something goes wrong. What has already been checked, and what has to be thrown away?** A milestone is where that answer changes.
+
+The cut rule — **a milestone must be EXERCISABLE ON ITS OWN**: its tasks leave the repo in a state you can run something against and get a real answer from. A phase of one indivisible change is not one: a rule restated in seven files is self-contradictory until the seventh lands, so "edit four" then "edit three" cuts nothing. SEAMS decide this, never size — a long list with no seam gets no milestones, a short one across two independent surfaces may get two.
+
+Then:
+1. Cut → group `# Tasks` under `## <milestone name>` sub-headings, in build order. Task wording is untouched; only order and grouping change. Every task belongs to exactly one milestone.
+2. No cut → **say what you checked and why no slice stands alone.** A bare "not needed" is not a record; this gate has no threshold to hide behind.
+3. Append `# Milestones` at the END: the milestones in build order, one line each on what that milestone makes exercisable — or the one-line skip record.
+4. Go to step 2.
 
 ## 2. Request approval → NEEDS_APPROVAL
-Move to `/features/pending/`. Summarize for the user. The summary carries BOTH gates' output, and neither is optional. Step 1.4 → the `# Open Questions` answers and what each changed (nothing qualified → say that, naming the categories checked), PLUS every `Open assumption:` line still unresolved, said out loud. Premortem ran → its mitigation table, not the report; skipped → the one-line skip reason. **STOP. Ask via AskUserQuestion.** Offer at least:
+Move to `/features/pending/`. Summarize for the user. The summary carries the output of steps 1.4, 1.5 and 1.6, and none is optional. Step 1.4 → the `# Open Questions` answers and what each changed (nothing qualified → say that, naming the categories checked), PLUS every `Open assumption:` line still unresolved, said out loud. Premortem ran → its mitigation table, not the report; skipped → the one-line skip reason. Step 1.6 → the milestones in build order, or why no slice stands alone. **STOP. Ask via AskUserQuestion.** Offer at least:
 - **Approve & implement** — → APPROVED (step 3) → implementation gate (step 4) → implement (step 5) without asking again.
 - **Approve, don't implement yet** — → APPROVED then stop.
-- **Change spec** — stay in NEEDS_APPROVAL, refine in place. Then re-enter the gates the revision invalidated, from `pending/`: step 1.4 if it opened a new question, step 1.5 if it newly crosses that threshold OR if 1.4 edited the spec after the mitigation table was written.
+- **Change spec** — stay in NEEDS_APPROVAL, refine in place. Then re-enter the gates the revision invalidated, from `pending/`: step 1.4 if it opened a new question, step 1.5 if it newly crosses that threshold OR if 1.4 edited the spec after the mitigation table was written, step 1.6 if the revision added, removed or re-ordered tasks.
 - **Discard** — → DISCARDED, move to `/features/discarded/`.
 
 Only an explicit "Approve" choice counts as approval. An implement option IS the explicit confirmation to proceed.
@@ -213,11 +231,13 @@ Only on explicit approval: move to `/features/approved/`.
 ## 4. Implementation gate → IN_PROGRESS
 Before ANY code change: verify file exists AND status = APPROVED. Then move to `/features/in-progress/`.
 **A spec can be APPROVED and still have nothing to build.** A write-only record (ON ACTIVATION 0.7) ships with `# Solution` and `# Technical Plan` as placeholders. Read both sections here. Placeholder → write the plan into the spec, and put the APPROACH to the user via AskUserQuestion before any code.
-**The plan you write HERE has had no premortem.** Crosses 1.5's threshold → run it now, against this plan, and append `# Premortem`. Record the approach answer as `# Open Questions` in the same pass; that ask IS 1.4, arriving late.
+**The plan you write HERE has had no premortem.** Crosses 1.5's threshold → run it now, against this plan, and append `# Premortem`. Record the approach answer as `# Open Questions` in the same pass; that ask IS 1.4, arriving late. Run 1.6 against that plan too — a spec that skipped step 2 skipped the milestone cut with it.
 **Then SEED THE MIRROR: one todo per `# Tasks` item, `content` copied VERBATIM.** Always, at every size — a threshold is one more rule to get wrong. VERBATIM is not style: `tick-sync.mjs` matches todo to task by exact text, so a paraphrased todo is a box that never moves. Re-seeding after a task is ADDED mid-build is part of the same rule, and `tick-guard.mjs` blocks until you do.
+**The mirror is milestone-BLIND.** Cut into `## ` milestones (1.6) → still seed EVERY item now, including milestones you will not start for hours. Milestones order the WORK, never the mirror: `tick-guard.mjs` blocks while any task has no todo, so seeding per milestone wedges the build on its own guard.
 
 ## 5. Implement
 Build only the spec's tasks. Scope changes → update the spec first.
+**Spec cut into `## ` milestones (1.6) → build them in order**, one finished before the next starts. As each lands, exercise what it made exercisable and add one line under `# Milestones`: what you ran, what you saw. That line is a RECORD, not a gate — no folder move, no user stop. **A FAILED milestone check is different: it stops the build**, via the invalidated-premise rule below. `autopilot` depends on that — unattended, a failure only recorded is a failure parked at ready-for-done.
 **`# Tasks` is a live work-list, and you do NOT tick it.** Move the TODO the moment its task lands — that is the whole act. On this harness `tick-sync.mjs` (MECHANICAL CHECK) sets the box to follow, in the same turn, both ways. Do not also edit the box by hand: a box you tick while its todo still reads `pending` is cleared again on the next `TodoWrite`, because the todo list is authoritative for tick state. Elsewhere — another harness, the Copilot export — no hook runs, so there you tick the box yourself, in the same act, and the four sites this rule used to be restated at are why it needed a mechanism.
 The LIST itself changes too: a task added mid-build is added silently, but a task REMOVED or REWORDED carries a one-line reason. A task "removed" after being delivered by a knowingly weaker means is DEBT, not a removal; one never delivered stays an unfinished task.
 Knowingly leaving a shortcut → that is DEBT, and debt becomes its own feature. Note it under this file's `# Debt Found` section the MOMENT you take it; step 6 files it. TECHNICAL DEBT in `skills/_shared/blocks.md` owns the rule — including the three things that look like debt and are not: an UNDELIVERED task, debt you did not create, and an `audit-solution` finding.
@@ -253,7 +273,7 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 - exercising a changed path that MUTATES persisted/user state (settings store, DB, on-disk files) → find the store's REAL path first (don't assume it), snapshot it, restore it after. This binds any TEST/verify you RUN as validation too: a script that writes to a REAL config/DB/store corrupts the user's environment when run — check it isolates or snapshot+restores first
 - exercising a streaming/real-time/async changed path → size the test so the observed window outlasts connect/setup latency; observe events arriving over time, not just a final snapshot
 - a path that EMITS events/metrics/callbacks → assert the payload VALUES, not just that events fire; a fired-but-null event passes a count check yet violates intent
-- two consumers of SHARED code asserted to AGREE (same output, parity, round-trip equality) → that check CANNOT fail on a defect in the shared code: both break identically and stay equal. Assert absolute expected VALUES per case too. Same trap whenever a check's EXPECTED and ACTUAL both derive from ONE source. Prove a new check can FAIL — break what it guards and watch it go red. A check never seen red is not a check
+- two consumers of SHARED code asserted to AGREE (same output, parity, round-trip equality) → that check CANNOT fail on a defect in the shared code: both break identically and stay equal. Assert absolute expected VALUES per case too. Same trap whenever a check's EXPECTED and ACTUAL both derive from ONE source. Prove a new check can FAIL — break what it guards and watch it go red. A check never seen red is not a check. **A RED that never reached an assertion proves nothing** — an import error, a missing module, a crash at setup gives the same exit code and failure count as a genuine red; read the output and confirm the assertions RAN. **The INSTRUMENT is a check too** — the probe, fixture, stub or harness you wrote to produce the evidence. Nobody validated its assertions, so a tautology (both sides equal by construction), a swallowed exception, an unreachable branch, or a stub declaring an EMPTY input schema each print a clean result having measured nothing
 - a generated artifact COMMITTED to version control → verify it survives a CLEAN CHECKOUT, not just your working tree. Line-ending and filter rules apply on checkout. VCS warnings printed during the commit are evidence, not noise
 - shell CWD persists between commands and may have drifted — anchor every verification path
 - feature OUTPUT is DATA it DERIVES (from user content, a heuristic, a model) → read a real SAMPLE of the values and judge each against EVERY invariant that constrains them (language, format, allowed-set, no-secrets), not just that values appeared. Seeing a value is not checking it

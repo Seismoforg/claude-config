@@ -108,6 +108,11 @@ with a stated reason, never a bullet naming one feature.
    - Then the premortem (1.5), reading `feature/reference/premortem.md` the same way. It has its own
      threshold and short-circuit. Below threshold → write the one-line `# Premortem` skip record, and
      put its other half in the run report, since there is no step-2 summary to carry it.
+   - Then the milestone cut (1.6). It has no threshold and no user stop, so it always runs and always
+     writes `# Milestones` — the cut, or why no slice stands alone. Its output goes in the run report
+     too, for the same reason. A cut here is what makes an unattended build checkable partway: a
+     milestone check that FAILS stops the run, exactly like any other failure, rather than being
+     recorded and carried to ready-for-done.
    - **A no-defensible-default question discovered HERE stops the run** — it does not become a quiet
      skip. The spec has already been edited, so "leave it byte-identical" is no longer available, and
      a half-gated spec left in `draft/` is exactly the state a later session cannot interpret.
