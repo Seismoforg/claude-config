@@ -70,3 +70,6 @@ token to every reader.
 - `~/.copilot/skills` keeps stale `web-standards/` and `taste/` folders after the next
   `--install-skills`. `scripts/build-copilot.mjs:379` never deletes, by design, and reports them
   instead.
+  **Amended by [0007](0007-install-the-whole-config-not-only-skills.md)** — the flag is now
+  `--install`. The stale-folder behaviour is unchanged: it still never deletes, and still reports
+  them.

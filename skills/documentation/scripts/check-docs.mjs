@@ -8,7 +8,12 @@
 import { readFileSync, existsSync, statSync, readdirSync } from 'node:fs';
 import { join, dirname, relative, resolve, isAbsolute, posix } from 'node:path';
 
-const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'out', 'coverage']);
+// `github_build` is this repo's own generated tree, listed beside the generic build outputs for the
+// same reason: these rules describe a SOURCE tree. A generated AGENTS.md has no CLAUDE.md sibling
+// because the converter deliberately does not emit one, and its relative links point at a repo root
+// the export does not contain. Checking generated output against source rules reports the generator
+// working as designed as if it were a defect.
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'out', 'coverage', 'github_build']);
 const root = resolve(process.argv[2] ?? '.');
 
 const rel = (p) => relative(root, p).split('\\').join('/') || '.';

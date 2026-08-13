@@ -133,16 +133,23 @@ node scripts/behaviour-suite.mjs <experiment-dir> --coverage             # is th
 Copilot reads the same `SKILL.md` format this repo writes, so a skill translates one for one.
 ```
 node scripts/build-copilot.mjs .                  # build github_build/
-node scripts/build-copilot.mjs . --install-skills # also install them for this user
+node scripts/build-copilot.mjs . --install        # also install for this user
 node scripts/build-copilot.mjs . --check          # re-derive and diff, write nothing
 ```
 - **`github_build/`** — a portable `.github/` tree for a REPO: every skill at `.github/skills/<name>/`,
-  the 6 subagents at `.github/agents/`, `CLAUDE.md` as `copilot-instructions.md`. Git-ignored; build
-  it when you want it.
-- **`--install-skills`** — the per-machine install, into `~/.copilot/skills` (or `=<dir>`). Writes
-  only the skill folders it emits, never deletes, and names anything there it did not write.
+  the 6 subagents at `.github/agents/`, `CLAUDE.md` as `copilot-instructions.md`, the folder
+  `AGENTS.md` docs at their mirrored positions. Git-ignored; build it when you want it.
+- **`--install`** — the per-machine install, into `~/.copilot` (or `=<dir>`, which names the Copilot
+  HOME). Writes skills, the 6 agents and `copilot-instructions.md` to the three locations Copilot
+  documents. Never deletes, and names anything there it did not write. It refuses to replace an
+  existing, differing `copilot-instructions.md` — that one is a FILE and may be yours; `--force`
+  overrides. Installed text differs from the export on purpose: `blocks.md` is inlined and pointers
+  are rewritten, because a Copilot home has no `.github/`.
 - **`--check`** — answers "did my edit change the translation?". Not a gate: nothing is committed,
   so nothing goes stale.
+- **Every source file is carried or explicitly excluded.** A file under `skills/`, `agents/` or
+  `scripts/` that no rule mentions FAILS the build with `uncovered-source-file`, rather than being
+  dropped in silence. Add a file there and you decide once, then, what happens to it.
 
 Verify in VS Code with `/skills` in Copilot Chat, or the gear icon → Agent Customizations → Skills.
 
@@ -159,6 +166,7 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 - [0004](docs/adr/0004-export-skills-as-copilot-agent-skills.md) — skills export as Copilot Agent Skills
 - [0005](docs/adr/0005-merge-surface-skills-into-coding-standards.md) — the web and design skills become coding-standards addenda
 - [0006](docs/adr/0006-tick-guard-hook.md) — hooks enforce the `# Tasks` tick cadence: a PostToolUse hook writes the box, a Stop hook guards the mirror; why they live in the skill and are registered user-level
+- [0007](docs/adr/0007-install-the-whole-config-not-only-skills.md) — every source file is carried or explicitly excluded, and `--install` installs the whole config rather than only skills
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.

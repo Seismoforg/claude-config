@@ -16,9 +16,11 @@ reads, the body is the agent's brief.
   in `check-agents.mjs` is deliberately lenient and stays that way, because the same rules living in
   two scripts is how they drift. Name-matches-filename stays here; that is semantics
 
-`AGENTS.md` and `CLAUDE.md` in this folder are docs, not definitions. Both
-`scripts/check-agents.mjs` and `../scripts/build-copilot.mjs` skip them by name; without that they
-parse as agents and fail with `no-frontmatter`.
+`AGENTS.md` and `CLAUDE.md` in this folder are docs, not definitions. Both `scripts/check-agents.mjs`
+and the Copilot build skip them when reading agent DEFINITIONS; without that they parse as agents and
+fail with `no-frontmatter`. Skipped there is not the same as dropped: the build emits this file as a
+folder doc under its own name, and excludes `CLAUDE.md` only because it is a one-line `@AGENTS.md`
+import of this very file.
 
 # Key Components
 
