@@ -43,14 +43,11 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 - 200 lines that could be 50 → rewrite it.
 - Test: "would a senior engineer call this overcomplicated?" Yes → simplify.
 
-## 3. Surgical Changes
+## 3. Repo Patterns, Debt, Resources, Processes
 
-**Touch only what you must. Clean up only your own mess.**
-- Don't "improve" adjacent code, comments, or formatting. Don't refactor what isn't broken.
-- Match existing style, even if you'd do it differently. EXCEPT when the brief is to change how it LOOKS: then the existing look is the thing being replaced, not a convention to preserve, and the design addendum owns that call. (FLOOR of REPO PATTERNS in `skills/_shared/blocks.md`.)
-- Notice unrelated dead code → mention it, don't delete it.
-- Remove imports/vars/functions YOUR change orphaned; leave pre-existing dead code alone.
-- Test: every changed line traces directly to the user's request.
+**Match existing style, even if you'd do it differently.** EXCEPT when the brief is to change how it LOOKS: then the existing look is the thing being replaced, not a convention to preserve, and the design addendum owns that call. (FLOOR of REPO PATTERNS in `skills/_shared/blocks.md`.)
+
+**Remove imports, vars and functions YOUR change orphaned.**
 
 **Debt you knowingly leave becomes a FEATURE, never just a doc line.** FLOOR of TECHNICAL DEBT in `skills/_shared/blocks.md`, which a subagent does not inherit (`agents/AGENTS.md`, "Three constraints binding BOTH classes").
 - Trigger: every knowing shortcut, workaround or deferred fix you leave behind. No size bar.
@@ -61,7 +58,7 @@ Full depth when I ask for it, or when the answer genuinely needs it. Precision-c
 - **An UNFINISHED task is not debt** — report it blocked. The test is COMPLETENESS, not scope: work
   you did not deliver stays a task; work you DID deliver by a knowingly weaker means than planned is
   debt, and that is the commonest kind.
-- Debt you did NOT create is not yours to file — mention it, per the dead-code rule above.
+- Debt you did NOT create is not yours to file — mention it, don't fix it silently.
 - **Subagent: report it, never file it.** You cannot write feature state at all — a file in your
   worktree is discarded with the worktree (`features/` is git-ignored), and an edit aimed at the main
   checkout is REJECTED for an isolated agent. Name the debt in your final message; the dispatcher
@@ -141,4 +138,4 @@ Word-identical copy of LANGUAGE in `skills/_shared/blocks.md` (canonical); an ed
 
 ---
 
-**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+**These guidelines are working if:** fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.

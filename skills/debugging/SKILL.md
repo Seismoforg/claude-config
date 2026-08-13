@@ -44,8 +44,7 @@ tests. Don't restate it here.
 
 Hand-off: if the fix needs a structural change (per `coding-standards` REFACTOR RULES
 threshold), stop the ad-hoc hunt and capture it as a `feature` draft instead — UNLESS
-the user, told it's structural, explicitly chose to keep it an ad-hoc fix; then continue
-but stay surgical.
+the user, told it's structural, explicitly chose to keep it an ad-hoc fix; then continue.
 
 # HARD RULES
 Non-obvious, high-severity only — the four steps above are not repeated here.
