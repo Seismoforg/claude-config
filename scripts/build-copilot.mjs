@@ -145,6 +145,16 @@ const SOURCE_EXCLUSIONS = {
 // bound this feature accepted rather than solved.
 const COVERED_TREES = ['skills', 'agents', 'scripts'];
 
+// Excluded files that are NORMALLY ABSENT, and whose absence must not be reported as a stale row.
+// These two are git-ignored runtime data, so a fresh clone — the common case — simply does not have
+// them. Without this the dead-row report below tells everyone who clones the repo to delete two
+// CORRECT exclusions. MEASURED, not anticipated: a clean checkout via `git worktree add` covered 61
+// sources instead of 63 and produced exactly those two bogus rows.
+const EXPECTED_ABSENT = new Set([
+  'skills/self-improve/findings.md',
+  'skills/self-improve/findings-archive.md',
+]);
+
 // ─── frontmatter ──────────────────────────────────────────────────────────────
 // Minimal YAML: `key: scalar` and `key:` followed by indented `- item` lines. That is the whole
 // shape used by this repo's skills and agents, verified by enumeration. Anything else is not
@@ -425,7 +435,9 @@ for (const p of uncovered) {
 // export. Reported rather than failed: it blocks nothing, and failing on it would make deleting a
 // file harder than adding one, which is the wrong incentive.
 for (const p of Object.keys(SOURCE_EXCLUSIONS)) {
-  if (!actualSources.includes(p)) unmapped.push({ file: p, key: 'SOURCE_EXCLUSIONS', note: 'excluded, but no such file exists any more — drop the row' });
+  if (!actualSources.includes(p) && !EXPECTED_ABSENT.has(p)) {
+    unmapped.push({ file: p, key: 'SOURCE_EXCLUSIONS', note: 'excluded, but no such file exists any more — drop the row' });
+  }
 }
 
 // Source-set hash, so a stale build is identifiable without re-running the converter.
