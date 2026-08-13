@@ -32,6 +32,10 @@ alongside inside the same folder. Delete `SKILL_CLASS` and the instructions/agen
 
 Add `--install-skills` for the per-machine install, defaulting to `~/.copilot/skills`.
 
+**Amended by [0007](0007-install-the-whole-config-not-only-skills.md)** — the flag is now `--install`,
+the old name removed, and it installs agents and `copilot-instructions.md` as well as skills. Its
+`=<dir>` argument names the Copilot HOME, not the skills folder.
+
 # Rationale
 The split was a workaround for a missing feature. The feature exists, so the workaround goes — and
 with it a table whose rows had to be judged and maintained per skill, and the risk that the next
@@ -52,6 +56,9 @@ together by rewritten pointers.
 - `--install-skills` writes into the user's home directory. It only writes folders it emits, never
   deletes, and reports anything in the target it did not write — a skill removed from this repo
   leaves a stale folder behind, visible but not cleaned up automatically.
+  **Amended by [0007](0007-install-the-whole-config-not-only-skills.md)** — the command now also
+  writes one FILE, `copilot-instructions.md`, where "only writes what it emits" is not enough on its
+  own. It refuses to replace an existing differing copy unless `--force` is given.
 - `rewritePointers` no longer invents a home for an unattributable `reference/x.md`. It used to
   fabricate `.github/agents/reference/<file>`, a path present in no build; four such pointers existed
   at the time of this change. Unattributable pointers are now left exactly as written.
