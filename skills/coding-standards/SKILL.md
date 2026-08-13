@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: "Use whenever code is created, modified, reviewed, or refactored — and the single entry point for DESIGN work (landing pages, portfolios, pricing/marketing/about pages, redesigns, hero UI, visual polish, design direction, make it look good, make it not look templated, make it less generic, this looks AI-generated, AI slop) and for any WEB/UI work (pages, components, layouts, styling, responsive/mobile, animations, anything user-facing on the web). Enforces architecture, file-size limits, Atomic Design, minimal-diff change strategy, code-quality rules. Design surfaces load an anti-slop addendum — brief inference, real design systems, audit-first redesigns, strict pre-flight check. Web surfaces load mobile-first responsive layout, WCAG accessibility, Core Web Vitals, purposeful motion, minimalist/bento layouts."
+description: "Use whenever code is created, modified, reviewed, or refactored — and the single entry point for DESIGN work (landing pages, portfolios, pricing/marketing/about pages, redesigns, hero UI, visual polish, design direction, make it look good, make it not look templated, make it less generic, this looks AI-generated, AI slop) and for any WEB/UI work (pages, components, layouts, styling, responsive/mobile, animations, anything user-facing on the web). Enforces architecture, file-size limits, Atomic Design, code-quality rules. Design surfaces load an anti-slop addendum — brief inference, real design systems, audit-first redesigns, strict pre-flight check. Web surfaces load mobile-first responsive layout, WCAG accessibility, Core Web Vitals, purposeful motion, minimalist/bento layouts."
 ---
 
 # CODING STANDARDS
@@ -97,14 +97,11 @@ API conventions (if building anything consumed externally): consistent error res
 Scheduled or polled work (cron, timer, queue poller) must not overlap itself. Guard it: concurrency limit, lock, or lease. Check WHEN the "handled" marker becomes visible to other runs — state persisted only at run end is invisible to runs already in flight, so it guards nothing.
 
 # CHANGE STRATEGY
-Prefer: minimal diffs · localized edits · existing patterns · incremental improvements.
-Avoid: full-file rewrites · broad restructuring · unnecessary renaming · large refactors without approval.
-Exception — a design surface whose brief is a redesign. Replacing the look IS the task, so a full rewrite of that surface's markup is in scope; `reference/design.md` owns how far it goes.
 Introducing a whole-repo formatter/linter alongside other edits → run the format pass FIRST, or commit functional changes before formatting, so mechanical churn lands in its own commit.
 **Never write or patch file content through the SHELL.** Three routes, all bad: a heredoc (`cat > f <<'EOF'`, `python - <<EOF`), an inline interpreter (`node -e`, `perl -e`), a pattern patcher (`sed -i`, `perl -i`). The payload is mangled in transit — backslashes eaten (`\n` lands as a real newline, `\d` as a bare `d`), apostrophes breaking the quoting, CRLF defeating a multi-line pattern. A QUOTED heredoc delimiter does not save it. Every route reports SUCCESS on a zero-match or a corrupted write; the file-editing tool errors instead. Binds the SEARCH PATTERN as much as the content. A multi-file sweep, a throwaway script, or an edit you will revert are not reasons — they are where this bites hardest: a mangled needle matches nothing, every replacement no-ops, and a red-proof reads as green.
 
 # REFACTOR RULES
-Before: identify affected files, assess risk, minimize scope, preserve behavior. Significant structural changes need approval.
+Before: identify affected files, assess risk, preserve behavior. Significant structural changes need approval.
 **"Significant" means ANY of:** > 3 files touched · a public API/exported-signature changes · a module boundary moves · a folder/module is renamed or split. Below this bar → proceed without an extra approval gate.
 Significant → capture as a `feature` draft before touching code. Non-significant → inline approval question is enough, no feature file needed.
 Moving/renaming/splitting files: TRACKED → VCS move (`git mv`) to keep history. UNTRACKED (never committed) → plain `mv`; `git mv` fails "not under version control". Rewrite every affected import/reference in one pass, then run the project's typecheck/build to confirm no stale references. A missed reference fails silently until built.
@@ -144,12 +141,11 @@ companion.
 - [ ] File sizes within guidelines
 - [ ] Architecture consistent with surrounding code
 - [ ] Existing patterns respected — on a design surface asked to CHANGE the look, this box covers code patterns only; the look is judged against `reference/design.md`
-- [ ] Diff minimal, matches task scope
 - [ ] No unnecessary complexity / premature abstraction
 - [ ] Verification (compile/tests/smoke) ran against the project's OWN env/toolchain (its virtualenv/lockfile/interpreter), not a global install
 - [ ] Long-running verification launched in the background prints UNBUFFERED (`PYTHONUNBUFFERED`, `stdbuf`, equivalent) — a buffered pipe hides all progress until exit
 - [ ] A path that can run concurrently (scheduled, triggered, multi-user) was exercised with runs OVERLAPPING — green unit tests prove logic, never timing
-- [ ] Orphaned imports/vars/functions YOUR change made unused are removed (see CLAUDE.md Surgical Changes — don't touch pre-existing dead code)
+- [ ] Orphaned imports/vars/functions YOUR change made unused are removed
 
 # HARD RULES
 Non-obvious, high-severity only — the sections above are not repeated here.
