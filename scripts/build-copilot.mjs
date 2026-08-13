@@ -150,7 +150,12 @@ const COVERED_TREES = ['skills', 'agents', 'scripts'];
 // them. Without this the dead-row report below tells everyone who clones the repo to delete two
 // CORRECT exclusions. MEASURED, not anticipated: a clean checkout via `git worktree add` covered 61
 // sources instead of 63 and produced exactly those two bogus rows.
-const EXPECTED_ABSENT = new Set([
+//
+// Same NAME and same two paths as `check-size.mjs:43`, deliberately — one concept, one name. That
+// script reached the identical conclusion for the identical reason, and two names for one rule is how
+// they drift apart. The LIST is still duplicated across the two scripts; a shared definition would be
+// the real fix and is not attempted here.
+const RUNTIME_DATA_FILES = new Set([
   'skills/self-improve/findings.md',
   'skills/self-improve/findings-archive.md',
 ]);
@@ -435,7 +440,7 @@ for (const p of uncovered) {
 // export. Reported rather than failed: it blocks nothing, and failing on it would make deleting a
 // file harder than adding one, which is the wrong incentive.
 for (const p of Object.keys(SOURCE_EXCLUSIONS)) {
-  if (!actualSources.includes(p) && !EXPECTED_ABSENT.has(p)) {
+  if (!actualSources.includes(p) && !RUNTIME_DATA_FILES.has(p)) {
     unmapped.push({ file: p, key: 'SOURCE_EXCLUSIONS', note: 'excluded, but no such file exists any more — drop the row' });
   }
 }
