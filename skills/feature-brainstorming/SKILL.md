@@ -165,7 +165,7 @@ Read the OUTPUT, not just the exit code:
 
 ## 7. Return — never gate
 Return to `feature` workflow **step 1.4, the implementation-questions gate**, and let the workflow run
-on from there — 1.4, then the premortem at 1.5, then step 2. Never jump to step 2. Hand back two things, not one:
+on from there — 1.4, then the premortem at 1.5, then the milestone cut at 1.6, then step 2. Never jump to step 2. Hand back two things, not one:
 - the DRAFT's path, and that step 1 is done
 - **every `Open assumption:` line, said out loud.** They are the only requirements nobody confirmed,
   and they are step 1.4's candidate list. Left inside the file they get approved unread — 1.4 works

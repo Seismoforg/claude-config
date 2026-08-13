@@ -58,7 +58,7 @@ its workflow — the crew only assigns the work. **Every number in this list is 
 1. **Intake (Teamleiter).** Read the task. Vague/exploratory, or named but underspecified → brainstorm
    first (`feature` step 0; its own test picks `drunken-genius` vs `feature-brainstorming`). Concrete →
    go on. `feature-brainstorming` RETURNS WITH THE DRAFT ALREADY WRITTEN, so CREW step 2 is done —
-   run `feature` step 1.4 and then 1.5 on that DRAFT, then go to CREW step 3. Dispatching the PM anyway
+   run `feature` step 1.4, then 1.5, then 1.6 on that DRAFT, then go to CREW step 3. Dispatching the PM anyway
    writes a second spec for the same feature — and so does routing a later "Change spec" answer back to
    it. Refine that DRAFT in place instead, staying in NEEDS_APPROVAL as `feature` step 2 prescribes.
    **A DRAFT written in an EARLIER session is the different case: re-planning it is correct, not a
@@ -72,8 +72,9 @@ its workflow — the crew only assigns the work. **Every number in this list is 
    DRAFT into /features/draft/ (`feature` step 1). **Transcribe the OPEN items that need the user into
    that DRAFT as `Open assumption:` lines** — the list arrives as a chat message, and only `/features`
    files are feature state. Split off any genuine skill defect first. Those lines ARE step 1.4's
-   candidate list. Then run `feature` step 1.4 and 1.5 yourself before CREW step 3 — the PM holds
-   neither a user channel nor a gate, and both must land while the spec is still a DRAFT.
+   candidate list. Then run `feature` step 1.4, 1.5 and 1.6 yourself before CREW step 3 — the PM holds
+   neither a user channel nor a gate, and all three must land while the spec is still a DRAFT. 1.6 also
+   decides whether the build is dispatched to the devs in one pass or one milestone at a time.
 3. **Approval gate (Teamleiter).** `feature` step 2 — move to pending/, **STOP. Ask via
    AskUserQuestion**. A worker NEVER runs this. Then honour the choice `feature` offers:
    - **Approve & implement** (fast-path) → straight to in-progress/, then THROUGH step 4 (it establishes
@@ -84,8 +85,8 @@ its workflow — the crew only assigns the work. **Every number in this list is 
      move it back to draft/. Needs a re-plan → re-dispatch the `pm` agent with the current spec and what
      must change, and fold its answer into that same file — the PM returns 7 sections and knows nothing
      of `# Open Questions` or `# Premortem`, so preserve BOTH sections yourself, re-run `feature` step
-     1.4 if the revision opens a new question, and re-run 1.5 if it newly crosses that threshold.
-     Discard → discarded/.
+     1.4 if the revision opens a new question, re-run 1.5 if it newly crosses that threshold, and
+     re-run 1.6 if the revision added, removed or re-ordered tasks. Discard → discarded/.
 4. **Implementation gate (Teamleiter).** Before any dev is dispatched, the file must be IN_PROGRESS in
    in-progress/. The fast-path already landed it there. Resuming a held feature (still APPROVED in
    approved/) → set status IN_PROGRESS, then move it. Folder and status always match.

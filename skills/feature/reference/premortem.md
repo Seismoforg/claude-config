@@ -56,6 +56,6 @@ Mandatory. One row per cause, no exceptions.
 - **Feature file** — report and table appended as a new `# Premortem` section, after `# Validation`.
 - **Chat** — the table and the plan edits. Not the report.
 
-Self-check before returning to step 2: did the plan actually change? A premortem that changed
+Self-check before going on to 1.6: did the plan actually change? A premortem that changed
 nothing either found nothing real (say that in one line) or was written to be comfortable. In the
 second case re-read categories 3 and 5 — integration and usage reality are the two that fail late.
