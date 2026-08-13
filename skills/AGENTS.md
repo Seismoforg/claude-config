@@ -20,9 +20,13 @@ file still loads, and the skill simply stops matching anything.
                            is a check you run, `tick-guard.mjs` (Stop) and `tick-sync.mjs`
                            (PostToolUse) are hooks you never invoke by hand, and `_shared.mjs` is
                            imported by the other three and is no entry point at all
+- `<name>/*.template.md`   — the BASE for a runtime file the skill writes. `self-improve/` holds both
+                           halves: `findings.template.md` travels, `findings.md` is the live log, per
+                           machine, git-ignored
 - `_shared/blocks.md`      — rule text several skills share, one block per rule
 
-Never at a skill root: an addendum or a script. `_shared/` holds no `SKILL.md` and is not a skill.
+Never at a skill root: an addendum or a script. A TEMPLATE is the one exception. `_shared/` holds no
+`SKILL.md` and is not a skill.
 
 # Key Components
 
