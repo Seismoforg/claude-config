@@ -41,7 +41,7 @@ Two come from the harness; the third is this repo's own policy, and the bullet s
 None forbids *writing*; they forbid a worker from *gating* or *dispatching*, which is why
 write-capable executors are still safe.
 - Subagents cannot call `AskUserQuestion` — no user channel. A gate-bound skill (`feature`,
-  `git-commit`, `self-improve`, `feature-brainstorming`) can never run inside one; it would guess or
+  `git-commit`, `self-improve`, `grilling`) can never run inside one; it would guess or
   stall. **Workers do the work, the main loop keeps every gate.**
 - No agent here dispatches another — **repo POLICY, not a harness limit.** The harness allows nesting
   (three layers by default, `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`); withholding the `Agent` tool is

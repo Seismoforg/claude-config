@@ -56,8 +56,8 @@ its workflow — the crew only assigns the work. **Every number in this list is 
 `feature`**; reading them as `feature` steps skips a gate.
 
 1. **Intake (Teamleiter).** Read the task. Vague/exploratory, or named but underspecified → brainstorm
-   first (`feature` step 0; its own test picks `drunken-genius` vs `feature-brainstorming`). Concrete →
-   go on. `feature-brainstorming` RETURNS WITH THE DRAFT ALREADY WRITTEN, so CREW step 2 is done —
+   first (`feature` step 0; its own test picks `drunken-genius` vs `grilling`). Concrete →
+   go on. `grilling` RETURNS WITH THE DRAFT ALREADY WRITTEN, so CREW step 2 is done —
    run `feature` step 1.4, then 1.5, then 1.6 on that DRAFT, then go to CREW step 3. Dispatching the PM anyway
    writes a second spec for the same feature — and so does routing a later "Change spec" answer back to
    it. Refine that DRAFT in place instead, staying in NEEDS_APPROVAL as `feature` step 2 prescribes.

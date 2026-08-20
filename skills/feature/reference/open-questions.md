@@ -10,7 +10,7 @@ Frame it as "you are starting tomorrow — what blocks you?", never "is anything
 
 # 1. THE CANDIDATE LIST — start here, not from a blank page
 
-Read the spec's `Open assumption:` lines FIRST. They are the candidate list. `feature-brainstorming`
+Read the spec's `Open assumption:` lines FIRST. They are the candidate list. `grilling`
 writes one for everything its interview could not settle, an inline spec writer produces them at step
 1, and under `crew` the Teamleiter transcribes the `pm` agent's `OPEN:` list into them. Those three
 are the only producers — the premortem writes none, so do not go looking for premortem-authored

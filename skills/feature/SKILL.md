@@ -140,7 +140,7 @@ These are added by the GATES, in the order their gate runs. Every section above 
   has no threshold either. Absent only where 1.6 never ran, the same carve-out list as 1.4's.
 - **`# Debt Found`** is conditional on a shortcut actually being taken. Absent = none was — a claim step 6 makes you state out loud, never a silence it accepts. TECHNICAL DEBT in `skills/_shared/blocks.md` owns WHEN to write it; the line above is the only definition of what a line in THAT section carries. `agents/dev.md` OUTPUT separately owns a worker's `DEBT:` REPORT line, which a dispatcher transcribes into this format — two formats on purpose.
 
-**`Open assumption:` lines** — a trailing list under `# Technical Plan`, one line each: what you assumed and why, for anything the spec could not settle. EVERY spec writer produces them: inline at step 1, `feature-brainstorming` (its §5), and the Teamleiter transcribing a `pm` agent's `OPEN:` list. They are step 1.4's candidate list, so a spec that smooths its assumptions away disarms the gate that exists to confirm them.
+**`Open assumption:` lines** — a trailing list under `# Technical Plan`, one line each: what you assumed and why, for anything the spec could not settle. EVERY spec writer produces them: inline at step 1, `grilling` (its §5), and the Teamleiter transcribing a `pm` agent's `OPEN:` list. They are step 1.4's candidate list, so a spec that smooths its assumptions away disarms the gate that exists to confirm them.
 
 **Language + style: feature files follow ENGLISH + SIMPLE ARTIFACTS** (`skills/_shared/blocks.md`).
 
@@ -151,9 +151,9 @@ Every new feature enters here. One of its branches is "go to step 1 now". Two br
 
 The test that picks — **to fill the spec, would you have to INVENT a decision the user has an opinion about?** Not "can I write fluent prose for this section": you always can, and that fluency is the failure. Ask which concrete choices you would be making FOR them — a limit, a default, a storage location, a scope cut.
 - **None** → skip both, straight to step 1.
-- **Several, and the IDEA itself is one of them.** Vague, exploratory, "what could we do", or the user says brainstorm/wild ideas → `drunken-genius`. Its output stays in chat; it never writes a file. Once the user picks an idea, carry it into step 1 as the DRAFT's Summary/Problem/Solution seed — or into `feature-brainstorming` if details are still open.
-- **Several, but the idea is settled — the DETAILS or the APPROACH are open** → `feature-brainstorming`. Mostly multiple-choice interview, then it performs step 1 for you: DRAFT written into `/features/draft/`. You resume at **step 1.4** and do NOT redo step 1.
-- **The idea is open AND the details under it are** → `drunken-genius` first, then `feature-brainstorming`.
+- **Several, and the IDEA itself is one of them.** Vague, exploratory, "what could we do", or the user says brainstorm/wild ideas → `drunken-genius`. Its output stays in chat; it never writes a file. Once the user picks an idea, carry it into step 1 as the DRAFT's Summary/Problem/Solution seed — or into `grilling` if details are still open.
+- **Several, but the idea is settled — the DETAILS or the APPROACH are open** → `grilling`. A design-tree interview worked in ROUNDS: it asks the whole frontier, takes your answers, recomputes and asks again until nothing is left assumed. Then it performs step 1 for you: DRAFT written into `/features/draft/`. You resume at **step 1.4** and do NOT redo step 1.
+- **The idea is open AND the details under it are** → `drunken-genius` first, then `grilling`.
 
 ## 1. Create → DRAFT
 Claim the file with `new-feature.mjs` (STRUCTURE owns the invocation), then write the spec into the path it prints. Fill all sections as far as known.

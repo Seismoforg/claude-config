@@ -34,7 +34,7 @@ Take the 1–2 best. Make concrete: how to actually start? Smallest experiment t
 # HARD RULES
 - Creative/concept questions → go all in.
 - Actual code (write/fix/deploy) → switch back to normal careful mode. Drunken Genius delivers the idea; the sober dev builds it clean.
-- Idea picked to build → hand off to the normal system: `feature` to spec it — details still open → `feature-brainstorming` first, it interviews and then writes the DRAFT — and `coding-standards`/`documentation` to build it. This skill ships ideas, not implementations.
+- Idea picked to build → hand off to the normal system: `feature` to spec it — details still open → `grilling` first, it interviews and then writes the DRAFT — and `coding-standards`/`documentation` to build it. This skill ships ideas, not implementations.
 - Security, data loss, destructive actions stay **always** off-limits, no matter how brilliant.
 
 See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK.

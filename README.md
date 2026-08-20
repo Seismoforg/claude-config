@@ -4,7 +4,7 @@ Versioned Claude Code global config: user `CLAUDE.md` + custom skills + custom s
 
 ## Layout
 - `CLAUDE.md` — global user instructions (behavioral guidelines).
-- `skills/`   — custom skills (coding-standards, feature, feature-brainstorming, crew, autopilot, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
+- `skills/`   — custom skills (coding-standards, feature, grilling, crew, autopilot, debugging, security-review, documentation, git-commit, audit-solution, self-improve, simple-language, fableize, drunken-genius).
 - `agents/`   — custom subagents. Analysis (read-only): audit-scout, security-auditor, standards-reviewer, pm, tester. Executor (write, worktree): dev.
 - `experiments/` — measurement runs over the rule corpus, one directory each. **Git-ignored**: local working data, not part of the config the harness loads, and outside every check script's corpus. See "Measuring a cut" below.
 
