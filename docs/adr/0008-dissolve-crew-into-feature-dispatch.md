@@ -61,6 +61,11 @@ design to step 6, both main-loop work. `dev` survives as the only executor.
   TIME, not the session-start tip ADR 0001 records — its base `22f1386` was a commit made in the same
   session. One run is not a measurement of harness behaviour, so nothing in this decision rests on it
   and `dispatch.md` §4 still states the invariant as ADR 0001 measured it. Recorded to be replicated.
+  **Amended 20260821 (no ADR — the replication this bullet asked for was run):** it was neither tip.
+  The base is `origin/main`, on five worktree branches. That single mechanism explains this observation
+  and ADR 0001's at once — `22f1386` was same-session because that session had pushed. Two consequences
+  for the text above: the last sentence is now false, since `dispatch.md` §4 states the corrected claim;
+  and this bullet's caution was right — nothing rested on the one run, and the one run was wrong.
 - **MEASURED:** the harness advertises a `worktreeBranch` ref that can point at a commit from BEFORE
   the round while the worker commits in detached HEAD. `git merge --no-ff <that name>` lands nothing
   and exits 0, reading as a clean merge. `dispatch.md` §5 therefore requires merging the worker's
