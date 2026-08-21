@@ -131,7 +131,15 @@ Everything about isolation follows from that one line:
 - Worktrees are for PARALLEL INDEPENDENT work. They cannot hand one worker's output to the next.
 - A step that must SEE earlier work cannot be a worktree worker at all. Make it read-only so it
   returns TEXT, or do it in the main loop.
-- Dispatch a round from a base you will not change until that round is merged.
+- **Dispatch a round from a base you will not REWRITE until that round is merged — §5 governs where
+  this and it disagree.** Read as "do not move the branch at all" it forbids §5, which mandates merging
+  the moment each worker returns; both cannot hold, and §5 wins because losing a `DEBT:` line or a
+  coverage re-check is a real failure while a moved branch tip, on its own, is not. The distinction
+  that makes them compatible: a MERGE only ADDS commits, so every live worker's base stays an ancestor
+  of yours and nothing it built becomes unreachable. A REBASE, a RESET or a force-push does not — it
+  makes those bases unreachable mid-round, and that is what this bullet actually protects against.
+  MEASURED 2026-08-21: a four-worker round whose branch moved twice while three workers were still
+  building produced no conflict and no lost work; each worker's base remained an ancestor.
 - Do NOT resume a finished worker for later work: its worktree is frozen at that stale base, and may
   already have been removed.
 
