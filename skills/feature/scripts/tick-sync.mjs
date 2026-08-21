@@ -80,7 +80,7 @@ const main = () => {
   // A dispatched worker's private todo list must never tick the dispatcher's spec. MEASURED: both fields
   // are `undefined` from the main loop. The positive case is inferred from the hook docs ("when in
   // subagent") and is NOT measured — see the spec's open assumption. It fails safe for the case that
-  // matters most anyway: under `crew` a dev works in a worktree, and `features/` is git-ignored, so a
+  // matters most anyway: a dispatched dev works in a worktree, and `features/` is git-ignored, so a
   // worktree has no `features/in-progress/` for the dir check below to find.
   if (input?.agent_id !== undefined || input?.agent_type !== undefined) bail();
 

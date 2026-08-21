@@ -79,7 +79,7 @@ Exit 1 = violations as `file:line:col  rule (§)  detail`. Fix every hit, re-run
 files). Fix the invocation and re-run; a 2 is never a pass.
 
 **Who runs it: whoever wrote the code, if they hold a shell — the dispatcher otherwise.** Holding no
-shell at all (`pm`, `tester`, `audit-scout`) or only a restricted one (`standards-reviewer`'s HARD
+shell at all (`audit-scout`) or only a restricted one (`standards-reviewer`'s HARD
 RULES allow read-only git) → say so in your report; do not claim the check as done and do not treat
 it as someone else's silence. The dispatcher's own run covers the integrated whole and does NOT
 replace the per-worker one.
@@ -89,7 +89,7 @@ check enforces it (`unprefixed-design-ref`); its command is in that repo's READM
 Elsewhere the rule is yours to keep.
 
 **Dispatching a WORKER these govern → hand it the ABSOLUTE path.** Every pointer above, and
-`reference/dependencies.md` below, is skill-relative. `crew` DISPATCH RULES owns the hand-off.
+`reference/dependencies.md` below, is skill-relative. `feature/reference/dispatch.md` §3 owns the hand-off.
 
 # BACKEND ARCHITECTURE
 Layer: Controllers → Services → Repositories → Domain Models. No business logic in controllers or UI — it belongs in services/domain models.

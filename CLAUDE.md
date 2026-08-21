@@ -110,7 +110,6 @@ Invoke the matching skill — don't bypass it and hand-roll:
 - Writing/modifying/reviewing code → `coding-standards`. It also owns web/UI work, and frontend design — landing pages, portfolios, pricing/marketing/about pages, redesigns, hero UI, visual polish, design direction, and any complaint about how something LOOKS ("make it look good", "not templated", "less generic", "this looks AI-generated"). The skill routes to the right addendum from there; it must be READ before writing on that surface. This entry names the SKILL only, deliberately: an addendum gets no route of its own (`self-improve` SKILL LIFECYCLE).
 - New features (plan/spec/approve/implement) → `feature`
 - Feature named but underspecified, or you want your thinking stress-tested — pin it down before speccing → `grilling` (runs inside `feature` step 0; design-tree interview in rounds, each round shown as one block with recommended answers and collected through `AskUserQuestion`, then writes the DRAFT). MAIN LOOP ONLY — it lives on `AskUserQuestion`, which a subagent does not have.
-- Delegate a task to the role-based crew (Teamleiter/PM/devs/tester) → `crew` (drives `feature`)
 - Ad-hoc bug hunt outside a feature ("why is this crashing", "this is broken") → `debugging`
 - Sensitive code (auth, input validation) / pre-release security check → `security-review`
 - Architecture, modules, APIs, AGENTS.md, ADRs → `documentation`
@@ -124,7 +123,7 @@ Invoke the matching skill — don't bypass it and hand-roll:
 ## 7. Skill composition order
 
 When several skills apply to one request, they compose in this order:
-1. Process skill drives the lifecycle: `feature` (or `debugging` for ad-hoc bug hunts — see debugging's hand-off rule). `autopilot` and `crew` sit ABOVE `feature` rather than replacing it — both drive it, so its gates still apply except where `autopilot` declares an exception.
+1. Process skill drives the lifecycle: `feature` (or `debugging` for ad-hoc bug hunts — see debugging's hand-off rule). `autopilot` sits ABOVE `feature` rather than replacing it — it drives it, so its gates still apply except where `autopilot` declares an exception. `feature` step 5 splits a milestone's tasks across `dev` workers itself; that is inside the lifecycle, not above it.
 2. Content/style skills apply in parallel during IN_PROGRESS: `coding-standards` (+ its addenda — web and design included), `security-review` on sensitive code — while writing it, not after.
 3. Cross-cutting review before DONE: an independent `security-review` pre-release pass, `audit-solution` on request.
 4. `git-commit` closes.

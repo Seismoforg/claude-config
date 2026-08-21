@@ -78,7 +78,7 @@ continue.
    later features, and nothing would record that two features in one batch followed different
    versions of a rule:
    - `CLAUDE.md` — loaded for the whole session, and its rules bind autopilot directly
-   - `skills/_shared/blocks.md`, `coding-standards`, `feature`, `autopilot`
+   - `skills/_shared/blocks.md`, `coding-standards`, `feature` — its `feature/reference/dispatch.md` included, since step 5 reads it on every milestone — and `autopilot`
    - the surface rules a build applies: `coding-standards`' `reference/` addenda, `security-review`, `documentation`
    - the always-on `simple-language` and `fableize`
    Read the spec's Impact Analysis, not just its title.
@@ -128,9 +128,12 @@ with a stated reason, never a bullet naming one feature.
      silently suppresses a real `tasks-not-current` violation. **Draft path only** — never stamp a
      feature a human actually approved.
 4. Seed the mirror the moment the file lands in `in-progress/` — one todo per `# Tasks` item, verbatim
-   (`feature` step 4). Then build the tasks. Apply `coding-standards` and whichever surface skills the
-   feature implies. Tick each task as it lands, box and todo in one act. A task you ADD mid-build means
-   re-seeding, or it sits outside the mirror.
+   (`feature` step 4). Then build the tasks, through step 5's DISPATCH DECISION like any other run —
+   there is no autopilot carve-out for it, and unattended is exactly where model cost is worst. A set
+   that fails after its one escalation is a failure like any other and stops the run under ON FAILURE.
+   Apply `coding-standards` and whichever surface skills the feature implies. Tick each task as it
+   lands, box and todo in one act. A task you ADD mid-build means re-seeding, or it sits outside the
+   mirror.
 5. Run `feature` step 6's validation checks in full. Then move to `ready-for-done/`, status
    READY_FOR_DONE, taking *Leave open for now*.
 6. One line to the report. Next feature.

@@ -103,6 +103,9 @@ const violations = [];
 // matching the boundary regex below — all 6 agents wired themselves and the rule could never fire.
 // Excluding that one directory then let the very next file added, docs/adr/0001-tester-...md, do the
 // same for `tester`. A denylist is one new top-level directory away from a false clean, every time.
+// `pm` and `tester` were retired later, with the crew skill. The agent count and the `tester`
+// example above are the state AT MEASUREMENT TIME and stay as written — they are the evidence, and
+// restating them against today's roster would leave the conclusion with nothing behind it.
 // statSync, never Dirent.isDirectory(): a Windows junction reports false as a Dirent, so a
 // junctioned skills/ would vanish and every agent would read as orphaned. This repo is reached
 // via exactly such a junction. Same SKIP_DIRS + statSync shape as check-docs.mjs.

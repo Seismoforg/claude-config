@@ -45,7 +45,7 @@ const CORPUS_FILES = ['CLAUDE.md', 'README.md'];
 const CORPUS_EXT = /\.(?:md|mjs)$/;
 const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'build', '.next', 'out', 'coverage']);
 
-const RETIRED = ['web-standards', 'taste'];
+const RETIRED = ['web-standards', 'taste', 'crew'];
 // `web-standards` is never an English word, so any spelling of it is a live reference.
 // `taste` IS one — skills/self-improve/SKILL.md, SKILL LIFECYCLE ("not by taste") and
 // skills/coding-standards/reference/design.md:27 ("not your taste") are both correct English and
@@ -53,10 +53,17 @@ const RETIRED = ['web-standards', 'taste'];
 // backticked `taste`, or the all-caps heading form the deleted SKILL.md used.
 // GAP, stated rather than hidden: a bare mid-sentence "taste" that MEANS the skill is
 // indistinguishable from the word here. Prose review owns that one; this script cannot.
+// `crew` is the same shape as `taste` — an ordinary English word, and this corpus uses it that way
+// ("a role that must see an earlier worker's output", "the crew skill was retired"). So it counts only
+// in a PATH or skill-name position, and the same GAP applies: a bare mid-sentence "crew" meaning the
+// skill is invisible here. That is deliberate — it is what lets a historical note keep naming what was
+// retired, which `agents/AGENTS.md` and `agents/scripts/check-agents.mjs` both do on purpose.
 const RETIRED_PATTERNS = [
   [/web-standards/i, 'web-standards'],
   [/[`/]taste\b|\btaste[`/]/i, 'taste (path or skill name)'],
   [/\bTASTE\b/, 'TASTE (heading form)'],
+  [/[`/]crew\b|\bcrew[`/]/i, 'crew (path or skill name)'],
+  [/\bCREW\b/, 'CREW (heading form)'],
 ];
 
 // The five references under skills/coding-standards/reference/ that are NOT design addenda.

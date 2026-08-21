@@ -18,6 +18,11 @@ worker's output to the next.
 The tester is an **analysis** agent, not an executor. It derives tests from the feature SPEC and
 returns the test code as TEXT. The dispatcher writes the files and runs them.
 
+**Amended by 0008:** the `tester` agent was deleted with the `crew` skill, so this decision's SUBJECT
+no longer exists. Its PRINCIPLE stands unchanged — a role that must see an earlier worker's output is
+built as analysis, never as an executor — and now lives in `feature/reference/dispatch.md` §4. Test
+design returned to `feature` step 6, in the main loop.
+
 # Rationale
 A tester that WROTE its tests would need a worktree. It would then faithfully test a version of the
 repo that lacks the very build it was sent to check — a green run proving nothing, with no error to
@@ -36,3 +41,7 @@ something you have to check rather than something you can rely on.
   same shape: read-only, returns text. `crew` DISPATCH RULES states this as a general rule ("a role
   that must see earlier work cannot use a worktree at all"), not a fact about the tester.
 - Fix rounds after a red test are main-loop work for the same reason.
+  **Amended by 0008:** reversed. A fix round MAY be dispatched when three conditions all hold — the
+  failing state is committed, the brief names that commit as the expected base, and the worker
+  fast-forwards onto it before editing. An UNCOMMITTED failure still stays main-loop work, for
+  exactly the reason this line gave: the worker's tree never contained it.

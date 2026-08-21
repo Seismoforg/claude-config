@@ -404,7 +404,7 @@ Mode resolved to either **Redesign** → load it now, before touching anything. 
 Three passes, in order, before outputting code. This is the last filter. **NOT OPTIONAL.**
 The ordering is per-ACTOR, not per-clock. Where a WORKER outputs the code it cannot run pass 2 at all
 (no agent here holds `Agent`), so pass 2 moves to the INTEGRATED result and the dispatcher owns it
-— `crew` step 5 assigns it. **Pass 3 SPLITS, it does not move:** you still tick every box your own
+— `feature` step 5 assigns it. **Pass 3 SPLITS, it does not move:** you still tick every box your own
 slice can answer; only the ones needing the whole merged page (the theme/colour/shape locks, the
 zigzag cap, layout-family repetition, duplicate CTA intent) go with pass 2. Read "the dispatcher owns
 pass 3" as covering all of it and ~35 boxes end up owned by nobody.

@@ -71,7 +71,7 @@ No running feature (ad-hoc fix, bug hunt) → no host section, so write the DRAF
 line each and Tasks one item.
 Subagent: you cannot file feature state AT ALL. A file you write in your worktree is discarded with
 it (`features/` is git-ignored), and an edit aimed at the main checkout is REJECTED for an isolated
-agent — MEASURED, see `crew` DISPATCH BRIEF. So neither a new file nor an append to the spec is open
+agent — MEASURED, see `feature/reference/dispatch.md` §3. So neither a new file nor an append to the spec is open
 to you. Name the debt in your final message; the dispatcher files it.
 
 # FINDING SHAPE

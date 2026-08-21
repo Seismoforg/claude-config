@@ -11,10 +11,9 @@ Frame it as "you are starting tomorrow — what blocks you?", never "is anything
 # 1. THE CANDIDATE LIST — start here, not from a blank page
 
 Read the spec's `Open assumption:` lines FIRST. They are the candidate list. `grilling`
-writes one for everything its interview could not settle, an inline spec writer produces them at step
-1, and under `crew` the Teamleiter transcribes the `pm` agent's `OPEN:` list into them. Those three
-are the only producers — the premortem writes none, so do not go looking for premortem-authored
-assumptions on a revision.
+writes one for everything its interview could not settle, and an inline spec writer produces them at
+step 1. Those two are the only producers — the premortem writes none, so do not go looking for
+premortem-authored assumptions on a revision.
 
 Generating categories from scratch instead re-asks a question the user already answered.
 
