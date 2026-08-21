@@ -64,7 +64,7 @@ const readTail = (path, bytes) => {
 // each call; it replaces the previous one." So one record is the entire state, and scanning backwards
 // to the first hit is both correct and the cheap direction.
 //
-// `isSidechain` skips a dispatched worker's own todo list. Under `crew` a dev writes into this same
+// `isSidechain` skips a dispatched worker's own todo list. A dispatched dev writes into this same
 // JSONL; without the filter its private list becomes "the last TodoWrite", matches nothing in the
 // spec, and fires condition 1 against a mirror that was seeded correctly. MEASURED: the field is on
 // all 5316 message records in this repo's transcripts. It fails OPEN — a record missing the field is
