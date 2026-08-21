@@ -14,6 +14,15 @@ MEASURED: a worktree is cut from the branch tip as of SESSION START, not current
 dispatched after a commit had landed both reported the older tip. A worktree therefore cannot hand one
 worker's output to the next.
 
+**Amended 20260821 (no ADR — a replication measurement refuted the MECHANISM above, not this
+decision):** the base is `origin/main`. The observation stands and agrees with that — a commit landing
+locally does not move `origin/main`. Evidence: five worktree branches, each reflog reading
+`branch: Created from origin/main`; one cut while the checked-out branch stood elsewhere, arriving at a
+commit that predated that branch's own work. `feature/reference/dispatch.md` §4 carries the corrected
+claim. Out of scope here and left unchanged: the last sentence above. The same round refuted it too —
+the object store is shared, so a worktree CAN see another's committed work, by race — and that is
+being handled in its own feature.
+
 # Decision
 The tester is an **analysis** agent, not an executor. It derives tests from the feature SPEC and
 returns the test code as TEXT. The dispatcher writes the files and runs them.
