@@ -216,9 +216,10 @@ const rewritePointers = (text, skill, skillNames) => text
   // Links back to the REPO ROOT — `../README.md`, `../docs/adr/x.md`, `../../docs/adr/x.md`. The
   // export contains neither README nor docs/, by decision, so these resolve nowhere in it. Named as
   // the source repo rather than deleted: a deleted pointer is an invisible loss.
-  // Counted, not estimated: 4 occurrences — skills/AGENTS.md:74, agents/AGENTS.md:37, :99, and
-  // skills/crew/SKILL.md:235. That last one has been dead in every build to date; it travelled
-  // already and nothing checked it, because check-docs only ever looked at AGENTS.md files.
+  // Counted, not estimated: 4 occurrences — skills/AGENTS.md:72, agents/AGENTS.md:39, :98, and
+  // skills/feature/reference/dispatch.md:124, which reaches three levels up (`../../../docs/`).
+  // The crew SKILL.md occurrence this comment used to name went with that skill; dispatch.md's ADR
+  // link arrived in the same feature, so the COUNT is unchanged and every line number is not.
   .replace(/(?:\.\.\/)+(README\.md|docs\/)/g, '<claude-config>/$1')
   // A pointer may name ANOTHER skill's reference — audit-solution cites coding-standards/reference/design-ai-tells.md,
   // security-review cites coding-standards/reference/dependencies.md. Resolve to the OWNING skill's

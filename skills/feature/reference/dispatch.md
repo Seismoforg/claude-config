@@ -51,6 +51,15 @@ differently-worded tasks — and that surfaces at the SECOND merge, not the firs
 cutting, no file derivation, no brief. Most milestones are this, and without the short-circuit the
 decision costs more than it saves.
 
+**A set that edits what the dispatch RUNS UNDER is `inline`, whatever the rubric rated it.** The
+tier describes the work; this overrides where it runs. It covers `CLAUDE.md`, `skills/_shared/blocks.md`,
+`feature` and this file, and every skill a worker PRELOADS (`coding-standards`, `documentation`) or is
+handed as a surface rule. Dispatching one sends a worker to rewrite the rules it is at that moment
+obeying, and nothing records that two sets in one round followed different versions of them. Same
+reasoning as `autopilot`'s third skip category. In a config repo this catches most rule-prose work,
+which is a real limit on how much this mechanism can save HERE — say so in `# Dispatch` rather than
+routing around it.
+
 **At most four dispatches at once.** More sets than that wait for a free slot.
 
 **Assign every task explicitly. Verify coverage twice** — before dispatch and after merge.
@@ -135,6 +144,14 @@ the merge: remove the worktree and delete its branch — until then that branch 
 
 Worker branches are EXEMPT from the `feature/` scheme: the harness names them when `isolation:
 worktree` is set, so read the name back from `git worktree list`.
+
+**MERGE THE WORKER'S REPORTED HEAD SHA, not the advertised branch name.** MEASURED here: the harness
+reported `worktreeBranch: worktree-agent-<id>`, that ref existed, and it pointed at a commit from
+BEFORE the round — the worker had committed in DETACHED HEAD, which is what `git worktree list` shows.
+Merging the name would have landed NOTHING and exited 0, reading as a clean merge of an empty change.
+The worker reports its HEAD first for exactly this reason (`agents/dev.md` OUTPUT). Verify what you
+are about to merge — `git log --oneline -1 <sha>` and `git merge-base --is-ancestor` against your own
+HEAD — before running the merge, and again by the file list the merge prints.
 
 **Immediately after EACH merge, not "later":**
 - Re-check coverage against the milestone's task list.

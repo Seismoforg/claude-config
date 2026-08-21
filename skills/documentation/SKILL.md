@@ -50,8 +50,8 @@ A folder whose own convention already mandates an equivalent per-folder doc (a f
 ## Structure + worked example
 See `reference/agents-md-template.md`. Load it only when creating or restructuring an AGENTS.md file.
 Dispatching a SUBAGENT whose task creates a module doc → hand it the ABSOLUTE path. The pointer above
-is skill-relative, and an absolute one is unambiguous for every reader (`crew` DISPATCH RULES owns the
-hand-off).
+is skill-relative, and an absolute one is unambiguous for every reader
+(`feature/reference/dispatch.md` §3 owns the hand-off).
 
 # CLAUDE.md SIBLING (HARD RULE)
 Every folder with an `AGENTS.md` MUST have a `CLAUDE.md` beside it whose entire content is one line:
