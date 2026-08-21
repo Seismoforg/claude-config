@@ -86,6 +86,7 @@ const CAPS = {
   'skills/fableize/reference/offload-calc.md': 310,
   'skills/fableize/reference/offload-summarize.md': 333,
   'skills/feature/SKILL.md': 6963,
+  'skills/feature/reference/dispatch.md': 2039,
   'skills/feature/reference/open-questions.md': 988,
   'skills/feature/reference/premortem.md': 596,
   'skills/git-commit/SKILL.md': 5888,
