@@ -76,8 +76,10 @@ Every dispatch carries all of it. A missing item is the dispatcher's miss, not t
   fine from inside a worktree. Write targets → repo-relative, joined onto the worker's own worktree
   root. An edit target handed as a main-checkout absolute is REJECTED for an isolated agent.
 - **The EXPECTED base — branch name AND commit** — plus "run `git rev-parse HEAD` first; behind it →
-  move onto that base before editing". A worktree is cut from the tip as of SESSION START, so every
-  round after a merge starts stale. Naming the base is what makes the worker's own check actionable.
+  move onto that base before editing". **This is not belt-and-braces. It is the ONLY thing standing
+  between a round and a silently wrong base**, because a worktree is cut from `origin/main` (§4), never
+  from your branch. Concretely: milestone 2's workers do not receive milestone 1's commits unless this
+  bullet is obeyed. Naming the base is what makes the worker's own check actionable.
 - The `DEBT:` line is EXPECTED. Say so, or a knowingly-left shortcut comes back as neither a report
   nor a filing. `agents/dev.md` OUTPUT owns its format.
 - The shell-bound checks the task's own surface mandates — `coding-standards`' pre-flight on a design
@@ -119,8 +121,10 @@ flags the gap instead of assuming coverage.
 # 4. THE INVARIANT
 
 **A worker sees only its own worktree, cut from a base that may be older than yours — verify its
-reported HEAD, never assume it matches.** A worktree is cut from the branch tip as of SESSION START,
-not current HEAD. The measurement lives in
+reported HEAD, never assume it matches.** MEASURED 2026-08-21: **the base is `origin/main`** — not the
+branch tip, not current HEAD. Five worktree branches all read `branch: Created from origin/main`, one
+cut while the checked-out branch stood elsewhere. An unpushed `main` is older still. §3's expected-base
+bullet is what corrects for it. Earlier record and its amendment:
 [ADR 0001](../../../docs/adr/0001-tester-is-read-only-not-an-executor.md).
 
 Everything about isolation follows from that one line:
@@ -131,15 +135,11 @@ Everything about isolation follows from that one line:
 - Worktrees are for PARALLEL INDEPENDENT work. They cannot hand one worker's output to the next.
 - A step that must SEE earlier work cannot be a worktree worker at all. Make it read-only so it
   returns TEXT, or do it in the main loop.
-- **Dispatch a round from a base you will not REWRITE until that round is merged — §5 governs where
-  this and it disagree.** Read as "do not move the branch at all" it forbids §5, which mandates merging
-  the moment each worker returns; both cannot hold, and §5 wins because losing a `DEBT:` line or a
-  coverage re-check is a real failure while a moved branch tip, on its own, is not. The distinction
-  that makes them compatible: a MERGE only ADDS commits, so every live worker's base stays an ancestor
-  of yours and nothing it built becomes unreachable. A REBASE, a RESET or a force-push does not — it
-  makes those bases unreachable mid-round, and that is what this bullet actually protects against.
-  MEASURED 2026-08-21: a four-worker round whose branch moved twice while three workers were still
-  building produced no conflict and no lost work; each worker's base remained an ancestor.
+- **Never REWRITE the base under a live round — rebase, reset, force-push. Where this and §5 disagree,
+  §5 governs.** Read as "never move the branch" it forbids §5's merge-immediately rule. §5 wins: a
+  merge only ADDS commits, so every live worker's base stays an ancestor and nothing it built becomes
+  unreachable; a rewrite is what breaks that. MEASURED 2026-08-21: a four-worker round whose branch
+  moved twice mid-round lost nothing.
 - Do NOT resume a finished worker for later work: its worktree is frozen at that stale base, and may
   already have been removed.
 
