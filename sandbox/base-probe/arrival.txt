@@ -1,0 +1,26 @@
+git rev-parse HEAD
+fe9568d083435287e92b9bb5986eaea3eaf18f02
+
+git branch --show-current
+worktree-agent-a342bce5bf2cf1036
+
+git rev-parse --show-toplevel
+D:/Projects/claude-config/.claude/worktrees/agent-a342bce5bf2cf1036
+
+git rev-parse --git-dir
+D:/Projects/claude-config/.git/worktrees/agent-a342bce5bf2cf1036
+
+git reflog show worktree-agent-a342bce5bf2cf1036
+fe9568d worktree-agent-a342bce5bf2cf1036@{0}: branch: Created from origin/main
+
+git rev-parse origin/main
+fe9568d083435287e92b9bb5986eaea3eaf18f02
+
+git rev-parse main
+fe9568d083435287e92b9bb5986eaea3eaf18f02
+
+git rev-parse feature/dispatch-base-is-origin-main
+6cb20f10db9f15672351c98e33ab18151a7e5477
+
+git log --oneline -1 HEAD
+fe9568d Merge branch 'feature/dispatch-smoke-test'
