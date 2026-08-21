@@ -410,7 +410,11 @@ for (const d of [skillsDir, agentsDir]) {
 // NOT verified, and stated so it is not mistaken for a checked fact: check-size.mjs and
 // check-pointers.mjs were written against THIS repo's structure. Run inside a consuming repo they
 // may report against a tree they were not written for.
-for (const f of ['check-frontmatter.mjs', 'check-pointers.mjs', 'check-size.mjs']) {
+// check-adr.mjs is the one that travels cleanly: its corpus is docs/adr/NNNN-kebab-title.md, which is
+// the layout skills/documentation/SKILL.md:78 DEFINES rather than a shape of this repo — and it exits
+// 0 with "nothing to check" where that directory is absent, so a consuming repo without ADRs is not
+// told it failed.
+for (const f of ['check-frontmatter.mjs', 'check-pointers.mjs', 'check-size.mjs', 'check-adr.mjs']) {
   const p = join(root, 'scripts', f);
   if (existsSync(p)) put(`.github/scripts/${f}`, readSrc(p));
 }

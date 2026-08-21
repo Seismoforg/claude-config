@@ -19,11 +19,12 @@ repeated here: one home per rule.
 
 ## Mechanical checks
 Run them all after editing anything they cover. Each exits 1 on a violation, printing `file  rule  detail`.
-A bad ROOT exits 2 in all six — a broken invocation, never a pass. An EMPTY corpus splits them, and the
+A bad ROOT exits 2 in all seven — a broken invocation, never a pass. An EMPTY corpus splits them, and the
 split is deliberate: `check-frontmatter` and `check-size` exit 2, because their corpus IS this repo and
-its absence means nothing was examined; `check-agents`, `check-features` and `check-docs` exit 0 with an
-explicit "nothing to check" line, because another repo may legitimately have no `features/` and no
-`AGENTS.md`. So read the COUNT each prints, not just the code — exit 0 over an empty corpus is not a pass.
+its absence means nothing was examined; `check-agents`, `check-features`, `check-docs` and `check-adr`
+exit 0 with an explicit "nothing to check" line, because another repo may legitimately have no
+`features/`, no `AGENTS.md` and no `docs/adr/`. So read the COUNT each prints, not just the code — exit 0
+over an empty corpus is not a pass.
 ```
 node agents/scripts/check-agents.mjs
 node skills/feature/scripts/check-features.mjs
@@ -31,7 +32,12 @@ node skills/documentation/scripts/check-docs.mjs
 node scripts/check-pointers.mjs
 node scripts/check-frontmatter.mjs
 node scripts/check-size.mjs
+node scripts/check-adr.mjs
 ```
+`check-adr` covers `docs/adr/NNNN-kebab-title.md`: an ADR marked `status: superseded` must name another
+EXISTING ADR in its first 10 body lines, and `status:` must be one of the three
+`skills/documentation/SKILL.md:81` allows. It proves the pointer exists and resolves — never that the
+ADR named is the one that actually replaced this decision, which is semantic and unenforceable.
 `check-size` holds a word cap per rule file — its size when `20260804-0003` cut it, plus 15% headroom
 — and ENFORCES a corpus total on top of them, printed on every run. A cap is editable, so it is not
 a hard constraint on its own; the total is what stops raised caps from growing the corpus past the
