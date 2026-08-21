@@ -94,8 +94,14 @@ node ${CLAUDE_SKILL_DIR}/scripts/tick-guard.mjs
 - **`tick-sync.mjs` is a PostToolUse hook on `TodoWrite`.** It SETS the box in every `in-progress/` spec
   to follow its todo, both ways: `completed` ticks it, anything else clears it. So the box is not
   something you draw. It never guesses — no matching todo, an annotated line, or a task text living in
-  two in-progress specs at once, and it leaves the line alone. Every write, skip and abandon goes to
-  `features/.tick-sync.log`.
+  two in-progress specs at once, and it leaves the line alone. What it DOES goes to
+  `features/.tick-sync.log` — a box it moved, or a line it refused to guess at (`TICK`, `UNTICK`,
+  `SKIP-AMBIGUOUS`, `ABANDON`, `FAILED`, and whatever the script logs next; read it, don't trust this
+  list). **Doing NOTHING is silent, by design.** A todo already matching its box, a task with no todo,
+  a spec with no change pending — none writes a line. **So an unchanged log means nothing needed
+  doing, NOT that the hook stopped.** Seeding a fresh mirror is the case that catches people out: every
+  todo starts `pending` against an unticked box, so the whole seed logs nothing at all and the first
+  line appears only when a todo first reaches `completed`.
 - **`tick-guard.mjs` is a Stop hook.** One job: block while any `# Tasks` item has no todo. That is the
   input side of the auto-tick — an unmirrored task is one whose box can never move on its own. It blocks
   ONCE per signature, then only advises, so nothing can wedge.
@@ -228,6 +234,7 @@ Move to `/features/pending/`. Summarize for the user. The summary carries the ou
 - **Change spec** — stay in NEEDS_APPROVAL, refine in place. Then re-enter the gates the revision invalidated, from `pending/`: step 1.4 if it opened a new question, step 1.5 if it newly crosses that threshold OR if 1.4 edited the spec after the mitigation table was written, step 1.6 if the revision added, removed or re-ordered tasks.
 - **Discard** — → DISCARDED, move to `/features/discarded/`.
 
+Those four LABELS are fixed; their DESCRIPTIONS are not written for you. Each must carry what the choice does to this spec and what it costs — "Approve & implement" spends the only read you get before the build starts, "Change spec" pays a re-entry into the gates named above. APPROVAL GATES (`skills/_shared/blocks.md`) owns the requirement.
 Only an explicit "Approve" choice counts as approval. An implement option IS the explicit confirmation to proceed.
 Spec settles a choice the user judges by LOOK or FEEL (layout, composition, interaction shape) → never record it as decided. Offer the viable options AT this gate.
 
@@ -276,7 +283,7 @@ Do NOT move to DONE. Verify and record under `# Validation`:
 
 Verification fails (build/tests red) → fix the root cause, re-run. Same check fails again after a fix attempt → stop, report the failure and your diagnosis, do NOT weaken the check, skip it, or keep guessing at patches. Ask before a third attempt at the same failing check.
 
-Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion**: "Implementation complete and validation passed. Move to DONE?" Offer at least **Move to DONE** / **Leave open for now**. Only DONE counts as the explicit confirmation for step 7.
+Then move to `/features/ready-for-done/`. **STOP. Ask via AskUserQuestion**: "Implementation complete and validation passed. Move to DONE?" Offer at least **Move to DONE** / **Leave open for now**. Only DONE counts as the explicit confirmation for step 7. **Both options need a DESCRIPTION** — DONE unlocks step 7's commit and branch-landing asks and closes the spec to further tasks; "Leave open" keeps it in `ready-for-done/` where more work can still be added, at the price of the feature staying unclosed. APPROVAL GATES (`skills/_shared/blocks.md`) owns the requirement.
 
 ## 7. Finalize → DONE
 Only on explicit user confirmation: move to `/features/done/`.
@@ -287,7 +294,7 @@ Then — and only after that move — OPTIONALLY commit, and read the working tr
 
 Dirty branch, on an explicit yes → commit via `git-commit` (owns its own confirmation + default-branch/branch gate; don't hand-roll). User declines → skip. Commit unavoidably carries ANOTHER feature's uncommitted work (shared file, interleaved edits) → that feature's DONE gate is being bypassed. Name it and get its opt-in too, or don't commit. Never make the DELIVERABLE commit before this point. The clean-tree case is `git-commit`'s PUSH-ONLY EXCEPTION: a clean tree with unpushed commits does NOT stop at its STEP 1, it goes on to a push-only STEP 3. Clean AND nothing unpushed → `git-commit` stops, and that is a valid end. A PR is not offered here — `git-commit`'s PR trigger owns it, and it fires only if you ask for one.
 
-Then the BRANCH itself. **This step owns the landing of a feature's branch** — `git-commit`'s Q3 stays suppressed for as long as a feature owns that branch. Feature sat on a branch ≠ the default branch → **STOP. Ask via AskUserQuestion.** **Spell that question out; it does not get to be improvised.** Heading: "Land the branch?". Options: "Keep the branch" / "Merge into `<default>`, delete the branch — here AND on `<remote>` if it is published there — and push `<default>`". The label carries the ACTION; the option's DESCRIPTION says why it is safe — the branch is merged by the time it is deleted, and `git branch -d` refuses, stopping the sequence, if it is not.
+Then the BRANCH itself. **This step owns the landing of a feature's branch** — `git-commit`'s Q3 stays suppressed for as long as a feature owns that branch. Feature sat on a branch ≠ the default branch → **STOP. Ask via AskUserQuestion.** **Spell that question out; it does not get to be improvised.** Heading: "Land the branch?". Options: "Keep the branch" / "Merge into `<default>`, delete the branch — here AND on `<remote>` if it is published there — and push `<default>`". The safety fact that question owes its reader: the branch is merged by the time it is deleted, and `git branch -d` refuses, stopping the sequence, if it is not. How it is packaged across label and description is APPROVAL GATES (`skills/_shared/blocks.md`), not this step.
 
 **`<default>` must be BOUND before you can word this, and it may not be** — a `git-commit` run that STOPped at its STEP 1 never resolved the name. Unbound → follow `git-commit` STEP 1's `<default>` bullet as a PROCEDURE; no remote → that bullet's only source IS the question, so asking is the procedure itself. Binding it HERE is also what lets the land list treat it as a check rather than resolve it again.
 

@@ -66,6 +66,11 @@ deferred, each naming what it would have asked.
 
 Nothing qualifies → ask nothing. The gate still ran; five evidence lines are its record.
 
+**What goes INSIDE each question — SUBJECT, CONSEQUENCE, PRICE, GLOSS, SHOW — is APPROVAL GATES
+(`skills/_shared/blocks.md`).** This section governs how many questions and which ones; it says
+nothing about whether the reader can follow one. You are reading a `reference/` file, which arrives
+alone — that block is not loaded with it, so follow the pointer.
+
 # 5. THE SECTION
 
 Append `# Open Questions` at the END of the feature file — after `# Validation` on a first run, since

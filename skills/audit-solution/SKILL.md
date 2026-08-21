@@ -56,6 +56,7 @@ Never edit before this gate. Present the remediation choice as multiple choice, 
 - **Fix must-fix only**
 - **Report only** (no changes)
 - **Adjust scope**
+Those LABELS name actions and nothing else. Each needs a DESCRIPTION carrying what the option changes on disk and what it costs — how many findings it touches, that "Fix everything" spends time on optional ones, that "Report only" leaves every must-fix in place. APPROVAL GATES (`skills/_shared/blocks.md`) owns the requirement.
 Significant structural changes (moves/renames/splits, broad restructuring) require explicit approval here regardless of the option chosen (see `coding-standards` REFACTOR RULES for the threshold).
 
 # STEP 5 — CAPTURE AS A FEATURE DRAFT (via `feature`, before any edits)

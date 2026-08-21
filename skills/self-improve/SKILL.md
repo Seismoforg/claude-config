@@ -94,7 +94,7 @@ full the log is.
      the user.
 5. **At most 4 proposals per run.** More qualify → NAME the remainder in one line ("3 further groups
    not proposed"). A silently dropped group is indistinguishable from one nobody found.
-6. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per proposal, labelled with target skill + one-line summary; description holds the finding. User picks. Never edit a skill file without this. **Exactly ONE proposal → the harness REJECTS a single-option question** (`expected array to have >=2 items`); ask "Apply" / "Don't apply" instead. Under this bar one proposal is the common case, not an edge one.
+6. **Confirm via AskUserQuestion (REQUIRED).** Multi-select (`multiSelect: true`), one option per proposal, labelled with target skill + one-line summary. **What this question's descriptions carry is the FINDING** — the transcript evidence behind the proposal, which is the only thing that makes an edit to a skill file judgeable; APPROVAL GATES (`skills/_shared/blocks.md`) owns the rest. Multi-select rules `preview` out. User picks. Never edit a skill file without this. **Exactly ONE proposal → the harness REJECTS a single-option question** (`expected array to have >=2 items`); ask "Apply" / "Don't apply" instead. Under this bar one proposal is the common case, not an edge one.
 7. **Apply** only selected, minimal surgical edits, to every copy step 4's grep found. Leave the rest. Before saving: check the new wording doesn't contradict an existing rule.
 8. **Move the settled entries to `findings-archive.md`**, each with what became of it — the resulting
    commit or `file:line` for an applied proposal, `rejected <date>` for one the user turned down. Both

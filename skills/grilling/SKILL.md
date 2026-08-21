@@ -101,20 +101,12 @@ from the block, word for word. Nothing mechanical can compare prose to an option
 yours to keep. A block whose recommendation the dialog contradicts turns the reasoning into decoration.
 
 ## Question craft
-- **SUBJECT** — the question says what is being decided and why it is being asked NOW.
-- **CONSEQUENCE** — each option says what HAPPENS if chosen, not just what it is called.
-- **PRICE** — each option names what it costs or gives up. Carve-out: a plain yes/no where the price
-  IS the answer states nothing extra.
-- **GLOSS** — a term, path, filename, skill name or status literal is explained in a half-clause at
-  first use.
-- **SHOW** — a concrete artifact under decision is displayed via the tool's `preview` field, not
-  described. Single-select questions only; the tool schema restricts it.
+SUBJECT, CONSEQUENCE, PRICE, GLOSS, SHOW and the label/description split — APPROVAL GATES
+(`skills/_shared/blocks.md`) owns all of it. Read it before writing a round.
 
-Requirements on CONTENT, not a template to fill. The test is whether the reader can DECIDE from what is
-written. Short labels; the description carries consequence and price. One decision per question. An
-answer derivable from repo context is never asked open — put the assumption in the question and offer
-"Fits" / "Different". Question LANGUAGE follows `simple-language`: chat matches the user's, quoted
-artifact content stays English.
+What this interview adds on top: one decision per question. An answer derivable from repo context is
+never asked open — put the assumption in the question and offer "Fits" / "Different". Question
+LANGUAGE follows `simple-language`: chat matches the user's, quoted artifact content stays English.
 
 # 3. FACTS ARE YOURS, DECISIONS ARE THEIRS
 
