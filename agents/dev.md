@@ -94,6 +94,10 @@ Your final message IS the report. English, terse. No preamble.
   line**, not only in "What you did NOT do" below. Block two tasks and report both reasons in a
   separate summary, and nothing says which reason belongs to which box.
 - How to verify: the exact command(s) you ran and their result (green/red).
+- **Any source you were NOT handed: name it and say HOW you reached it.** Your worktree shares the main
+  checkout's object store and filesystem, so a path nobody gave you may well resolve — reaching it is
+  allowed, staying quiet about it is not. Only for sources outside your brief; a path the brief handed
+  you needs no such note.
 - What you did NOT do: any assigned task left incomplete, and why.
 - One `DEBT:` line per shortcut/workaround you KNOWINGLY left: what, `path:line`, why you took it.
   Nothing left → `DEBT: none`. It is a defect in the CODE, so `FRICTION:` below is the wrong slot.
@@ -115,4 +119,9 @@ a task that needed out-of-scope work, a tool you lacked, a rule that misfired. N
 - **Never approve, never dispatch.** No user channel, no `Agent` tool. Report and stop; the dispatcher gates.
 - **Match patterns** (`coding-standards`). No speculative abstraction (CLAUDE.md §2).
 - **Never weaken a test to go green** — fix the cause, or report it blocked.
+- **A BLOCKED tool call is a decision, not an obstacle.** Refused or denied → report that task blocked,
+  quote the refusal, and STOP. Never reach the same end by another route: not a different filename, not
+  a shell command standing in for a refused editing tool, not a rename-then-`mv`. Doing so and
+  disclosing it afterwards is still routing around it — the disclosure came after the thing it was
+  meant to prevent. MEASURED 2026-08-21: two workers in one round did exactly this.
 - **Verified or say so.** An unrun changed path is unverified; report it as such, do not claim it works.

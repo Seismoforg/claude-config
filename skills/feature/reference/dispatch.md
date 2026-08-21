@@ -80,6 +80,10 @@ Every dispatch carries all of it. A missing item is the dispatcher's miss, not t
   between a round and a silently wrong base**, because a worktree is cut from `origin/main` (§4), never
   from your branch. Concretely: milestone 2's workers do not receive milestone 1's commits unless this
   bullet is obeyed. Naming the base is what makes the worker's own check actionable.
+- **A deliverable `.md` name must not START with `report`, `findings`, `summary` or `analysis`.**
+  MEASURED 2026-08-21: a harness guard refuses a SUBAGENT's write to those — anchored prefix, `-` and
+  `_` both trip it, `.md` only. Put the word later: `set-a-report.md` passes, `report-a.md` does not.
+  Not configurable from here, and YOU pick the name; a worker handed a blocked one can only stop.
 - The `DEBT:` line is EXPECTED. Say so, or a knowingly-left shortcut comes back as neither a report
   nor a filing. `agents/dev.md` OUTPUT owns its format.
 - The shell-bound checks the task's own surface mandates — `coding-standards`' pre-flight on a design
@@ -120,8 +124,10 @@ flags the gap instead of assuming coverage.
 
 # 4. THE INVARIANT
 
-**A worker sees only its own worktree, cut from a base that may be older than yours — verify its
-reported HEAD, never assume it matches.** MEASURED 2026-08-21: **the base is `origin/main`** — not the
+**A worker's INDEX and HEAD are private; nothing else is.** Its base may be older than yours — verify
+its reported HEAD, never assume. MEASURED 2026-08-21: `git rev-parse --git-common-dir` inside a worker
+returns the MAIN checkout's `.git`. Object store and filesystem are SHARED, so **a brief cannot withhold
+anything by omitting a path** — one worker reached the whole main checkout that way. MEASURED 2026-08-21: **the base is `origin/main`** — not the
 branch tip, not current HEAD. Five worktree branches all read `branch: Created from origin/main`, one
 cut while the checked-out branch stood elsewhere. An unpushed `main` is older still. §3's expected-base
 bullet is what corrects for it. Earlier record and its amendment:
@@ -132,9 +138,11 @@ Everything about isolation follows from that one line:
   preference (`agents/AGENTS.md`); `check-agents.mjs` enforces that the briefing exists. Two writers
   without it corrupt each other's diffs. The `inline` tier is what keeps a one-line change from
   paying for a worktree.
-- Worktrees are for PARALLEL INDEPENDENT work. They cannot hand one worker's output to the next.
-- A step that must SEE earlier work cannot be a worktree worker at all. Make it read-only so it
-  returns TEXT, or do it in the main loop.
+- Worktrees are for PARALLEL INDEPENDENT work. Output DOES cross them, via the shared object store, but
+  by RACE — MEASURED 2026-08-21: a worker read a sibling commit that had not existed two minutes
+  earlier. Unreliable and SILENT is worse than impossible; nothing tells a worker which case it is in.
+- A step that must SEE earlier work cannot be a worktree worker — not because it would fail, but because
+  it would sometimes succeed. Make it read-only so it returns TEXT, or do it in the main loop.
 - **Never REWRITE the base under a live round — rebase, reset, force-push. Where this and §5 disagree,
   §5 governs.** Read as "never move the branch" it forbids §5's merge-immediately rule. §5 wins: a
   merge only ADDS commits, so every live worker's base stays an ancestor and nothing it built becomes
@@ -160,6 +168,11 @@ Merging the name would have landed NOTHING and exited 0, reading as a clean merg
 The worker reports its HEAD first for exactly this reason (`agents/dev.md` OUTPUT). Verify what you
 are about to merge — `git log --oneline -1 <sha>` and `git merge-base --is-ancestor` against your own
 HEAD — before running the merge, and again by the file list the merge prints.
+
+**That verification is not prudence; it is what catches a FABRICATED SHA.** MEASURED 2026-08-21: a
+worker reported 40 characters whose first 7 were real and whose remainder was invented — `git cat-file
+-e` said NO SUCH OBJECT. Use the SHA whole, never a prefix: git resolves a short prefix, so `git diff
+… 129ff29` succeeds against a SHA that does not exist and the fabrication passes unseen.
 
 **Immediately after EACH merge, not "later":**
 - Re-check coverage against the milestone's task list.
