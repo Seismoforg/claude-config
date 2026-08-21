@@ -18,7 +18,8 @@ changes). Verified: the name resolves to THIS skill; the built-in is unreachable
   params) validated/sanitized before use — never trust it reaching business logic unchecked.
 - **Dependency CVEs:** run the check in `coding-standards/reference/dependencies.md` (skills-root-
   relative — parent of this skill's base directory) before a release — one owner for the topic,
-  not restated here.
+  not restated here. Dispatching a WORKER to run it → hand it the ABSOLUTE path; an agent
+  resolves neither form on its own.
 - **Secrets:** already a HARD RULE in `coding-standards` (never hardcode secrets/keys/
   tokens) — applies automatically, not restated here. One case it does NOT cover: while
   INVESTIGATING, never print a secret's VALUE — not from a config file, not from an env file,
