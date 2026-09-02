@@ -85,7 +85,11 @@ change"; there is no second skill to invoke, no addendum to hand an agent as an 
 - `~/.claude/agents` junction removed. `~/.claude/rules` junction added.
   **Amended by 0010:** the `agents/` tree and its junction are back, holding four model-tiered
   doorman workers instead of the role-based crew this ADR deleted. The decision above still stands —
-  that roster is gone and did not return. This is the rebuilt fan-out the next bullet anticipated.
+  that roster is gone and did not return.
+  **Amended by 0011:** 0010's amendment closed by calling that tree "the rebuilt fan-out the next
+  bullet anticipated". It was not. The doorman rates one prompt and dispatches one worker; it has no
+  notion of several tasks, of dependency order, or of two workers writing one file. It supplied the
+  WORKERS the fan-out needed, not the fan-out. 0011 is the rebuild the next bullet anticipated.
 - Claude Code's built-in `/security-review` is reachable again — the custom skill that shadowed it is
   gone.
 - ADR 0001 (tester isolation), 0005 (surface skills merged into `coding-standards`) and 0008 (crew
