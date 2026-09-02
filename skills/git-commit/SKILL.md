@@ -73,7 +73,7 @@ Message format (English, Conventional-Commits-friendly, not mandatory):
 - Optional body (blank line, wrapped) when the "why" isn't obvious.
 - No `Co-Authored-By:` / "Generated with Claude" line — see HARD RULES.
 
-# STEP 3 — CONFIRM via AskUserQuestion (REQUIRED — see APPROVAL GATES, end of file)
+# STEP 3 — CONFIRM via AskUserQuestion (REQUIRED — read `~/.claude/rules/asking.md` first)
 **Arrived by one of STEP 1's EXCEPTIONS?** Read this block first; everything after it assumes there is something to commit. Three entry states — add a fourth and you add it here:
 - **NORMAL** — a dirty tree. This block does not apply.
 - **PUSH-ONLY** — clean, and the branch has commits the remote does not. Asks about pushing, on ANY branch.
@@ -115,7 +115,7 @@ On the **default branch** (the name Step 1 resolved) → Q0 is REQUIRED, asked a
 - **The hygiene scan excluded a path → say HERE that landing cannot happen this run.** Land step 1 STOPs on anything left in the tree, so the merge-and-delete option is offering something it cannot deliver. That is this question's PRICE and it is invisible from anywhere else.
 - **The label NAMES the remote delete because Q3's yes is what authorizes it.** Leave it unnamed and the user authorizes a remote mutation they were never shown.
 - **Do NOT strip that clause off a never-pushed branch just because Step 1 saw no upstream.** Q2 and Q3 go out in the SAME round, so Q2's push can publish the branch before the land list runs. Word it "and on `<remote>` if it is published there"; land step 2 reads the truth. The clause drops only when NO remote exists at all.
-- **The safety fact this option's description owes the reader:** the branch is merged by the time it is deleted, and `git branch -d` refuses — and stops the list — if it is not. Which half goes in the label and which in the description is APPROVAL GATES (`skills/_shared/blocks.md`), not this step.
+- **The safety fact this option's description owes the reader:** the branch is merged by the time it is deleted, and `git branch -d` refuses — and stops the list — if it is not. Which half goes in the label and which in the description is `~/.claude/rules/asking.md`, not this step.
 - Q0 and Q3 can never both apply: Q0 exists only ON the default branch, Q3 only off it.
 - *(PR path only)* **Q2 × Q3 is the same trap as Q0 × Q2.** The pair (Q2's PR option + Q3's merge-and-delete option) IS selectable: it arrives → surface the conflict and re-ask Q2 + Q3 only. Same pair again → stop and report. Never let the merge delete a branch `gh pr create` is about to use as its head.
 
@@ -176,4 +176,8 @@ Non-obvious, high-severity only. This skill takes destructive, hard-to-reverse a
 - **Never merge with a dirty tree, and never merge before every commit of a split has landed.**
 - **Never delete a branch whose merge did not succeed**, and never delete one a PR still needs as its head.
 
-See `skills/_shared/blocks.md` for WHEN UNCERTAIN / AFTER THE TASK / LANGUAGE / APPROVAL GATES.
+# AFTER THE TASK
+Run `self-improve` via the Skill tool. It owns the fire-or-stay-silent call.
+
+Commit messages are English, always — `~/.claude/rules/documentation.md` owns the language rule.
+Gate questions are `~/.claude/rules/asking.md`.

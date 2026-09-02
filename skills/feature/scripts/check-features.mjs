@@ -10,8 +10,8 @@ import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import { ANNOTATED } from './_shared.mjs';
 
-// Default to the shell CWD — unlike check-agents, the thing under test lives in the USER's
-// project (features/ is per-project and usually VCS-ignored), not in the repo shipping this file.
+// Default to the shell CWD: the thing under test lives in the USER's project (features/ is
+// per-project and usually VCS-ignored), not in the repo shipping this file.
 const root = resolve(process.argv[2] ?? '.');
 
 // The state machine is closed: these 7 folders and no others. An 8th is drift, not a new state.
@@ -29,8 +29,8 @@ const FILENAME_RE = /^\d{8}-\d{4}-[a-z0-9-]+\.md$/;
 
 const rel = (p) => relative(root, p).split('\\').join('/') || '.';
 // YAML scalar: unwrap quoting and drop a trailing ` # comment`, so `status: "DONE"  # note`
-// reads as DONE. Deliberately duplicated from check-agents.mjs rather than shared — these
-// scripts stay standalone, reachable through both the ~/.claude junction and the real path.
+// reads as DONE. Kept local rather than shared — this script stays standalone, reachable
+// through both the ~/.claude junction and the real path.
 const str = (v) => {
   if (typeof v !== 'string') return null;
   const quoted = v.trim().match(/^(['"])([\s\S]*?)\1\s*(?:#.*)?$/);
@@ -111,8 +111,8 @@ const byId = new Map();
 
 for (const entry of readdirSync(featuresDir)) {
   // statSync, never Dirent.isDirectory(): a Windows junction reports false as a Dirent, so the
-  // whole folder would vanish and the run would report "clean" having checked nothing. Matches
-  // check-docs.mjs. A false clean is the worst output a checker can produce.
+  // whole folder would vanish and the run would report "clean" having checked nothing.
+  // A false clean is the worst output a checker can produce.
   // It throws on a DANGLING junction, though — report that entry and carry on, never crash.
   let st;
   try { st = statSync(join(featuresDir, entry)); } catch (e) {
@@ -152,7 +152,7 @@ for (const entry of readdirSync(featuresDir)) {
     // An EMPTY spec is new-feature.mjs's claim with nothing written into it yet — a session that died
     // between claiming the id and writing the content. It MUST NOT fall through to no-frontmatter:
     // that is a STOP-and-report violation, so one crashed session would block every later session's
-    // state check and halt an unattended autopilot run. Tested BEFORE the frontmatter read so it
+    // state check. Tested BEFORE the frontmatter read so it
     // pre-empts rather than competes, and FIXED IN PLACE — fill it or delete it. A non-empty file
     // missing its frontmatter is a real defect and keeps the STOP.
     if (body.trim() === '') {

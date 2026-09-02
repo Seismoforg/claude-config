@@ -2,10 +2,10 @@
 
 Prospective hindsight on a feature plan. Assert the failure as already happened, then explain it.
 
-Loaded by `feature` workflow step 1.5. That step owns the threshold and the carve-outs — this file
+Loaded by `feature` workflow step 3. That step owns the threshold and the carve-outs — this file
 is the prompt, not the trigger.
 
-Step 1.4, the implementation-questions gate, ran first: the spec you critique already carries the
+Step 2, the implementation-questions gate, ran first: the spec you critique already carries the
 user's answers under `# Open Questions`. Read them.
 
 Frame it as "it failed — why", never "what could go wrong".
@@ -56,6 +56,6 @@ Mandatory. One row per cause, no exceptions.
 - **Feature file** — report and table appended as a new `# Premortem` section, after `# Validation`.
 - **Chat** — the table and the plan edits. Not the report.
 
-Self-check before going on to 1.6: did the plan actually change? A premortem that changed
+Self-check before going on to step 4: did the plan actually change? A premortem that changed
 nothing either found nothing real (say that in one line) or was written to be comfortable. In the
 second case re-read categories 3 and 5 — integration and usage reality are the two that fail late.

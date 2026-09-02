@@ -3,17 +3,17 @@
 Prospective implementation on a feature plan. Put yourself one day ahead, about to build it, and find
 what you cannot start without.
 
-Loaded by `feature` workflow step 1.4, the implementation-questions gate. That step owns the trigger
+Loaded by `feature` workflow step 2, the implementation-questions gate. That step owns the trigger
 and the carve-outs — this file is the prompt, not the trigger.
 
 Frame it as "you are starting tomorrow — what blocks you?", never "is anything unclear?".
 
 # 1. THE CANDIDATE LIST — start here, not from a blank page
 
-Read the spec's `Open assumption:` lines FIRST. They are the candidate list. `grilling`
-writes one for everything its interview could not settle, and an inline spec writer produces them at
-step 1. Those two are the only producers — the premortem writes none, so do not go looking for
-premortem-authored assumptions on a revision.
+Read the spec's `Open assumption:` lines FIRST. They are the candidate list. The step-0 interview
+(`grilling.md`) writes one for everything it could not settle, and an inline spec writer produces
+them at step 1. Those two are the only producers — the premortem writes none, so do not go looking
+for premortem-authored assumptions on a revision.
 
 Generating categories from scratch instead re-asks a question the user already answered.
 
@@ -30,7 +30,7 @@ Every one gets an outcome. Never blank.
 4. **Edge, empty, limit, repeat** — zero items, one item, the boundary, running it twice.
 5. **Order & dependency** — what must land before what, and what breaks if one part ships alone.
 
-**Look and feel is NOT a category here.** `feature` step 2 already offers those options at the
+**Look and feel is NOT a category here.** `feature` step 5 already offers those options at the
 approval gate; asked in both places, one question collects two answers.
 
 # 3. WHAT COUNTS AS A QUESTION
@@ -66,10 +66,9 @@ deferred, each naming what it would have asked.
 
 Nothing qualifies → ask nothing. The gate still ran; five evidence lines are its record.
 
-**What goes INSIDE each question — SUBJECT, CONSEQUENCE, PRICE, GLOSS, SHOW — is APPROVAL GATES
-(`skills/_shared/blocks.md`).** This section governs how many questions and which ones; it says
-nothing about whether the reader can follow one. You are reading a `reference/` file, which arrives
-alone — that block is not loaded with it, so follow the pointer.
+**What goes INSIDE each question — SUBJECT, CONSEQUENCE, PRICE, GLOSS, SHOW — is
+`~/.claude/rules/asking.md`.** This section governs how many questions and which ones; it says
+nothing about whether the reader can follow one. Follow the pointer.
 
 # 5. THE SECTION
 
@@ -87,15 +86,15 @@ the "what changed" cell have to read back against a single question:
 - Edit the spec BEFORE writing the row. The last cell records edits already MADE, never intentions.
 - Answer that changed nothing → say so in that cell, with why. Never leave it empty.
 - User declined to decide, or answered "Other" without settling it → it becomes an `Open assumption:`
-  line under `# Technical Plan`, and step 2's summary carries it to the gate.
+  line under `# Technical Plan`, and step 5's summary carries it to the gate.
 - Deferred question (over the cap) → its own row, `deferred` in the answer cell, with what it would
   have asked.
 
 # 6. WHAT LEAVES THE STEP
 
 - **Feature file** — the `# Open Questions` section, plus every spec edit the answers forced.
-- **Chat** — nothing on its own. Step 2's summary carries the answers to the approval gate.
+- **Chat** — nothing on its own. Step 5's summary carries the answers to the approval gate.
 
-Self-check before going on to 1.5: did any answer change the plan? None did, and none was even
+Self-check before going on to step 3: did any answer change the plan? None did, and none was even
 asked → re-read categories 1 and 3. Data shape and the contract with code you are not touching are
 where a plan is wrong without looking wrong.

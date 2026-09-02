@@ -6,5 +6,4 @@ down. Both count as settled: an archived rejection is what stops the next review
 
 Entries are moved here, never deleted. Traceability is the point.
 
-This file is DATA, not rule prose a model loads. `check-size` names it outside its word corpus for
-that reason.
+This file is DATA, not rule prose a model loads. It is git-ignored and lives per machine.

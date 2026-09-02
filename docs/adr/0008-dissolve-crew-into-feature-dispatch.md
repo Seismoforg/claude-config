@@ -1,7 +1,11 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-21
 ---
+
+**Superseded by 0009** (`0009-rules-tree-replaces-most-skills.md`): the dispatch machinery this ADR
+moved into `feature` step 5 was removed along with the whole subagent roster. Task fan-out is to be
+rebuilt on a different mechanism.
 
 # Context
 The `crew` skill held every piece of task-splitting machinery this config had: cutting an approved

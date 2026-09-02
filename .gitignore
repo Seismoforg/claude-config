@@ -5,16 +5,12 @@ Thumbs.db
 *.swp
 features/
 
-# Harness runtime: isolated worktrees for executor agents. Transient, never committed.
+# Harness runtime: isolated worktrees. Transient, never committed.
 .claude/worktrees/
 
-# Generated GitHub Copilot translation. Derived from skills/, agents/ and CLAUDE.md — rebuild with
+# Generated GitHub Copilot translation. Derived from skills/, rules/ and CLAUDE.md — rebuild with
 # `node scripts/build-copilot.mjs .`. See docs/adr/0003 for why it is no longer committed.
 github_build/
-
-# Measurement runs over the rule corpus — questions, raw answers, candidate cuts, matrices. Local
-# working data, not part of the config the harness loads. Untracked from 20260804-0005 on.
-experiments/
 
 # `self-improve`'s log and its archive. Runtime DATA the skill writes, per machine — the base stays in
 # the repo as the `*.template.md` beside them, the entries never do. Untracked from 20260805 on.

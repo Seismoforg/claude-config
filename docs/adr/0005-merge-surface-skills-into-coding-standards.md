@@ -1,7 +1,12 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-03
 ---
+
+**Superseded by 0009** (`0009-rules-tree-replaces-most-skills.md`): `coding-standards` and its
+addenda left `skills/` entirely and became the `rules/` tree. The problem this ADR solved — three
+skills that had to be invoked together, with a missed one failing silently — is solved differently
+now, by a routing table rather than by merging.
 
 # Context
 Three skills governed overlapping ground and had to be invoked together: `coding-standards` (all code),
