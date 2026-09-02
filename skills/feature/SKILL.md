@@ -159,7 +159,7 @@ Body, all required:
 
 - **`# Tasks`** — a checklist (`- [ ] ...`). An unchecked box in `ready-for-done/` or `done/` must
   carry `BLOCKED`, `NOT DONE`, or a feature id, on its line or a continuation. **An item's task text
-  is ONE physical line** — the tick matcher reads no further. May be grouped under `## <milestone>`
+  is ONE physical line** — the tick matcher reads no further. May be grouped under `## Wave N`
   sub-headings.
 - **`# Impact Analysis`** — affected, new and deleted files; breaking changes; overlap with other
   in-flight features editing the same files.
@@ -169,12 +169,12 @@ Added by the gates, in the order their gate runs. None of these replaces a requi
 ```
 # Open Questions   (step 2 — one row per category: question or evidence · answer · what changed)
 # Premortem        (step 3 — failure report + mitigation table, or the one-line skip record)
-# Milestones       (step 4 — the cut and why, or the one-line skip record; then one check line
-                   #  per milestone as step 6 finishes it)
+# Waves            (step 4 — the cut: per wave, its tasks with their reads · writes · depends-on;
+                   #  then one check line per wave as step 6 finishes it)
 # Debt Found       (step 6 — one line per shortcut: what · path:line · why · the DRAFT id step 7
                    #  files it as)
 ```
-- `# Open Questions` and `# Milestones` are present on EVERY spec that reached step 5. Their gates
+- `# Open Questions` and `# Waves` are present on EVERY spec that reached step 5. Their gates
   have no threshold, so absent there is a defect. Absent is correct only where the gate never ran —
   a write-only record, or a spec predating the gate.
 - `# Premortem` is conditional on step 3's threshold.
@@ -271,24 +271,34 @@ Spec already carries `# Premortem` → it ran; go to step 4.
 3. Edit the spec. Then write the mitigation table, recording edits you MADE.
 4. Append report and table as a new `# Premortem` section at the END of the file.
 
-## 4. Milestone cut — stage the build, or say why not
+## 4. Wave cut — say which tasks can run at the same time
 Runs on EVERY spec, after the premortem. No threshold, no folder move, no status change. Same
-carve-out as step 2. Spec already carries `# Milestones` → it ran; go to step 5.
+carve-out as step 2. Spec already carries `# Waves` → it ran; go to step 5.
 
-Frame: **the build is half done and something goes wrong. What has already been checked, and what
-has to be thrown away?** A milestone is where that answer changes.
+Read `reference/waves.md`, joined onto this skill's announced base directory — **if it is there.** It
+owns the PROCEDURE: how to derive the three columns, and how a wave is dispatched at step 6. The rules
+are here, and they stand on their own. The file is deliberately absent on a target with no subagents,
+where a wave plan is a build order and every task is written inline.
 
-The cut rule: **a milestone must be EXERCISABLE ON ITS OWN.** Its tasks leave the repo in a state you
-can run something against and get a real answer from. A phase of one indivisible change is not one —
-a rule restated in seven files is self-contradictory until the seventh lands, so "edit four" then
-"edit three" cuts nothing. SEAMS decide this, never size.
+Frame: **step 6 is about to build this. Which of these tasks could a second pair of hands write at
+the same time, and which have to wait?**
 
-1. **Cut** → group `# Tasks` under `## <milestone name>` sub-headings, in build order. Task wording
-   is untouched; only order and grouping change. Every task belongs to exactly one milestone.
-2. **No cut** → say what you checked and why no slice stands alone. A bare "not needed" is not a
-   record; this gate has no threshold to hide behind.
-3. Append `# Milestones` at the END: the milestones in build order, one line each on what that
-   milestone makes exercisable, or the one-line skip record.
+Every `# Tasks` item gets three lists: **reads** · **writes** · **depends on**.
+
+The cut, in this order:
+1. **Merge** every set of tasks that write the same path into ONE task. Four edits to one file are
+   one task with one writer, not four tasks that rule 3 will strand in four separate waves.
+2. **Wave N holds only tasks whose dependencies are all in waves 1..N-1.** Unsure whether a dependency
+   exists → treat it as existing. A wrong dependency costs one wave of wall-clock time; a wrong
+   independence costs an edit lost in silence.
+3. **Two tasks that write the same path are NEVER in the same wave.** A survivor here means step 1
+   was incomplete — go back and merge, never push one task a wave later to hide it.
+
+**A wave of one is a correct answer.** Most features here edit a handful of prose files that their
+tasks share, so a narrow cut is the normal outcome and gets recorded as one, not apologised for.
+
+Then group `# Tasks` under `## Wave N` sub-headings in build order. Task wording is untouched; only
+order and grouping change. Append `# Waves` at the END: per wave, its tasks with their three lists.
 
 ## 5. Request approval → NEEDS_APPROVAL
 Move to `/features/pending/`. Summarize for the user. The summary carries the output of steps 2, 3
@@ -296,7 +306,7 @@ and 4, and none is optional:
 - Step 2 → the answers and what each changed (nothing qualified → say that, naming the categories
   checked), PLUS every `Open assumption:` line still unresolved, said out loud.
 - Step 3 → the mitigation table, not the report. Skipped → the one-line reason.
-- Step 4 → the milestones in build order, or why no slice stands alone.
+- Step 4 → the waves in build order, with what runs in parallel in each.
 
 **STOP. Ask via `AskUserQuestion`.** Offer at least:
 - **Approve & implement** → APPROVED, then the implementation gate, then implement, without asking
@@ -332,19 +342,39 @@ size. VERBATIM means the task's FIRST PHYSICAL LINE — `tick-sync.mjs` keys on 
 paraphrased todo is a box that never moves, and so is a todo carrying a wrapped task's FULL text. A
 wrapped item ticks fine; copying all of it is the thing that breaks. Measured both ways 2026-09-02.
 Re-seeding after a task is ADDED mid-build is part of the same rule, and `tick-guard.mjs`
-blocks until you do. The mirror is milestone-BLIND: seed EVERY item now, including milestones you
-will not start for hours. No `TodoWrite` reachable → tick each box by hand as its task lands, and
-treat any `tick-guard.mjs` block as unsatisfiable.
+blocks until you do. The mirror is wave-BLIND: seed EVERY item now, including waves you will not
+start for hours. No `TodoWrite` reachable → tick each box by hand as its task lands, and treat any
+`tick-guard.mjs` block as unsatisfiable.
 
 Then build:
 - **Build only the spec's tasks.** Scope changes → update the spec first.
-- **Spec cut into milestones → build them in order**, one finished before the next starts. As each
-  lands, exercise what it made exercisable and add one line under `# Milestones`: what you ran, what
-  you saw. **A FAILED milestone check stops the build** — see the invalidated-premise rule below.
+- **Build the waves in order**, one finished before the next starts. Before the FIRST one, re-derive
+  every task's reads and writes against the repo as it is now: the lists were written at spec time
+  and the repo has moved. Read `reference/waves.md` again here if it is there — it owns the dispatch
+  procedure, the failure and retry rules, and where verification sits. Absent → no subagents exist on
+  this target: build the waves in order, inline, and say so once.
+- **A wave is built by dispatching one subagent per task.** Rate each task against
+  `~/.claude/rules/doorman-tiers.md` and send it to the matching tier agent; `inline` is a real
+  outcome and means you write that task yourself, inside the wave. **At most 8 workers at once** — a
+  wider wave runs in batches of 8 and is still ONE wave. Stay inline regardless of the rating when a
+  task edits what the dispatch itself runs under: `CLAUDE.md`, the doorman files, the agent
+  definitions, or `reference/waves.md`.
+- **The brief owes each worker its write paths as the only paths it may write.** Everything else a
+  brief owes is `doorman-tiers.md`'s list, and the report format is `doorman-worker.md`'s. Neither is
+  restated; a second copy of either drifts.
+- **A reported failure does not interrupt its wave** — running workers cannot be recalled, and a
+  half-run wave cannot be told from a finished one. Let it finish, then stop at the boundary.
+  One retry, one tier up, then `BLOCKED`.
+- As each wave lands, exercise what it made exercisable and add one line under `# Waves`: what you
+  ran, what you saw. A wave that left nothing sensibly runnable says exactly that. **A FAILED check
+  stops the NEXT wave** — see the invalidated-premise rule below.
 - **`# Tasks` is a live work-list, and you do NOT tick it.** Move the TODO the moment its task lands;
   that is the whole act. `tick-sync.mjs` sets the box to follow, in the same turn. Do not also edit
   the box by hand: a box you tick while its todo still reads `pending` is cleared again on the next
   `TodoWrite`. No hook or no `TodoWrite` → you tick the box yourself, in the same act.
+  **A wave's todos move to `in_progress` TOGETHER, in one `TodoWrite` call.** That departs from the
+  tool's one-at-a-time convention on purpose — during a wave several tasks genuinely are in progress.
+  Said here so nobody later reads it as a bug and serialises the wave to fix it.
 - The LIST itself changes too. A task added mid-build is added silently; a task REMOVED or REWORDED
   carries a one-line reason. A task "removed" after being delivered by a knowingly weaker means is
   DEBT, not a removal. One never delivered stays an unfinished task.

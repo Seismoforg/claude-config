@@ -35,18 +35,14 @@ independence costs a silently lost edit that no check in this repo reads for.
 
 # 2. APPLYING THE CUT
 
-Run SKILL.md's two ordering rules against the three columns, then check the result against the
-merge rule before writing it down.
+SKILL.md step 4 owns the three cut rules and their order. Run them against the columns from §1. Two
+things it does not say, which is why this section exists.
 
-Order of work:
-1. Merge first. Tasks sharing a `writes` path collapse into one task, with one worker and one file.
-   Doing this before the wave build is what stops rule 2 from manufacturing a column of one-task
-   waves.
-2. Then build waves from `depends on`.
-3. Then verify no two tasks in one wave share a `writes` path. A survivor here means the merge in
-   step 1 was incomplete — go back, do not "fix" it by pushing one task a wave later.
+**A rule-3 survivor is a rule-1 miss.** Two tasks in one wave still sharing a `writes` path means the
+merge was incomplete. Go back and merge them. Pushing one of them a wave later satisfies the letter of
+rule 3 and produces exactly the column of one-task waves the merge rule exists to prevent.
 
-**The worked failure this prevents.** Two tasks, both editing one rule file: one adds a hard rule,
+**The worked failure the disjointness rule prevents.** Two tasks, both editing one rule file: one adds a hard rule,
 one rewrites a section heading. Dispatched into one wave, the second worker reads the file before
 the first has written, and its edit either fails on a stale anchor or succeeds against a stale copy
 and drops the first worker's paragraph. Nothing reports it. The mechanical checks in this repo read
@@ -75,19 +71,16 @@ drift, and this one is already what the four agents are built to emit.
 
 # 4. RUNNING A WAVE
 
-Rate each task against `rules/doorman-tiers.md` and dispatch to the matching agent. `inline` is a
-real outcome and means the main loop writes that task itself, inside the wave.
+SKILL.md step 6 owns the rating, the batch cap and the stay-inline carve-out. The mechanics:
 
-**Stay inline regardless of the rating** when a task edits what the dispatch itself runs under —
-`CLAUDE.md`, `doorman-tiers.md`, `doorman-worker.md`, the agent definitions, or this file. A worker
-rewriting the rules it is at that moment obeying leaves nothing recording which version it followed.
+**Send a wave's dispatches in ONE message**, or they queue instead of running together. Over the cap,
+send full batches in order and wait for each. The wave is not finished until every batch has returned,
+and nothing about the next wave starts before that.
 
-Send a wave's dispatches in ONE message so they run concurrently. Over the batch cap, send full
-batches in order and wait for each; the wave is not finished until every batch has returned.
-
-**A reported failure never interrupts its own wave.** Running workers cannot be recalled, and
-cancelling the not-yet-started batches leaves a half-run wave that the next attempt cannot tell apart
-from a finished one. Let the wave finish, then stop at its boundary with a report.
+**Why a reported failure is allowed to run its wave out**, since the instinct is to cancel: running
+workers cannot be recalled at all, so cancelling only the not-yet-started batches leaves a partly-run
+wave. Nothing on disk distinguishes that from a finished one, so the next attempt cannot tell which of
+its tasks to redo. Let the wave finish, then stop at its boundary with a report.
 
 # 5. WHEN A TASK FAILS
 
