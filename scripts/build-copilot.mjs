@@ -94,8 +94,8 @@ const SOURCE_EXCLUSIONS = {
   'skills/self-improve/findings.md':         'runtime data per machine — .gitignore owns the rule; the template travels instead',
   'skills/self-improve/findings-archive.md': 'runtime data per machine — .gitignore owns the rule; the template travels instead',
   'scripts/build-copilot.mjs':               'produces the export; shipping it inside the export is circular',
-  'rules/doorman-tiers.md':                  'names Claude Code subagents and a UserPromptSubmit hook, neither of which exists in Copilot',
-  'rules/doorman-worker.md':                 'the method for those same subagents; useless where they cannot be dispatched',
+  'rules/dispatch-tiers.md':                 'rates work across Claude Code subagents, a mechanism Copilot has no equivalent of',
+  'rules/agent-worker.md':                   'the method for those same subagents; useless where they cannot be dispatched',
   'skills/feature/reference/waves.md':       'the procedure for dispatching those same subagents; SKILL.md carries the rules Copilot can act on',
 };
 
@@ -105,8 +105,8 @@ const SOURCE_EXCLUSIONS = {
 // direction that fails loudly; the reverse ships the file in silence.
 const NOT_EMITTED_RULES = new Set([
   'rules/CLAUDE.md',
-  'rules/doorman-tiers.md',
-  'rules/doorman-worker.md',
+  'rules/dispatch-tiers.md',
+  'rules/agent-worker.md',
 ]);
 
 // The same both-lists rule for files under a skill's `reference/`. That walk is a SEPARATE loop from

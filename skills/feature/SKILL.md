@@ -354,13 +354,13 @@ Then build:
   procedure, the failure and retry rules, and where verification sits. Absent → no subagents exist on
   this target: build the waves in order, inline, and say so once.
 - **A wave is built by dispatching one subagent per task.** Rate each task against
-  `~/.claude/rules/doorman-tiers.md` and send it to the matching tier agent; `inline` is a real
+  `~/.claude/rules/dispatch-tiers.md` and send it to the matching tier agent; `inline` is a real
   outcome and means you write that task yourself, inside the wave. **At most 8 workers at once** — a
   wider wave runs in batches of 8 and is still ONE wave. Stay inline regardless of the rating when a
-  task edits what the dispatch itself runs under: `CLAUDE.md`, the doorman files, the agent
-  definitions, or `reference/waves.md`.
+  task edits what the dispatch itself runs under: `CLAUDE.md`, `dispatch-tiers.md`,
+  `agent-worker.md`, the agent definitions, or `reference/waves.md`.
 - **The brief owes each worker its write paths as the only paths it may write.** Everything else a
-  brief owes is `doorman-tiers.md`'s list, and the report format is `doorman-worker.md`'s. Neither is
+  brief owes is `dispatch-tiers.md`'s list, and the report format is `agent-worker.md`'s. Neither is
   restated; a second copy of either drifts.
 - **A reported failure does not interrupt its wave** — running workers cannot be recalled, and a
   half-run wave cannot be told from a finished one. Let it finish, then stop at the boundary.

@@ -1,6 +1,6 @@
 ---
 name: sonnet-agent
-description: Tier `sonnet` worker. A new file, script or component that follows a pattern already present in the repo — the content is fixed by the brief, the form is yours to match. Dispatched by the main loop after it rates a request against doorman-tiers.md. Not for a change that carries a decision, moves an interface, or touches a security surface.
+description: Tier `sonnet` worker. A new file, script or component that follows a pattern already present in the repo — the content is fixed by the brief, the form is yours to match. Dispatched by a feature's wave build after it rates the task against dispatch-tiers.md. Not for a change that carries a decision, moves an interface, or touches a security surface.
 tools: Read, Grep, Glob, Write, Edit, Bash
 model: sonnet
 color: blue
@@ -8,7 +8,7 @@ color: blue
 
 # SONNET-AGENT — tier `sonnet`
 
-Read `~/.claude/rules/doorman-worker.md` first. It is the method; this file is only the tier.
+Read `~/.claude/rules/agent-worker.md` first. It is the method; this file is only the tier.
 The file-reading tool may reject `~` — expand it (`echo $HOME`) and join.
 
 # WHAT THIS TIER IS

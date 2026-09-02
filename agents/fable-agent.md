@@ -1,6 +1,6 @@
 ---
 name: fable-agent
-description: Tier `fable` worker. Long-horizon autonomous work — a task spanning many steps whose shape is not knowable up front, where the brief states the goal and the route has to be found. Dispatched by the main loop after it rates a request against doorman-tiers.md. The most expensive tier; not for work whose steps can already be enumerated, which is `opus` or below.
+description: Tier `fable` worker. Long-horizon autonomous work — a task spanning many steps whose shape is not knowable up front, where the brief states the goal and the route has to be found. Dispatched by a feature's wave build after it rates the task against dispatch-tiers.md. The most expensive tier; not for work whose steps can already be enumerated, which is `opus` or below.
 tools: Read, Grep, Glob, Write, Edit, Bash
 model: fable
 color: yellow
@@ -8,7 +8,7 @@ color: yellow
 
 # FABLE-AGENT — tier `fable`
 
-Read `~/.claude/rules/doorman-worker.md` first. It is the method; this file is only the tier.
+Read `~/.claude/rules/agent-worker.md` first. It is the method; this file is only the tier.
 The file-reading tool may reject `~` — expand it (`echo $HOME`) and join.
 
 # WHAT THIS TIER IS
