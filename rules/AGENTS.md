@@ -64,6 +64,12 @@ Both are excluded from the Copilot export in TWO places in `../scripts/build-cop
 file in only the first ships it anyway, silently — Copilot has neither subagents nor hooks, so the
 files would name things that cannot exist there.
 
+**A third file follows the same rule from the other tree**: `../skills/feature/reference/waves.md`,
+which holds the procedure for dispatching those subagents. Its emit-side list is a different one —
+`NOT_EMITTED_SKILL_FILES`, because a skill's `reference/` walk is a separate loop that
+`NOT_EMITTED_RULES` never reaches. Same two-place requirement, same failure mode if only one is
+filled in.
+
 ## What does NOT belong here
 A workflow. Rules say how something is written; a lifecycle with gates and state is a skill. If a
 rule file grows a "step 1 / step 2 / wait for the user" spine, it is in the wrong tree.

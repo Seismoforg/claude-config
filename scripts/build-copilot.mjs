@@ -96,6 +96,7 @@ const SOURCE_EXCLUSIONS = {
   'scripts/build-copilot.mjs':               'produces the export; shipping it inside the export is circular',
   'rules/doorman-tiers.md':                  'names Claude Code subagents and a UserPromptSubmit hook, neither of which exists in Copilot',
   'rules/doorman-worker.md':                 'the method for those same subagents; useless where they cannot be dispatched',
+  'skills/feature/reference/waves.md':       'the procedure for dispatching those same subagents; SKILL.md carries the rules Copilot can act on',
 };
 
 // Rule files the rules walk must NOT emit. SOURCE_EXCLUSIONS alone does not stop an emit — it only
@@ -106,6 +107,13 @@ const NOT_EMITTED_RULES = new Set([
   'rules/CLAUDE.md',
   'rules/doorman-tiers.md',
   'rules/doorman-worker.md',
+]);
+
+// The same both-lists rule for files under a skill's `reference/`. That walk is a SEPARATE loop from
+// the rules walk, so NOT_EMITTED_RULES does not reach it and a skill reference needs its own set.
+// Paths are repo-relative with forward slashes, matching SOURCE_EXCLUSIONS' keys.
+const NOT_EMITTED_SKILL_FILES = new Set([
+  'skills/feature/reference/waves.md',
 ]);
 
 // The trees the coverage check walks. An ALLOWLIST of directories, never a list of things to ignore:
@@ -253,6 +261,7 @@ for (const s of skillNames) {
   const refDir = join(skillsDir, s, 'reference');
   if (existsSync(refDir)) {
     for (const f of readdirSync(refDir).filter((f) => f.endsWith('.md')).sort()) {
+      if (NOT_EMITTED_SKILL_FILES.has(`skills/${s}/reference/${f}`)) continue;  // SOURCE_EXCLUSIONS owns the reason
       put(`.github/${homeOf(s)}/reference/${f}`, rewritePointers(readSrc(join(refDir, f)), s, skillNameSet));
     }
   }

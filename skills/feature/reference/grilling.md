@@ -159,7 +159,7 @@ code:
 # 7. RETURN — never gate
 
 Return to `feature` workflow **step 2, the implementation-questions gate**, and let the workflow run
-on: step 2, then the premortem at 3, the milestone cut at 4, then step 5. Never jump to step 5.
+on: step 2, then the premortem at 3, the wave cut at 4, then step 5. Never jump to step 5.
 
 Hand back two things:
 - The DRAFT's path, and that step 1 is done.
