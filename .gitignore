@@ -12,12 +12,6 @@ features/
 # `node scripts/build-copilot.mjs .`. See docs/adr/0003 for why it is no longer committed.
 github_build/
 
-# VS Code extension build. `node_modules/` is the only third-party code this repo ever pulls, and it
-# is dev-only: the hook script it ships is node builtins. The .vsix is a build artifact of `out/`.
-extension/node_modules/
-extension/out/
-extension/*.vsix
-
 # `self-improve`'s log and its archive. Runtime DATA the skill writes, per machine — the base stays in
 # the repo as the `*.template.md` beside them, the entries never do. Untracked from 20260805 on.
 skills/self-improve/findings.md

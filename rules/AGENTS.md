@@ -24,8 +24,8 @@ rule is pulled. So a rule may be long — it costs nothing on a task that never 
 - `debugging.md`       — reproduce, isolate, root cause, verify
 - `processes.md`       — Windows/PowerShell/bash mechanics for launching and ending a process
 - `asking.md`          — what an `AskUserQuestion` owes its reader
-- `doorman-tiers.md`   — the doorman's tier rubric. Read by a SCRIPT, not pulled by the table
-- `doorman-worker.md`  — the shared method for the four `../agents/` tiers, pulled by each agent
+- `dispatch-tiers.md`  — the tier rubric: which agent gets a task, or none. Not pulled by the table
+- `agent-worker.md`    — the shared method for the four `../agents/` tiers, pulled by each agent
 - `design/*.md`        — design appendices, loaded only when `design.md` points at one
 - `scripts/*.mjs`      — checks a rule invokes: `preflight.mjs` (design §14 pass 1),
                          `check-adr.mjs` (ADR status and successor pointer)
@@ -45,30 +45,29 @@ A rule points at a sibling rule by bare filename (`web.md`), at an appendix by f
 (`design/ai-tells.md`), and from an appendix back up with `../design.md`. No absolute paths in prose,
 no `reference/` prefix — that was the old skill layout.
 
-## The two doorman files break the "pulled by the table" rule, on purpose
+## The two dispatch files are not pulled by the routing table, on purpose
 The opening claim — a rule reaches a model only because CLAUDE.md's routing table sent it there —
 has exactly two exceptions, and they are named here rather than left to be inferred from the file
-list.
+list. Both are read; neither is routed. A routing table row is for a change SURFACE, and these two
+files are about who does the work, not about what the work touches.
 
-- **`doorman-tiers.md` is read by a SCRIPT.** The doorman's `UserPromptSubmit` hook parses its
-  config block, strips it, and hands the rest to the model as hook context on every prompt it does
-  not wave through. No routing table is involved and no model chooses to open it: it arrives whether
-  or not it is wanted. That is why it is kept short, and why editing it changes behaviour with no
-  rebuild.
-- **`doorman-worker.md` is pulled by an AGENT, not by the table.** Each of the four
-  [../agents/](../agents/AGENTS.md) definitions reads it by path at the start of its run, because
-  four copies of one method drift apart.
+- **`dispatch-tiers.md` is read by a SKILL and by the agent definitions.** `feature`'s SKILL.md
+  step 6 opens it once per task in a wave, to rate that task and pick its agent; each of the four
+  [../agents/](../agents/AGENTS.md) definitions names it as the rubric that rated them. Nothing
+  else reads it.
+- **`agent-worker.md` is pulled by an AGENT, not by the table.** Each of those four definitions
+  reads it by path at the start of its run, because four copies of one method drift apart.
 
 Both are excluded from the Copilot export in TWO places in `../scripts/build-copilot.mjs`:
 `SOURCE_EXCLUSIONS` answers the coverage check, and `NOT_EMITTED_RULES` stops the emit. Listing a
-file in only the first ships it anyway, silently — Copilot has neither subagents nor hooks, so the
-files would name things that cannot exist there.
+file in only the first ships it anyway, silently — Copilot has no subagents, so both files would
+name a mechanism that cannot exist there.
 
-**A third file follows the same rule from the other tree**: `../skills/feature/reference/waves.md`,
-which holds the procedure for dispatching those subagents. Its emit-side list is a different one —
+**A third file carries the same exclusion from the other tree**: `../skills/feature/reference/waves.md`,
+which holds the procedure for dispatching those same subagents. Same two-place requirement and same
+silent failure if only one place is filled in, but the emit-side list is a different one —
 `NOT_EMITTED_SKILL_FILES`, because a skill's `reference/` walk is a separate loop that
-`NOT_EMITTED_RULES` never reaches. Same two-place requirement, same failure mode if only one is
-filled in.
+`NOT_EMITTED_RULES` never reaches.
 
 ## What does NOT belong here
 A workflow. Rules say how something is written; a lifecycle with gates and state is a skill. If a
@@ -80,4 +79,4 @@ Node (`node:` builtins only) for the two check scripts. No package manager, no t
 # Related Modules
 - Parent: [../](../README.md) — repo root: layout, the routing table, the Copilot build
 - Sibling: [../skills/](../skills/AGENTS.md) — the three workflow skills that pull these rules
-- Sibling: [../agents/](../agents/AGENTS.md) — the four doorman tiers, which pull `doorman-worker.md`
+- Sibling: [../agents/](../agents/AGENTS.md) — the four agent tiers, which pull `agent-worker.md`

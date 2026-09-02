@@ -53,7 +53,7 @@ prose. No check script reads it, exactly as `# Milestones` and `# Dispatch` befo
 
 # 3. THE DISPATCH BRIEF
 
-`rules/doorman-tiers.md` already lists what any brief owes a worker: its slice and nothing else,
+`rules/dispatch-tiers.md` already lists what any brief owes a worker: its slice and nothing else,
 absolute paths for anything outside the repo (a spec under `features/` above all — that directory is
 git-ignored, so a repo-relative path resolves to nothing), the rule files the surface needs by
 absolute path, and authorization for any run that spends the machine. Read that list; it is not
@@ -65,7 +65,7 @@ restated here.
   it.
 - **Its `reads` paths**, so the worker does not go looking and widen its own footprint.
 
-The return format is `doorman-worker.md`'s existing `HEAD` / `CHANGED` / `VERIFIED` / `DEBT` /
+The return format is `agent-worker.md`'s existing `HEAD` / `CHANGED` / `VERIFIED` / `DEBT` /
 `FRICTION` / `BLOCKED` block. Do not ask for a diff and do not invent a second format: two formats
 drift, and this one is already what the four agents are built to emit.
 

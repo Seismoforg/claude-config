@@ -1,6 +1,11 @@
 # Purpose
-The four subagent definitions the doorman dispatches to. One per model tier. Claude Code discovers
-them by scanning `~/.claude/agents/`, which is a junction to this folder.
+The four subagent definitions a feature's wave build dispatches to. One per model tier. Claude Code
+discovers them by scanning `~/.claude/agents/`, which is a junction to this folder.
+
+**One caller.** `feature` workflow step 6 cuts the task list into waves at step 4, then builds each
+wave by rating every task against [../rules/dispatch-tiers.md](../rules/dispatch-tiers.md) and
+sending one agent per task. Nothing else dispatches these, so work outside a feature run never
+reaches them — see [ADR 0012](../docs/adr/0012-remove-the-doorman-waves-dispatch-directly.md).
 
 Unlike `../rules/`, nothing here is pulled by a routing table and nothing is read as prose by the
 main loop. A file here becomes a callable agent purely by existing with valid frontmatter.
@@ -20,14 +25,14 @@ main loop. A file here becomes a callable agent purely by existing with valid fr
 
 ## Why the method is not in these files
 All four share one method, and four copies of it drift. The shared half lives once, in
-[../rules/doorman-worker.md](../rules/doorman-worker.md), and each agent's body is short enough that
+[../rules/agent-worker.md](../rules/agent-worker.md), and each agent's body is short enough that
 what differs between tiers is the only thing you read.
 
 Each agent reads that file itself, by path, at the start of its run. That is the same mechanic the
 rules tree already uses, and it is the reason these four files stay small.
 
 ## Why `~` and not an absolute path
-Each agent body points at `~/.claude/rules/doorman-worker.md` and tells the agent to expand the
+Each agent body points at `~/.claude/rules/agent-worker.md` and tells the agent to expand the
 tilde if its file-reading tool rejects one. This repo is public, so a hardcoded user home would
 publish a real machine's path and break on every other machine.
 

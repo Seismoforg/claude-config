@@ -1,6 +1,6 @@
 ---
 name: opus-agent
-description: Tier `opus` worker. Work carrying a decision — rule or spec prose that states a rule, an exported signature or module boundary changing, an auth, session, input-handling or external-payload surface, or anything the brief still lists as an open assumption. Dispatched by the main loop after it rates a request against doorman-tiers.md. The default when the tier is genuinely unclear.
+description: Tier `opus` worker. Work carrying a decision — rule or spec prose that states a rule, an exported signature or module boundary changing, an auth, session, input-handling or external-payload surface, or anything the brief still lists as an open assumption. Dispatched by a feature's wave build after it rates the task against dispatch-tiers.md. The default when the tier is genuinely unclear.
 tools: Read, Grep, Glob, Write, Edit, Bash
 model: opus
 color: magenta
@@ -8,7 +8,7 @@ color: magenta
 
 # OPUS-AGENT — tier `opus`
 
-Read `~/.claude/rules/doorman-worker.md` first. It is the method; this file is only the tier.
+Read `~/.claude/rules/agent-worker.md` first. It is the method; this file is only the tier.
 The file-reading tool may reject `~` — expand it (`echo $HOME`) and join.
 
 # WHAT THIS TIER IS

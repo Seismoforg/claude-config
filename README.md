@@ -1,7 +1,7 @@
 # claude-config
 
 Versioned Claude Code global config: user `CLAUDE.md` + a pulled `rules/` tree + three workflow
-skills.
+skills + four subagent tiers a feature wave dispatches to.
 
 ## Layout
 - `CLAUDE.md` — global user instructions. Style, work discipline, the **routing table** that says
@@ -11,12 +11,8 @@ skills.
   [rules/AGENTS.md](rules/AGENTS.md).
 - `skills/`   — the three workflow skills: `feature`, `git-commit`, `self-improve`. A skill is a
   LIFECYCLE — gates, state, a wait for the user. See [skills/AGENTS.md](skills/AGENTS.md).
-- `agents/`   — the four doorman subagent tiers, one per model. Discovered by existing, not pulled.
-  See [agents/AGENTS.md](agents/AGENTS.md).
-- `extension/`— the doorman: a VS Code extension plus the four hook scripts it installs. The only
-  place in this repo with a package manager and a build step; see
-  [ADR 0010](docs/adr/0010-a-build-step-enters-a-dependency-free-repo.md) and
-  [extension/AGENTS.md](extension/AGENTS.md).
+- `agents/`   — the four subagent tiers, one per model, that a `feature` wave dispatches its tasks
+  to. Discovered by existing, not pulled. See [agents/AGENTS.md](agents/AGENTS.md).
 - `docs/adr/` — hard-to-reverse decisions, superseded rather than edited.
 - `scripts/`  — checks whose corpus IS this repo, plus the Copilot export.
 
@@ -106,39 +102,19 @@ is not symlinked into this repo.
 **Registration is per machine and not versioned** — the same status as the junctions below. Without it
 you keep the prose rule and lose the enforcement: you tick the boxes yourself. Degraded, not broken.
 
-## The doorman
-A complexity rubric that every prompt passes, and that arrives again each time a task starts. It
-does not decide anything: it puts the tier ladder in front of the model and records what happened.
+## Dispatching a wave
+`feature` step 4 cuts a spec's tasks into waves: which can be written at the same time, which have to
+wait. Step 6 then builds one wave by rating every task in it against
+[rules/dispatch-tiers.md](rules/dispatch-tiers.md) and sending it to the matching agent in `agents/`,
+at most 8 at once. `inline` is a real rating and means the session model writes that task itself.
 
-Four hook scripts in `extension/hook/`, all `node:` builtins, all fail-open:
+Each brief carries the worker's write paths as the only paths it may write. Several workers edit one
+working tree at once, and that boundary is the only thing keeping them off each other's files, so it
+is the dispatcher's job to name it. The method every agent reads before writing is
+[rules/agent-worker.md](rules/agent-worker.md) — one copy, so four agent files cannot drift apart.
 
-| Script | Event | What it does |
-|---|---|---|
-| `doorman.mjs` | `UserPromptSubmit` | attaches the full rubric as `additionalContext` |
-| `doorman-todo.mjs` | `PostToolUse` on `TodoWrite` | attaches the short reminder when a task starts |
-| `doorman-subagent.mjs` | `SubagentStart` | records which agent actually started |
-| `launcher.mjs` | — | the stable path `settings.json` names; resolves the current build |
-
-**Coverage boundary.** Slash commands on the rubric's list and prompts under its length threshold are
-waved through at the door, and mid-turn the doorman only speaks when a task moves to `in_progress`.
-So work driven by a task list is covered; work without one, and anything reached through a
-waved-through slash command, is not. `/feature` is on that list deliberately — that workflow owns its
-own gates — which means the doorman is absent from exactly the lifecycle the old dispatch ladder
-lived in. Removing it from the list is a one-word edit in the rubric.
-
-**Fail-open is the contract.** Missing rubric, missing agents, malformed input, deadline exceeded:
-exit 0, inject nothing, log the reason. This runs before every prompt in every project, so a hook
-that throws or hangs is worse than a hook that does nothing.
-
-**Off:** create `~/.claude/doorman-disabled`. **On:** delete it. There is deliberately no `enabled`
-flag in the rubric — that file is tracked, and a switch there gets committed by accident.
-
-**Runtime state**, all per machine and none of it versioned: `~/.claude/doorman.log` (one JSON line
-per event), `doorman-install.json` (which build the launcher resolves), `doorman-override.json` (a
-forced tier for one prompt in one workspace), `doorman-state/` (the last announced task per session).
-
-`rules/doorman-tiers.md` holds the rubric AND every tuning value, so the doorman is retuned by
-editing markdown — no rebuild, no restart.
+**Nothing outside a feature run is rated.** A quick fix, a question, a bug hunt: no step rates those
+and none is dispatched. That gap is deliberate; ADR 0012 records it.
 
 ## GitHub Copilot export
 Copilot reads the same `SKILL.md` format this repo writes, so a skill translates one for one. The
@@ -180,12 +156,15 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 - [0007](docs/adr/0007-install-the-whole-config-not-only-skills.md) — every source file is carried or explicitly excluded
 - [0008](docs/adr/0008-dissolve-crew-into-feature-dispatch.md) — superseded by 0009
 - [0009](docs/adr/0009-rules-tree-replaces-most-skills.md) — coding rules become a pulled `rules/` tree; three skills remain; the subagent roster is removed
+- [0010](docs/adr/0010-a-build-step-enters-a-dependency-free-repo.md) — superseded by 0012
+- [0011](docs/adr/0011-waves-replace-milestones-and-feature-fans-out.md) — a spec's tasks are cut into waves, and a wave dispatches one agent per task
+- [0012](docs/adr/0012-remove-the-doorman-waves-dispatch-directly.md) — the doorman is removed; the wave build dispatches the tier agents directly
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
 - `~/.claude/rules`  → **junction** to `rules/` here.
-- `~/.claude/agents` → **junction** to `agents/` here. Without it Claude Code sees no doorman agents,
-  and the doorman falls open rather than naming an agent that does not exist.
+- `~/.claude/agents` → **junction** to `agents/` here. Without it Claude Code finds no `haiku-agent`,
+  `sonnet-agent`, `opus-agent` or `fable-agent`, and a `feature` wave has nothing to dispatch to.
 - `~/.claude/CLAUDE.md` → 1-line `@import` pointer to `CLAUDE.md` here.
 - `~/.claude/settings.json` → holds the `Stop` registration for `tick-guard.mjs` and the `PostToolUse`
   one for `tick-sync.mjs`. A real file, NOT a symlink into this repo: a file symlink needs elevation
