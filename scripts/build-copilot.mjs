@@ -94,7 +94,19 @@ const SOURCE_EXCLUSIONS = {
   'skills/self-improve/findings.md':         'runtime data per machine — .gitignore owns the rule; the template travels instead',
   'skills/self-improve/findings-archive.md': 'runtime data per machine — .gitignore owns the rule; the template travels instead',
   'scripts/build-copilot.mjs':               'produces the export; shipping it inside the export is circular',
+  'rules/doorman-tiers.md':                  'names Claude Code subagents and a UserPromptSubmit hook, neither of which exists in Copilot',
+  'rules/doorman-worker.md':                 'the method for those same subagents; useless where they cannot be dispatched',
 };
+
+// Rule files the rules walk must NOT emit. SOURCE_EXCLUSIONS alone does not stop an emit — it only
+// answers the coverage check — so a file that must not ship has to appear in BOTH. Keep the two in
+// step: a row here without a row there fails the build as `uncovered-source-file`, which is the
+// direction that fails loudly; the reverse ships the file in silence.
+const NOT_EMITTED_RULES = new Set([
+  'rules/CLAUDE.md',
+  'rules/doorman-tiers.md',
+  'rules/doorman-worker.md',
+]);
 
 // The trees the coverage check walks. An ALLOWLIST of directories, never a list of things to ignore:
 // ignore-list scoping is the permanent defect in any absence proof.
@@ -267,7 +279,7 @@ const walkRules = (d, base) => readdirSync(d).flatMap((e) => {
 if (existsSync(rulesDir)) {
   // .sort(): readdirSync order is not guaranteed, and the emitted order feeds the source-set hash.
   for (const { p, rel: r } of walkRules(rulesDir, 'rules').sort((a, b) => a.rel.localeCompare(b.rel))) {
-    if (r === 'rules/CLAUDE.md') continue;   // SOURCE_EXCLUSIONS owns the reason; not read, not emitted
+    if (NOT_EMITTED_RULES.has(r)) continue;  // SOURCE_EXCLUSIONS owns each reason; not read, not emitted
     put(`.github/${r}`, rewritePointers(readSrc(p), null, skillNameSet));
   }
 }
