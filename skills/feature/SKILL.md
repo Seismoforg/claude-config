@@ -328,9 +328,10 @@ had no premortem: crosses step 3's threshold → run it now. Record the approach
 `# Open Questions` in the same pass, and run step 4 against that plan too.
 
 **Then SEED THE MIRROR: one todo per `# Tasks` item, `content` copied VERBATIM.** Always, at every
-size. VERBATIM is not style — `tick-sync.mjs` matches todo to task by its FIRST PHYSICAL LINE, so a
-paraphrased todo is a box that never moves, and so is a task that WRAPS. Keep every `# Tasks` item on
-one line. Re-seeding after a task is ADDED mid-build is part of the same rule, and `tick-guard.mjs`
+size. VERBATIM means the task's FIRST PHYSICAL LINE — `tick-sync.mjs` keys on that line alone, so a
+paraphrased todo is a box that never moves, and so is a todo carrying a wrapped task's FULL text. A
+wrapped item ticks fine; copying all of it is the thing that breaks. Measured both ways 2026-09-02.
+Re-seeding after a task is ADDED mid-build is part of the same rule, and `tick-guard.mjs`
 blocks until you do. The mirror is milestone-BLIND: seed EVERY item now, including milestones you
 will not start for hours. No `TodoWrite` reachable → tick each box by hand as its task lands, and
 treat any `tick-guard.mjs` block as unsatisfiable.
