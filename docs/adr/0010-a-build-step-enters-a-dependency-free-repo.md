@@ -1,7 +1,11 @@
 ---
-status: accepted
+status: superseded
 date: 2026-09-02
 ---
+
+**Superseded by 0012** (`0012-remove-the-doorman-waves-dispatch-directly.md`): the `extension/` tree
+this ADR licensed a build step for is deleted. No extension, no build step, so the repo is
+dependency-free again and the exception below has nothing left to apply to.
 
 # Context
 Until now every executable file in this repo was a single `.mjs` using `node:` builtins only. There

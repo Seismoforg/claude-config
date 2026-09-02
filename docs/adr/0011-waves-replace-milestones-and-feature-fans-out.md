@@ -39,6 +39,12 @@ the only isolation, and the rule says so rather than implying more.
 The procedure lives in `skills/feature/reference/waves.md`, loaded at step 4 and again at step 6.
 It is excluded from the Copilot export in both required places, because Copilot has no subagents.
 
+**Amended by 0012:** every `doorman-tiers.md` above is now `rules/dispatch-tiers.md`, and
+`doorman-worker.md`, named in `# Rationale` and `# Consequences`, is now `rules/agent-worker.md`.
+Only the filenames moved. What the decision says — step 6 rates each task against that rubric and
+dispatches to the matching tier agent, at most 8 at a time — stands unchanged, and so does the
+`# Rationale` argument for reusing one rubric rather than writing a second.
+
 # Rationale
 - **The tier rubric already existed and had one reader too few.** Reusing `doorman-tiers.md` rather
   than writing a second tier table is the same call ADR 0008 made and for the same reason: two copies
@@ -76,3 +82,6 @@ It is excluded from the Copilot export in both required places, because Copilot 
 - `feature` remains in the doorman's `waveThroughSlashCommands` list. The door hook fires on the
   `/feature` prompt itself, which is interview and planning work that must stay in the main loop;
   the reconciliation this ADR performs is at step 6, which the door never sees.
+  **Amended by 0012:** the doorman is removed, so the door hook and that list are gone and there is
+  nothing left to exempt `feature` from. Step 6 still stands as the place dispatch happens; the
+  reconciliation this bullet left pending is settled by the removal rather than by a config edit.
