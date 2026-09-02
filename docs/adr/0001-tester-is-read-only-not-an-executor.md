@@ -1,7 +1,11 @@
 ---
-status: accepted
+status: superseded
 date: 2026-08-01
 ---
+
+**Superseded by 0009** (`0009-rules-tree-replaces-most-skills.md`): the whole subagent roster,
+tester included, was removed. The worktree measurement below still holds as a fact about git; the
+roles it constrains no longer exist.
 
 # Context
 Workers in the `crew` flow come in two classes: read-only **analysis** agents that return text, and

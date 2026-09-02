@@ -11,5 +11,5 @@ Context: <which call, step or situation — file:line where possible>
 Suspected cause: <1 line, a guess — never a rule, never "should do X">
 ```
 
-This file is DATA, not rule prose a model loads. `check-size` names it outside its word corpus for
-that reason, so it may grow without pushing rule text off the ceiling.
+This file is DATA, not rule prose a model loads. It is git-ignored and lives per machine, so it may
+grow freely — nothing loads it into a session's context.
