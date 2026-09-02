@@ -11,6 +11,12 @@ skills.
   [rules/AGENTS.md](rules/AGENTS.md).
 - `skills/`   — the three workflow skills: `feature`, `git-commit`, `self-improve`. A skill is a
   LIFECYCLE — gates, state, a wait for the user. See [skills/AGENTS.md](skills/AGENTS.md).
+- `agents/`   — the four doorman subagent tiers, one per model. Discovered by existing, not pulled.
+  See [agents/AGENTS.md](agents/AGENTS.md).
+- `extension/`— the doorman: a VS Code extension plus the four hook scripts it installs. The only
+  place in this repo with a package manager and a build step; see
+  [ADR 0010](docs/adr/0010-a-build-step-enters-a-dependency-free-repo.md) and
+  [extension/AGENTS.md](extension/AGENTS.md).
 - `docs/adr/` — hard-to-reverse decisions, superseded rather than edited.
 - `scripts/`  — checks whose corpus IS this repo, plus the Copilot export.
 
@@ -100,6 +106,40 @@ is not symlinked into this repo.
 **Registration is per machine and not versioned** — the same status as the junctions below. Without it
 you keep the prose rule and lose the enforcement: you tick the boxes yourself. Degraded, not broken.
 
+## The doorman
+A complexity rubric that every prompt passes, and that arrives again each time a task starts. It
+does not decide anything: it puts the tier ladder in front of the model and records what happened.
+
+Four hook scripts in `extension/hook/`, all `node:` builtins, all fail-open:
+
+| Script | Event | What it does |
+|---|---|---|
+| `doorman.mjs` | `UserPromptSubmit` | attaches the full rubric as `additionalContext` |
+| `doorman-todo.mjs` | `PostToolUse` on `TodoWrite` | attaches the short reminder when a task starts |
+| `doorman-subagent.mjs` | `SubagentStart` | records which agent actually started |
+| `launcher.mjs` | — | the stable path `settings.json` names; resolves the current build |
+
+**Coverage boundary.** Slash commands on the rubric's list and prompts under its length threshold are
+waved through at the door, and mid-turn the doorman only speaks when a task moves to `in_progress`.
+So work driven by a task list is covered; work without one, and anything reached through a
+waved-through slash command, is not. `/feature` is on that list deliberately — that workflow owns its
+own gates — which means the doorman is absent from exactly the lifecycle the old dispatch ladder
+lived in. Removing it from the list is a one-word edit in the rubric.
+
+**Fail-open is the contract.** Missing rubric, missing agents, malformed input, deadline exceeded:
+exit 0, inject nothing, log the reason. This runs before every prompt in every project, so a hook
+that throws or hangs is worse than a hook that does nothing.
+
+**Off:** create `~/.claude/doorman-disabled`. **On:** delete it. There is deliberately no `enabled`
+flag in the rubric — that file is tracked, and a switch there gets committed by accident.
+
+**Runtime state**, all per machine and none of it versioned: `~/.claude/doorman.log` (one JSON line
+per event), `doorman-install.json` (which build the launcher resolves), `doorman-override.json` (a
+forced tier for one prompt in one workspace), `doorman-state/` (the last announced task per session).
+
+`rules/doorman-tiers.md` holds the rubric AND every tuning value, so the doorman is retuned by
+editing markdown — no rebuild, no restart.
+
 ## GitHub Copilot export
 Copilot reads the same `SKILL.md` format this repo writes, so a skill translates one for one. The
 rules tree travels as plain markdown at a stable path, with every pointer rewritten.
@@ -144,6 +184,8 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
 - `~/.claude/rules`  → **junction** to `rules/` here.
+- `~/.claude/agents` → **junction** to `agents/` here. Without it Claude Code sees no doorman agents,
+  and the doorman falls open rather than naming an agent that does not exist.
 - `~/.claude/CLAUDE.md` → 1-line `@import` pointer to `CLAUDE.md` here.
 - `~/.claude/settings.json` → holds the `Stop` registration for `tick-guard.mjs` and the `PostToolUse`
   one for `tick-sync.mjs`. A real file, NOT a symlink into this repo: a file symlink needs elevation
@@ -156,6 +198,7 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 $repo = 'd:\Projects\claude-config'   # clone target
 New-Item -ItemType Junction -Path "$HOME\.claude\skills" -Target "$repo\skills"
 New-Item -ItemType Junction -Path "$HOME\.claude\rules"  -Target "$repo\rules"
+New-Item -ItemType Junction -Path "$HOME\.claude\agents" -Target "$repo\agents"
 # BOM-free — a byte-order mark before @ breaks the @import
 [IO.File]::WriteAllText("$HOME\.claude\CLAUDE.md", "@$($repo -replace '\\','/')/CLAUDE.md", (New-Object Text.UTF8Encoding $false))
 ```
