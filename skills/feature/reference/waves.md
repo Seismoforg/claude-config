@@ -60,6 +60,9 @@ absolute path, and authorization for any run that spends the machine. Read that 
 restated here.
 
 **What a wave brief adds:**
+- **The worker's label**, `<Tier> Agent <N>`, exactly as §4 forms it. `agent-worker.md` lists it
+  first among what a brief owes, and a worker without one falls back to its bare tier and reports
+  the miss.
 - **The task's `writes` paths, named as the only paths this worker may write.** The wave's safety
   rests entirely on that boundary being respected, and the worker is the only actor who can respect
   it.
@@ -69,6 +72,14 @@ The return format is `agent-worker.md`'s existing `HEAD` / `CHANGED` / `VERIFIED
 `FRICTION` / `BLOCKED` block. Do not ask for a diff and do not invent a second format: two formats
 drift, and this one is already what the four agents are built to emit.
 
+**A RECON brief is a different thing and does not belong to a wave.** `haiku-agent` writes nothing,
+so it has no `writes` column, cannot collide with a sibling, and is not a `# Tasks` item. Fire one
+whenever the main loop wants to know something — while cutting the waves, mid-wave, before the spec
+exists at all. It owes the worker everything above EXCEPT the write paths, and in their place one
+sentence saying it writes nothing, so a report claiming a file changed is itself the error. Its return
+format is `agent-worker.md`'s `FOUND` / `SOURCES` / `COVERED` / `FRICTION` / `BLOCKED` block.
+`rules/dispatch-tiers.md` owns why recon is unrated; it is not restated here.
+
 # 4. RUNNING A WAVE
 
 SKILL.md step 6 owns the rating, the batch cap and the stay-inline carve-out. The mechanics:
@@ -77,6 +88,23 @@ SKILL.md step 6 owns the rating, the batch cap and the stay-inline carve-out. Th
 send full batches in order and wait for each. The wave is not finished until every batch has returned,
 and nothing about the next wave starts before that.
 
+**Give every worker a LABEL and put it in the dispatch's `description`.** The label is
+`<Tier> Agent <N>` — `Opus Agent 1`, `Haiku Agent 2` — numbered within the wave, so two workers on
+the same tier are still tellable apart. `description` becomes `<label>: <what it does>`:
+`Opus Agent 1: UI atoms and molecules`. That string is what the harness shows on the running
+worker's status line, and nothing else on that line names the model, so a wave of four concurrent
+workers reads as four named tiers instead of four anonymous spinners. The label goes in the brief
+too (§3) — `agent-worker.md` makes the worker repeat it on its own `Bash` descriptions, which is the
+only part of a worker's inner transcript that can carry it.
+
+Two things the label is not. It does not renumber across waves — numbering restarts at 1 each wave,
+because the wave is the unit the user watches. And the retry in §5 carries the tier it was RAISED
+to, never the one that failed: a retried task is `Opus Agent 2`, not `Sonnet Agent 2` again.
+
+A recon worker takes the same label shape, `Haiku Agent <N>`, but it is not numbered within a wave
+because it does not belong to one. Number it within the batch you fired, or use `Haiku Agent` bare
+when you fired exactly one.
+
 **Why a reported failure is allowed to run its wave out**, since the instinct is to cancel: running
 workers cannot be recalled at all, so cancelling only the not-yet-started batches leaves a partly-run
 wave. Nothing on disk distinguishes that from a finished one, so the next attempt cannot tell which of
@@ -84,8 +112,9 @@ its tasks to redo. Let the wave finish, then stop at its boundary with a report.
 
 # 5. WHEN A TASK FAILS
 
-One retry, dispatched one tier up: `haiku` → `sonnet` → `opus` → `fable`. A task already at `fable`
-has no tier above it and skips straight to the last bullet.
+One retry, dispatched one tier up: `sonnet` → `opus` → `fable`. A task already at `fable`
+has no tier above it and skips straight to the last bullet. `haiku` is not on this ladder — it holds
+no write tools, so there is no failed write of its to retry.
 
 **The retry brief must say that the state on disk is partial and is not the retry worker's own
 work.** Without that sentence the worker reads a half-written file as the repo's existing convention
@@ -109,6 +138,10 @@ for not re-reading every changed file on every wave.
 
 Then write the wave's line under `# Waves`: what you ran and what you saw. A wave that left nothing
 sensibly runnable says exactly that. **A failed check stops the NEXT wave.**
+
+That line is also what the boundary gate reports. SKILL.md step 6 owns the gate — a wave with
+another one behind it ends by asking whether to go on — and it fires AFTER this line exists, never
+before. Nothing here runs it; §4's batch rule still decides when the wave is over.
 
 Ticking stays with the main loop. `tick-sync.mjs` skips a subagent's own todo list by design, so a
 worker's `TodoWrite` never moves a spec's boxes.

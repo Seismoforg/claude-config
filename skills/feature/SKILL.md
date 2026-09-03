@@ -170,7 +170,8 @@ Added by the gates, in the order their gate runs. None of these replaces a requi
 # Open Questions   (step 2 — one row per category: question or evidence · answer · what changed)
 # Premortem        (step 3 — failure report + mitigation table, or the one-line skip record)
 # Waves            (step 4 — the cut: per wave, its tasks with their reads · writes · depends-on;
-                   #  then one check line per wave as step 6 finishes it)
+                   #  then one check line per wave as step 6 finishes it, carrying every inline
+                   #  task's reason, or the literal phrase "no inline taken")
 # Debt Found       (step 6 — one line per shortcut: what · path:line · why · the DRAFT id step 7
                    #  files it as)
 ```
@@ -310,7 +311,8 @@ and 4, and none is optional:
 
 **STOP. Ask via `AskUserQuestion`.** Offer at least:
 - **Approve & implement** → APPROVED, then the implementation gate, then implement, without asking
-  again.
+  again. Step 6's wave-boundary gate is not covered by that: it still runs, and its
+  "run every remaining wave" option is what silences it.
 - **Approve, don't implement yet** → APPROVED, then stop.
 - **Change spec** — stay in NEEDS_APPROVAL, refine in place. Then re-enter the gates the revision
   invalidated, from `pending/`: step 2 if it opened a new question, step 3 if it newly crosses that
@@ -353,12 +355,19 @@ Then build:
   and the repo has moved. Read `reference/waves.md` again here if it is there — it owns the dispatch
   procedure, the failure and retry rules, and where verification sits. Absent → no subagents exist on
   this target: build the waves in order, inline, and say so once.
-- **A wave is built by dispatching one subagent per task.** Rate each task against
-  `~/.claude/rules/dispatch-tiers.md` and send it to the matching tier agent; `inline` is a real
-  outcome and means you write that task yourself, inside the wave. **At most 8 workers at once** — a
-  wider wave runs in batches of 8 and is still ONE wave. Stay inline regardless of the rating when a
-  task edits what the dispatch itself runs under: `CLAUDE.md`, `dispatch-tiers.md`,
-  `agent-worker.md`, the agent definitions, or `reference/waves.md`.
+- **A wave is built by dispatching one subagent per task. Dispatch is the presumption**, not one
+  option among two: the mechanism exists to spend a cheaper model and write several tasks at once, and
+  a task you write yourself buys neither. Rate each task against
+  `~/.claude/rules/dispatch-tiers.md` and send it to the matching tier agent. **At most 8 workers at
+  once** — a wider wave runs in batches of 8 and is still ONE wave.
+- **`inline` is an exception that must be earned, and there are exactly two ways to earn it.** Gate 0
+  of that file — a task editing what the dispatch itself runs under — which is mandatory and whose
+  closed file list lives THERE, not here; do not restate it, read it. Or a judged exception, where no
+  dispatch mechanism is reachable or the task's whole content is already written verbatim in the spec.
+  Anything else is dispatched.
+- **Every inline task's reason goes on its wave's `# Waves` line**, naming the task and why. A wave
+  where nothing was built inline says so in the LITERAL phrase `no inline taken` — silence reads
+  identically to a forgotten line. Same literalness as `no debt taken` at step 7.
 - **The brief owes each worker its write paths as the only paths it may write.** Everything else a
   brief owes is `dispatch-tiers.md`'s list, and the report format is `agent-worker.md`'s. Neither is
   restated; a second copy of either drifts.
@@ -366,8 +375,16 @@ Then build:
   half-run wave cannot be told from a finished one. Let it finish, then stop at the boundary.
   One retry, one tier up, then `BLOCKED`.
 - As each wave lands, exercise what it made exercisable and add one line under `# Waves`: what you
-  ran, what you saw. A wave that left nothing sensibly runnable says exactly that. **A FAILED check
+  ran, what you saw, and the inline record the dispatch bullets above require. A wave that left
+  nothing sensibly runnable says exactly that. **A FAILED check
   stops the NEXT wave** — see the invalidated-premise rule below.
+- **A wave that leaves another one behind it ends at a gate. STOP. Ask via `AskUserQuestion`.** Ask
+  AFTER the `# Waves` line is written, so the question carries what the wave actually did and what
+  the next one would dispatch. Offer at least: run the next wave now · run every remaining wave
+  back-to-back without asking again · stop here and report. The LAST wave has no next one — go to
+  step 7 rather than ask. Two things override the answer: a FAILED check stops the next wave whatever
+  was chosen, and an invalidated premise re-opens its own gate. Either one also SPENDS a
+  "run everything" answer — it covers the waves that run uninterrupted, never the whole build.
 - **`# Tasks` is a live work-list, and you do NOT tick it.** Move the TODO the moment its task lands;
   that is the whole act. `tick-sync.mjs` sets the box to follow, in the same turn. Do not also edit
   the box by hand: a box you tick while its todo still reads `pending` is cleared again on the next
