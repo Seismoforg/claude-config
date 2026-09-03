@@ -105,7 +105,7 @@ This repo checks the superseded pointer and the `status` value mechanically:
 ```
 node ~/.claude/rules/scripts/check-adr.mjs
 ```
-`~` expands in a POSIX shell only; under PowerShell prefix `$HOME` in its place.
+A `~` in a command path expands in a POSIX shell only; under PowerShell put `$HOME` in its place.
 
 # TECHNICAL DEBT IS NOT A DOC
 Debt you knowingly leave becomes its own feature DRAFT, never a line in a document nothing revisits.

@@ -47,10 +47,13 @@ A rule points at a sibling rule by bare filename (`web.md`), at an appendix by f
 no `reference/` prefix — that was the old skill layout.
 
 A shell command in a rule file names its script by the junction path
-(`~/.claude/rules/scripts/<name>.mjs`), never a repo-relative one. That `~` expands in a POSIX shell
-only: measured 2026-09-03, `node ~/.claude/rules/scripts/check-adr.mjs` runs under Git Bash and
-fails under PowerShell 5.1 with `Cannot find module '<cwd>\~\.claude\rules\scripts\check-adr.mjs'`.
-So the command carries a clause telling a PowerShell reader to prefix `$HOME` in the `~`'s place.
+(`~/.claude/rules/scripts/<name>.mjs`), never a repo-relative one.
+
+A path CONTAINING a `~` expands in a POSIX shell only, so every command carrying one also tells a
+PowerShell reader to put `$HOME` where the `~` is. Measured 2026-09-03: invoking a script through a
+`~`-prefixed path runs under Git Bash and fails under PowerShell 5.1 with
+`Cannot find module '<cwd>\~\.claude\rules\scripts\check-adr.mjs'` — PowerShell takes the tilde as a
+literal directory name. A path with no `~` in it needs no such clause.
 
 ## The two dispatch files are not pulled by the routing table, on purpose
 The opening claim — a rule reaches a model only because CLAUDE.md's routing table sent it there —

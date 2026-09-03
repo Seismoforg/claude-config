@@ -38,17 +38,17 @@
 // Usage: node check-adr.mjs [root]   Exit 1 = at least one violation. Exit 0 = clean, INCLUDING the
 // case where docs/adr/ is absent or empty — another repo may legitimately have no ADRs, so absence
 // is not a broken invocation. README.md's check-list section records that split and its reason.
-// Exit 2 = the run was INVALID: a bad root. [root] defaults to this script's own repo, never the
-// shell CWD.
+// Exit 2 = the run was INVALID: a bad root. [root] defaults to the shell CWD.
 
 import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { join, resolve } from 'node:path';
 
-// Default to the repo this script ships in — never the shell CWD, which drifts. Same rule as
-// check-frontmatter.mjs; this file sits at <repo>/rules/scripts/, so the root is two levels up.
-const here = dirname(fileURLToPath(import.meta.url));
-const root = resolve(process.argv[2] ?? join(here, '..', '..'));
+// Default to the shell CWD: this script TRAVELS through the ~/.claude/rules junction and is invoked
+// from the project being worked on, so a bare run must check THAT project's ADRs. It used to default
+// to its own repo, which made a bare run from another project examine claude-config's ADRs and print
+// clean — a false green about a tree nobody asked about. check-frontmatter.mjs keeps its own-repo
+// default on purpose, because its corpus IS this repo.
+const root = resolve(process.argv[2] ?? '.');
 
 // A bad root must be a named error, never a quiet "nothing to check" — the two look identical in a
 // log otherwise. isDirectory() as well as existsSync: a FILE passed as root reaches readdirSync and
@@ -102,7 +102,10 @@ for (const { file, id, path } of corpus) {
   const src = readFileSync(path, 'utf8');
   const rel = `docs/adr/${file}`;
 
-  const block = src.match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
+  // Strip a leading BOM first: an editor-added U+FEFF sits in front of the opening --- and makes
+  // this ^--- match miss, so a perfectly good ADR is reported as unknown-status — a true failure
+  // under a misleading name. Same strip as check-features.mjs and build-copilot.mjs.
+  const block = src.replace(/^\uFEFF/, '').match(/^---\r?\n([\s\S]*?)\r?\n---\r?\n?/);
   if (!block) {
     violations.push(`${rel}  unknown-status  no --- frontmatter block, so no status: at all`);
     continue;

@@ -20,11 +20,11 @@
 
 import { openSync, closeSync, existsSync, mkdirSync, readdirSync, statSync } from 'node:fs';
 import { join, resolve, relative } from 'node:path';
+import { STATUS_BY_FOLDER } from './_shared.mjs';
 
-// The state machine is closed: these 7 and no others. Same list as check-features.mjs, deliberately
-// duplicated rather than shared — these scripts stay standalone so both resolve through the
-// ~/.claude/skills junction and through the real repo path.
-const STATE_FOLDERS = ['draft', 'pending', 'approved', 'in-progress', 'ready-for-done', 'done', 'discarded'];
+// The state machine is closed: the 7 folders `_shared.mjs` defines and no others. Only the NAMES are
+// needed here, and their order is the state-machine order that file's KEY ORDER note guarantees.
+const STATE_FOLDERS = Object.keys(STATUS_BY_FOLDER);
 
 // Matches the slug half of check-features.mjs's FILENAME_RE (/^\d{8}-\d{4}-[a-z0-9-]+\.md$/), minus
 // a leading or trailing hyphen, which that pattern allows but which reads as a typo every time.

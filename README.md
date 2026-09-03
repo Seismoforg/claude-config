@@ -34,14 +34,20 @@ node rules/scripts/check-adr.mjs
 node rules/scripts/preflight.mjs <changed files or dir>
 ```
 
-An EMPTY corpus splits them, and the split is deliberate. `check-frontmatter` exits 2, because its
-corpus IS this repo and its absence means nothing was examined. `check-features` and `check-adr` exit
+An EMPTY corpus splits them, and the split is deliberate. `check-frontmatter` exits 2 when EITHER of
+its two corpora resolves to zero files, because its corpus IS this repo and an absence means nothing
+was examined. `check-features` and `check-adr` exit
 0 with an explicit "nothing to check" line, because another repo may legitimately have no `features/`
 and no `docs/adr/`. So read the COUNT each prints, not just the exit code — exit 0 over an empty
 corpus is not a pass.
 
-- **`check-frontmatter`** — every `skills/*/SKILL.md` must have frontmatter a YAML parser accepts,
-  plus a non-empty `name` and `description`, `name` matching the folder. It exists because that
+- **`check-frontmatter`** — two corpora, counted separately in its summary line. Every
+  `skills/*/SKILL.md` must have frontmatter a YAML parser accepts, plus a non-empty `name` and
+  `description`, `name` matching the folder. Every `agents/*.md` except that folder's `AGENTS.md` and
+  `CLAUDE.md` must pass the same YAML validity, plus a non-empty `name` matching the file stem,
+  `description`, `tools` and `model` — the last two because a definition with no `tools:` line
+  inherits every tool the harness has, and a missing `model:` picks one nobody chose. Presence only:
+  a `tools:` line naming the wrong tools passes. It exists because that
   failure is SILENT: an unquoted `description:` holding a colon-space is a nested mapping, the block
   is dropped, the file still loads, and a skill with no description never matches auto-delegation.
 - **`check-features`** — folder↔status agreement, filename shape, task-list currency. The `feature`
@@ -56,7 +62,10 @@ corpus is not a pass.
 
 `check-adr` and `preflight` live under `rules/scripts/` rather than `scripts/` because they travel
 with the rule that invokes them, through the `~/.claude/rules` junction, and are meant to run in
-other projects.
+other projects. So `check-adr`'s `[root]` defaults to the shell CWD: a bare run checks the project
+you are standing in, and it prints the root it used. `check-frontmatter` defaults to its own repo
+instead, and the difference is deliberate — its corpus IS this repo, so a CWD default would aim it
+at a tree it does not describe.
 
 ## Starting a feature
 `skills/feature/scripts/new-feature.mjs` claims a feature-file id and prints the path it created.
@@ -141,9 +150,11 @@ node scripts/build-copilot.mjs . --check          # re-derive and diff, write no
   so their pointers are repointed at this repo and the install says so.
 - **`--check`** — answers "did my edit change the translation?". Not a gate: nothing is committed, so
   nothing goes stale.
-- **Every source file is carried or explicitly excluded.** A file under `skills/`, `rules/` or
-  `scripts/` that no rule mentions FAILS the build with `uncovered-source-file`, rather than being
-  dropped in silence.
+- **Every source file is carried or explicitly excluded.** A file under `skills/`, `rules/`,
+  `scripts/` or `agents/` that no rule mentions FAILS the build with `uncovered-source-file`, rather
+  than being dropped in silence. Nothing under `agents/` is emitted — Copilot has no subagent
+  concept — so every file there carries an exclusion row, and a new agent file fails the build until
+  somebody classifies it.
 
 Verify in VS Code with `/skills` in Copilot Chat, or the gear icon → Agent Customizations → Skills.
 

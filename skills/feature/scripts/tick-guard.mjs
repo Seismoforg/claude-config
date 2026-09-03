@@ -19,7 +19,7 @@
 import { openSync, fstatSync, readSync, closeSync, readFileSync, writeFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { tasksOf, norm } from './_shared.mjs';
+import { tasksOf, norm, readStdin } from './_shared.mjs';
 
 // FAIL OPEN, deliberately against this repo's grain. Every other check here treats "exited clean
 // having examined nothing" as a defect. Here the costs are asymmetric: a false negative is a missed
@@ -30,14 +30,6 @@ const bail = () => process.exit(0);
 // affordable. Start small, grow ONCE, then give up rather than read an unbounded file.
 const TAIL_BYTES = 512 * 1024;
 const TAIL_BYTES_MAX = 4 * 1024 * 1024;
-
-const readStdin = () => {
-  try {
-    return readFileSync(0, 'utf8');
-  } catch {
-    return '';
-  }
-};
 
 // Read the last `bytes` of a file without loading the whole thing. The first line of the window is
 // almost always a partial record, so it is dropped unless the window covers the entire file.
