@@ -172,7 +172,7 @@ for (const entry of readdirSync(featuresDir)) {
         && !/no debt taken|# Debt Found/i.test(body)) {
       violations.push(`${rel(path)}  debt-not-recorded  # Validation must state the filed debt ids or "no debt taken" — silence is not proof`);
     }
-    // `# Tasks` is a live work-list (feature step 5). By ready-for-done/done every box is ticked, or
+    // `# Tasks` is a live work-list (feature step 6). By ready-for-done/done every box is ticked, or
     // says WHY it is not.
     //
     // WIDENED 20260810: it used to require `# Premortem` as well, and that gate is why the rule was

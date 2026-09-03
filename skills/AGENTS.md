@@ -22,11 +22,13 @@ is dropped, the file still loads, and the skill simply stops matching anything.
 - `self-improve/` — the retrospective, in two modes
 - `<name>/SKILL.md`       — the always-loaded body. The folder name is the skill name
 - `<name>/reference/*.md` — addenda, loaded ON DEMAND by an explicit pointer, never automatically
-- `<name>/scripts/*.mjs`  — that skill's mechanical checks, any harness hook it owns, and any module
-                            they share. `feature/scripts/` holds all three kinds: `check-features.mjs`
-                            is a check you run, `tick-guard.mjs` (Stop) and `tick-sync.mjs`
-                            (PostToolUse) are hooks you never invoke by hand, and `_shared.mjs` is
-                            imported by the other three and is no entry point at all
+- `<name>/scripts/*.mjs`  — that skill's mechanical checks, any harness hook it owns, any producer it
+                            runs, and any module they share. `feature/scripts/` holds every kind:
+                            `check-features.mjs` is a check you run, `tick-guard.mjs` (Stop) and
+                            `tick-sync.mjs` (PostToolUse) are hooks you never invoke by hand,
+                            `new-feature.mjs` is a producer you run to claim a feature-file id, and
+                            `_shared.mjs` is imported by `check-features.mjs`, `tick-guard.mjs` and
+                            `tick-sync.mjs` (not `new-feature.mjs`) and is no entry point at all
 - `<name>/*.template.md`  — the BASE for a runtime file the skill writes. `self-improve/` holds both
                             halves: `findings.template.md` travels, `findings.md` is the live log,
                             per machine, git-ignored

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // feature — PostToolUse hook that writes a `# Tasks` checkbox to follow its todo.
 //
-// `feature` step 5 says a box and its todo move in ONE act. That was a habit restated at four sites and
+// `feature` step 6 says a box and its todo move in ONE act. That was a habit restated at four sites and
 // held at none: two separate records, nothing connecting them. This connects them. The model moves the
 // todo — the one list the harness itself pushes on — and the box follows automatically.
 //

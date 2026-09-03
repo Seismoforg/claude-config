@@ -38,12 +38,19 @@ This tree is junctioned into the Claude config home, so it travels to every proj
 whose corpus IS this repo, and those never leave it.
 
 Rule prose invokes them by the junction path, so the command works from any project rather than only
-from this checkout. `design.md` §14 carries the one live example.
+from this checkout. Two live examples: `design.md` §14 invokes `preflight.mjs`, and
+`documentation.md`'s ADR section invokes `check-adr.mjs`.
 
 ## Pointer style
 A rule points at a sibling rule by bare filename (`web.md`), at an appendix by folder
 (`design/ai-tells.md`), and from an appendix back up with `../design.md`. No absolute paths in prose,
 no `reference/` prefix — that was the old skill layout.
+
+A shell command in a rule file names its script by the junction path
+(`~/.claude/rules/scripts/<name>.mjs`), never a repo-relative one. That `~` expands in a POSIX shell
+only: measured 2026-09-03, `node ~/.claude/rules/scripts/check-adr.mjs` runs under Git Bash and
+fails under PowerShell 5.1 with `Cannot find module '<cwd>\~\.claude\rules\scripts\check-adr.mjs'`.
+So the command carries a clause telling a PowerShell reader to prefix `$HOME` in the `~`'s place.
 
 ## The two dispatch files are not pulled by the routing table, on purpose
 The opening claim — a rule reaches a model only because CLAUDE.md's routing table sent it there —

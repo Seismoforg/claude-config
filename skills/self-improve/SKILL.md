@@ -173,7 +173,9 @@ pulled rule files. Keeping it that small is the point.
   token. A shell inherits the CWD, not the base directory, so a skill-relative path there is a
   guaranteed ENOENT.
 - **A shell command inside a RULE file** → the junction path (`node ~/.claude/rules/scripts/...`).
-  There is no placeholder to substitute; rules are read, never loaded as skills.
+  There is no placeholder to substitute; rules are read, never loaded as skills. That `~` is
+  shell-dependent, and `~/.claude/rules/AGENTS.md` Pointer style owns the detail, the measurement
+  and the clause such a command carries.
 - Skill/agent frontmatter/config change → may not register in the SAME turn; a later turn often picks it up, a restart is NOT always needed. A not-found error right after writing is not proof it's broken — re-check later before concluding. Probing a field on a live skill can strip tools for the rest of the turn.
   **Frontmatter is YAML, and an unquoted value holding `": "` silently drops the WHOLE block** — the file still loads, its description does not, and nothing reports it; a skill with no description never matches auto-delegation. Same for a trailing `:`, a leading YAML indicator, and a ` #`. Quote the value or reword the colon away. In THIS config's repo a frontmatter check enforces it, run from the check list in that repo's README. Elsewhere it is yours to keep by hand.
 - Skill body text is SUBSTITUTED before the model sees it. Placeholders: dollar-sign + ARGUMENTS · dollar-sign + digit · the skill-dir token (dollar-brace CLAUDE_SKILL_DIR). Each is replaced before you read the line, silently corrupting any rule holding one.

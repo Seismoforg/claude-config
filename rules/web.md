@@ -77,7 +77,7 @@ browser as routine.
 
 Exception: a browser is actually available AND the change is style- or layout-heavy. A green
 build + typecheck + lint is not proof it renders right. Then drive it yourself and assert measured
-values, not a screenshot glance. Driving it is a local resource run — ask first (CLAUDE.md §3).
+values, not a screenshot glance. Driving it is a local resource run — ask first (CLAUDE.md §7).
 
 Either way, report what you verified versus what still needs their eyes.
 
