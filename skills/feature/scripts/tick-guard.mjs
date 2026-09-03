@@ -131,7 +131,7 @@ const main = () => {
 
     for (const task of tasks) {
       // A task with no todo. Covers "never seeded" and "seeded, then a task was added mid-build", which
-      // `feature` step 5 explicitly allows. Those late tasks are the ones most likely to be forgotten,
+      // `feature` step 6 explicitly allows. Those late tasks are the ones most likely to be forgotten,
       // so they are exactly the ones that must not fall outside the check — and with the auto-tick they
       // are also the only tasks whose box can never move on its own.
       if (!mirrored.has(norm(task.text))) {

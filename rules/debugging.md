@@ -8,7 +8,7 @@ No fix attempt before you can trigger the bug on demand. Intermittent → charac
 condition before touching code.
 
 A repro run that spends the machine (test suite, build, GPU, local model) asks the user first — see
-`core.md` and CLAUDE.md §3. One bug hunt is one task, so you ask once, not per attempt. Declined →
+`core.md` and CLAUDE.md §7. One bug hunt is one task, so you ask once, not per attempt. Declined →
 the hunt stops on your side. Say plainly that you cannot reproduce it without that run and hand over
 the exact command. Never fix blind instead.
 

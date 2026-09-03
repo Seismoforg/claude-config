@@ -23,8 +23,9 @@ Per skill: `SKILL.md` is the always-loaded body. Addenda → `<skill>/reference/
 never at the skill root). Scripts → `<skill>/scripts/`.
 
 ## Mechanical checks
-Run each after editing anything it covers. Each exits 1 on a violation, printing `file  rule  detail`.
-A bad ROOT exits 2 — a broken invocation, never a pass.
+Run each after editing anything it covers. Each exits 1 on a violation: the three repo checks print
+`file  rule  detail`, `preflight` prints `file:line:col  rule (§)  detail`. A bad ROOT exits 2 — a
+broken invocation, never a pass.
 
 ```
 node scripts/check-frontmatter.mjs
@@ -222,6 +223,6 @@ writes.
 
 ## Portability
 This setup uses Windows junctions + `@import` to link the config into Claude Code's expected location.
-On Mac/Linux the equivalent is a symlink (`ln -s`) instead of a junction — for both `skills/` and
-`rules/`, same `@import` structure otherwise. Not tested on Mac/Linux; adjust the link steps if you
-ever set this up there.
+On Mac/Linux the equivalent is a symlink (`ln -s`) instead of a junction — for `skills/`, `rules/`
+and `agents/`, same `@import` structure otherwise. Not tested on Mac/Linux; adjust the link steps if
+you ever set this up there.

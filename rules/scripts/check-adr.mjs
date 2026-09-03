@@ -30,7 +30,7 @@
 // That is what stops a date ("2026-08-01") in the scan window reading as a pointer, and it makes the
 // rule mean what it says: the successor must exist.
 //
-// CORPUS IS AN ALLOWLIST — never a list of places to ignore (skills/feature/SKILL.md, step 6).
+// CORPUS IS AN ALLOWLIST — never a list of places to ignore (scripts/check-frontmatter.mjs:21).
 // IN: docs/adr/NNNN-kebab-title.md, the filename shape rules/documentation.md sets.
 // OUT: anything else in that directory. Skipped files are COUNTED and printed, so a corpus that
 // quietly resolved to nothing cannot read as a clean one.

@@ -104,8 +104,8 @@ Always checked: `folder-status-mismatch`, `bad-filename`, `bad-timestamp`, `aban
 
 Gated, so read the trigger before trusting a green run: `debt-not-recorded` fires only on a
 `ready-for-done/` or `done/` spec carrying both `# Open Questions` and `# Premortem`;
-`tasks-not-current` and `unterminated-fence` need those two folders plus a `# Premortem` section. An
-unclosed fence in an earlier folder is therefore NOT seen.
+`tasks-not-current` and `unterminated-fence` fire on every spec in those two folders, whatever
+sections it carries. An unclosed fence in an earlier folder is therefore NOT seen.
 
 **Read the detail string — a violation means different things:**
 - `folder-status-mismatch`, `missing-status`, `no-frontmatter` are never auto-fixed. STOP and report;
