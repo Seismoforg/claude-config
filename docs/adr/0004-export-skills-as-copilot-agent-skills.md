@@ -30,6 +30,11 @@ Emit every skill as a Copilot skill: `.github/skills/<name>/SKILL.md`, with its 
 alongside inside the same folder. Delete `SKILL_CLASS` and the instructions/agents split for skills.
 `.github/agents/` now holds only the six real subagents.
 
+**Amended by [0009](0009-rules-tree-replaces-most-skills.md)** — that subagent roster is gone, and
+`.github/agents/` with it: the export carries no agents at all. A later `agents/` tree exists in the
+repo, holding model tiers rather than roles, but it is outside the walked trees and never reaches the
+export.
+
 Add `--install-skills` for the per-machine install, defaulting to `~/.copilot/skills`.
 
 **Amended by [0007](0007-install-the-whole-config-not-only-skills.md)** — the flag is now `--install`,
@@ -62,5 +67,9 @@ together by rewritten pointers.
 - `rewritePointers` no longer invents a home for an unattributable `reference/x.md`. It used to
   fabricate `.github/agents/reference/<file>`, a path present in no build; four such pointers existed
   at the time of this change. Unattributable pointers are now left exactly as written.
-- The six subagents still inline their preloaded skills. Copilot agents have no way to declare a
-  preloaded skill, so the inlining stays even though the skill now also ships standalone.
+- ~~The six subagents still inline their preloaded skills. Copilot agents have no way to declare a
+  preloaded skill, so the inlining stays even though the skill now also ships standalone.~~
+  **Amended by [0009](0009-rules-tree-replaces-most-skills.md):** false. 0009 removed the subagent
+  roster entirely; there is nothing left to inline anything. `build-copilot.mjs` no longer translates
+  agents at all — 0009's own Consequences record that `TOOL_MAP`, the agent frontmatter table and the
+  read-only-breach assertion are gone with them. Nothing replaced the roster.
