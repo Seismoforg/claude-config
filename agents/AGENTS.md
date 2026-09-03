@@ -57,10 +57,23 @@ fields the deleted `agents/` tree used are gone with it: `skills:` named a skill
 longer exists, and `class:` was checked by a script that was deleted in the same commit. A field
 nothing reads is a field that goes stale silently.
 
-## Unchecked, and known to be
-`../scripts/check-frontmatter.mjs` covers `skills/*/SKILL.md` only. These four files' frontmatter is
-verified by nothing. `claude plugin validate <dir>` will report a file whose frontmatter does not
-parse, but it is not wired into this repo's checks.
+## What checks this tree, and where each check stops
+`../scripts/check-frontmatter.mjs` reads every `agents/*.md` except this file and its `CLAUDE.md`
+sibling. Each needs frontmatter a YAML parser accepts, a `name` equal to the file stem, and a
+non-empty `description`, `tools` and `model`. `tools` and `model` are required because their ABSENCE
+is the dangerous case: a definition with no `tools:` line inherits every tool the harness has,
+silently, and a missing `model:` picks one nobody chose.
+
+It checks PRESENCE, never a value beyond `name`. A `tools:` line naming the wrong tools passes, and
+so does a `description` no request would ever match — both are semantic, and no script here sees
+them. `claude plugin validate <dir>` will report a file whose frontmatter does not parse, but it is
+not wired into this repo's checks.
+
+`../scripts/build-copilot.mjs` walks this tree for coverage and emits none of it, so every file here
+carries a `SOURCE_EXCLUSIONS` row giving its reason. A new agent file fails the build until somebody
+classifies it. That one row is the whole decision: the emit-side lists
+[../rules/AGENTS.md](../rules/AGENTS.md) describes guard the rules walk and the skill-reference
+walk, and neither walk reaches this tree.
 
 # Dependencies
 None. Plain markdown read by Claude Code.

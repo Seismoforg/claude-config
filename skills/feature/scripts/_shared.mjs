@@ -1,9 +1,9 @@
 // feature — the pieces more than one of this folder's scripts needs.
 //
 // Not a check and not a hook: nothing invokes this file directly. `check-features.mjs`,
-// `tick-guard.mjs` and `tick-sync.mjs` remain the entry points.
+// `new-feature.mjs`, `tick-guard.mjs` and `tick-sync.mjs` remain the entry points.
 //
-// The three scripts used to be standalone on purpose, each carrying its own copy. That bought
+// Those scripts used to be standalone on purpose, each carrying its own copy. That bought
 // reachability — they are reached both through the `~/.claude/skills` junction and at their real path,
 // and `build-copilot.mjs` copies them flat into `.github/scripts/`. A sibling import survives all three
 // (measured; see ADR 0006), so the copies bought nothing that this file does not.
@@ -12,11 +12,29 @@
 // marker to one and the check goes green on a spec the hook blocks. That hazard is what this file ends.
 //
 // NOT everything here has the same importers, and that is deliberate:
-//   ANNOTATED       — all three scripts
-//   tasksOf, norm   — tick-guard.mjs and tick-sync.mjs only. check-features.mjs walks `# Tasks` with its
-//                     own `tasksNotCurrent`, which returns violation STRINGS rather than task items, and
-//                     it has no normaliser at all. Unifying those two return contracts is a separate
-//                     refactor, deliberately not done here.
+//   ANNOTATED        — check-features.mjs, tick-guard.mjs and tick-sync.mjs
+//   tasksOf, norm    — tick-guard.mjs and tick-sync.mjs only. check-features.mjs walks `# Tasks` with its
+//                      own `tasksNotCurrent`, which returns violation STRINGS rather than task items, and
+//                      it has no normaliser at all. Unifying those two return contracts is a separate
+//                      refactor, deliberately not done here.
+//   STATUS_BY_FOLDER — check-features.mjs as the map; new-feature.mjs as `Object.keys(STATUS_BY_FOLDER)`,
+//                      which is why no second array of the same seven names is exported beside it.
+//   readStdin        — tick-guard.mjs and tick-sync.mjs, the two hooks. Nothing else reads stdin.
+
+import { readFileSync } from 'node:fs';
+
+// The state machine is closed: these 7 folders and no others. An 8th is drift, not a new state.
+// KEY ORDER is part of the contract, not cosmetic: new-feature.mjs takes `Object.keys` and gets the
+// folders in state-machine order. Re-sorting this object silently re-orders that list.
+export const STATUS_BY_FOLDER = {
+  'draft': 'DRAFT',
+  'pending': 'NEEDS_APPROVAL',
+  'approved': 'APPROVED',
+  'in-progress': 'IN_PROGRESS',
+  'ready-for-done': 'READY_FOR_DONE',
+  'done': 'DONE',
+  'discarded': 'DISCARDED',
+};
 
 // An unchecked box is deliberate only if it SAYS so. These three markers are the vocabulary: the two
 // in live use plus a feature id for work that moved into its own spec. Adding a fourth marker is now a
@@ -58,3 +76,13 @@ export const norm = (s) => String(s ?? '')
   .replace(/\s+/g, ' ')
   .trim()
   .toLowerCase();
+
+// Read the hook payload from fd 0. Both hooks FAIL OPEN, so a stdin that cannot be read is not an
+// error to report: it yields '' and the caller's own parse then bails on empty input.
+export const readStdin = () => {
+  try {
+    return readFileSync(0, 'utf8');
+  } catch {
+    return '';
+  }
+};

@@ -97,6 +97,17 @@ const SOURCE_EXCLUSIONS = {
   'rules/dispatch-tiers.md':                 'rates work across Claude Code subagents, a mechanism Copilot has no equivalent of',
   'rules/agent-worker.md':                   'the method for those same subagents; useless where they cannot be dispatched',
   'skills/feature/reference/waves.md':       'the procedure for dispatching those same subagents; SKILL.md carries the rules Copilot can act on',
+  // The agents/ tree, walked for coverage since it joined COVERED_TREES. Unlike the three rows above,
+  // none of these needs a second row in an emit-side set: NOT_EMITTED_RULES guards the rules walk and
+  // NOT_EMITTED_SKILL_FILES the skills reference walk, and neither walk reaches agents/ because no
+  // loop reads that tree at all. A row here is the whole decision. Do not go hunting for the missing
+  // second list.
+  'agents/haiku-agent.md':                   'a Claude Code subagent, a mechanism Copilot has no equivalent of; the read-only recon tier',
+  'agents/sonnet-agent.md':                  'the same mechanism, the floor tier for work the brief and the repo already settle',
+  'agents/opus-agent.md':                    'the same mechanism, the tier for work that settles something',
+  'agents/fable-agent.md':                   'the same mechanism, the tier for work whose steps are unknowable up front',
+  'agents/AGENTS.md':                        'documents that tree; the tree does not travel, so its doc has nothing to describe there',
+  'agents/CLAUDE.md':                        'one line, `@AGENTS.md`. The file it imports does not travel either',
 };
 
 // Rule files the rules walk must NOT emit. SOURCE_EXCLUSIONS alone does not stop an emit — it only
@@ -118,10 +129,14 @@ const NOT_EMITTED_SKILL_FILES = new Set([
 
 // The trees the coverage check walks. An ALLOWLIST of directories, never a list of things to ignore:
 // ignore-list scoping is the permanent defect in any absence proof.
-// Root CLAUDE.md is outside all three and needs no coverage — it has its own emit rule further down.
+// Root CLAUDE.md is outside all four and needs no coverage — it has its own emit rule further down.
 // docs/ and README.md are outside too, deliberately; a file added there is still missed, which is the
 // bound this converter accepted rather than solved.
-const COVERED_TREES = ['skills', 'rules', 'scripts'];
+// agents/ is NOT in that category any more. It is walked, and nothing in it is emitted — Copilot has
+// no subagent concept — so every file there carries a SOURCE_EXCLUSIONS row instead. Walking a tree
+// whose every file is excluded is the point: a new agent file fails the build until somebody
+// classifies it, which the comment-at-the-allowlist alternative could never do.
+const COVERED_TREES = ['skills', 'rules', 'scripts', 'agents'];
 
 // Excluded files that are NORMALLY ABSENT, and whose absence must not be reported as a stale row.
 // These two are git-ignored runtime data, so a fresh clone — the common case — simply does not have
@@ -216,9 +231,10 @@ const fail = [];                       // hard violations
 // templates emit LF, so without this the build mixes both and its bytes depend on the checkout that
 // produced them — which is the one thing a deterministic converter must not do.
 // MEASURED, not anticipated: with core.autocrlf=true and no .gitattributes, a fresh checkout of the
-// committed build produced 22 drifts against a re-derive. The paired half of this fix is the
-// `github_build/** text eol=lf` rule in .gitattributes — normalising here alone is not enough,
-// because git rewrites on checkout.
+// then-committed build produced 22 drifts against a re-derive. The build stopped being committed with
+// ADR 0003, so no checkout rewrites the output any more and the `github_build/** text eol=lf` rule
+// that used to pair with this was deleted. Normalising here is now the whole fix, and it still earns
+// its place: it is what keeps the emitted bytes independent of the checkout that produced them.
 const put = (p, c) => files.set(p, c.replace(/\r\n/g, '\n'));
 
 // Every SOURCE file the build reads, recorded as it is read. The coverage check below subtracts this

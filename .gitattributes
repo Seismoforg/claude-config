@@ -1,8 +1,11 @@
-# LF for the check scripts. They are copied verbatim into the generated Copilot build, so the source
-# and its copy must stay byte-identical. Without this rule a checkout under core.autocrlf=true
-# restores CRLF while the build emits LF, and the two diverge.
+# LF for the repo-root check scripts, so a checkout under core.autocrlf=true does not rewrite them
+# to CRLF. This is NOT for the Copilot build's sake: build-copilot.mjs's put() normalises every
+# emitted file to LF regardless of what the source carries, so the export needs no help here.
 # Written as a property of that SETTING, never of one machine: an earlier version of this comment
 # asserted "this machine runs core.autocrlf=true" and went stale the day the global config changed.
 # The matching `github_build/** text eol=lf` rule is gone: the build is no longer committed
 # (docs/adr/0003), so git never stores or restores those files.
+# rules/scripts/ and skills/*/scripts/ are copied the same way and are deliberately NOT covered here:
+# widening the pattern would buy nothing (put() already normalises) and would churn those files'
+# line endings on the next checkout.
 scripts/*.mjs text eol=lf

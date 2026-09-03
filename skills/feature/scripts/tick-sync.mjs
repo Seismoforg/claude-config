@@ -16,20 +16,12 @@
 
 import { readFileSync, writeFileSync, renameSync, unlinkSync, appendFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
-import { ANNOTATED, tasksOf, norm } from './_shared.mjs';
+import { ANNOTATED, tasksOf, norm, readStdin } from './_shared.mjs';
 
 // FAIL OPEN, and harder than tick-guard.mjs needs to. That one risks a turn that cannot end; this one
 // WRITES to the user's spec files, so every uncertain path must end in doing nothing at all. A missed
 // tick is a tick the model still makes by hand. A wrong write is lost work in a git-ignored file.
 const bail = () => process.exit(0);
-
-const readStdin = () => {
-  try {
-    return readFileSync(0, 'utf8');
-  } catch {
-    return '';
-  }
-};
 
 // Set the checkbox on a single line, leaving every other byte of it alone.
 const setBox = (line, ch) => line.replace(/^- \[[ xX]\]/, `- [${ch}]`);
