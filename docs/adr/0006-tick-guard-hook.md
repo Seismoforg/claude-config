@@ -97,6 +97,9 @@ Root `scripts/` holds repo-wide checks over THIS repo's own corpus — `check-si
 projects and other worktrees, reached through the `~/.claude/skills` junction. A guard for it that
 lived in the repo root would be unreachable from everywhere the thing it guards is used.
 
+**Amended by 0009:** `check-size` and `check-pointers` no longer exist. `check-frontmatter` is the
+only one of the three still in root `scripts/`; the reasoning above still holds for it.
+
 **Registration is user-level because that is the only level with the required reach.** Project-level
 `.claude/settings.json` is the committable, shareable location and was the first choice for exactly
 that reason. It is blind in every other project. Hooks MERGE across levels rather than replacing, so
@@ -140,6 +143,10 @@ a spec permanently claim more than the todo list does, with no way to notice. Th
 long as the hand-ticking habit survives, specs will visibly oscillate. That is why every clearing is
 logged and why `feature` step 5 now states outright that the box is not yours to draw.
 
+**Amended 20260903 (no ADR — a step was inserted ahead of it in the wave cut):** every `feature`
+step 5 named below, here and in Consequences, is now step 6. The content is unchanged; only its
+number moved.
+
 **Fail open, against this repo's usual grain.** Every check script here treats "a clean exit that
 examined nothing" as a defect. The hook inverts that deliberately: a false negative is a missed
 reminder, a false positive is a session that cannot end its turn. The cost is asymmetric, so the
@@ -161,6 +168,11 @@ and the Copilot and `check-pointers` bullets now cover three `.mjs` files instea
 mechanical consequences of the amendment above, listed here rather than as four separate markers. Bullets
 whose SUBSTANCE changed carry their own marker in place.
 
+**Amended by 0009:** `check-size` and `check-pointers`, named in the last bullet below, no longer
+exist — ADR 0009 deleted both. The skill roster named below is stale too: the skills that ship to
+Copilot alongside `skills/feature/SKILL.md` are now `skills/git-commit/SKILL.md` and
+`skills/self-improve/SKILL.md`, and no other skill remains to ship.
+
 - **The hooks fire in every project and every worktree, not just this repo.** That is the point, and
   it is also the blast radius: a misfire blocks the end of every turn everywhere. Bounded by fail-open,
   by one block per signature, and by the fact that removal is deleting two named entries.
@@ -180,17 +192,22 @@ whose SUBSTANCE changed carry their own marker in place.
   queued specs built to the same shape repeat lines like `Update the docs`, and the ambiguity rule skips
   those in all of them. Accepted — the alternative is guessing which spec a todo belongs to. Every skip is
   logged, and `check-features.mjs`'s `tasks-not-current` still catches the unticked boxes at the gate.
+  **Amended by 0009:** `autopilot` no longer exists — ADR 0009 deleted it, so this illustrating case is
+  gone. The behaviour it illustrated still holds: `tick-sync.mjs`'s `ambiguous` set still skips a task
+  line shared by more than one `in-progress/` spec, whichever specs those are.
 - **`skills/feature/SKILL.md` and three other skills ship to Copilot, where hooks do not exist.**
   `scripts/build-copilot.mjs` exports every `SKILL.md` to `.github/skills/` and emits
   `skills/<name>/scripts/*.mjs` alongside. Both hook scripts and `_shared.mjs` therefore ship to an
   environment that will never run them, and the prose must state the RULE as the rule, naming the hooks
   as this harness's enforcement rather than as something that will stop you. There, the box IS drawn by
   hand again.
-- **`skills/audit-solution/SKILL.md:69` becomes false.** It states that the mechanical half cannot
+- ~~**`skills/audit-solution/SKILL.md:69` becomes false.**~~ It states that the mechanical half cannot
   reach audit remediations, because they never run step 1.5 and so carry no `# Premortem`. Neither hook
   reads `# Premortem`. That sentence shares no string with anything else changed here.
   **Amended 20260807 (no ADR — a second hook was added):** its count of mechanical halves went from two
   to three at the same time, which is a second way the same sentence had to be rewritten.
+  **Amended by 0009:** `skills/audit-solution/` no longer exists — ADR 0009 deleted the whole skill,
+  so there is no `SKILL.md:69` left to become false or stay true.
 - **The hooks cannot detect their own absence — but the writing one now leaves a trace.** Nothing in a
   git-ignored `features/` tree or an unversioned settings file can announce that a hook stopped running.
   `features/.tick-sync.log` narrows it: a build with no new lines in it is a build where the auto-tick did
