@@ -357,6 +357,10 @@ item there is also condensed into a §14 checkbox.
 
 ## 9.G EM-DASH BAN (the single most-violated Tell)
 
+**Scope: page copy the end user sees.** Headlines, labels, button text, body copy, captions, alt
+text, any string that renders on the page. The ban stops there and makes no claim about this repo's
+own prose, comments or docs.
+
 **Em-dash (`—`) is COMPLETELY banned.** It is the LLM's signature stylistic crutch and it is the #1 visual Tell in production tests. There is no "limited use" allowance, no "natural language frequency" allowance, no "in body copy is fine" allowance. None.
 
 - **Banned in headlines.** Use a period or a comma.

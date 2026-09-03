@@ -58,6 +58,10 @@ dispatches to the matching tier agent, at most 8 at a time — stands unchanged,
   worktrees require is also what introduced the fabricated-SHA failure — a worker reported a
   40-character SHA whose last 33 characters it invented, and git resolved the prefix. Removing the
   merge step removes that class.
+  **Amended 20260903 (no ADR — evidence pointer marked machine-local):** the feature record cited
+  above is a local one. `features/` is git-ignored, so that path resolves on the authoring machine
+  only and not in a clone. The measurement it records, and every conclusion drawn from it here,
+  stands unchanged.
 - **Two groupings of one list is a question asked at every build.** Milestones cut by exercisability,
   waves by write-disjointness. Where they disagree nothing said which wins. One cut removes the
   question instead of answering it.

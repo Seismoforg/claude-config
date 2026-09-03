@@ -16,7 +16,8 @@
 //   tasksOf, norm    — tick-guard.mjs and tick-sync.mjs only. check-features.mjs walks `# Tasks` with its
 //                      own `tasksNotCurrent`, which returns violation STRINGS rather than task items, and
 //                      it has no normaliser at all. Unifying those two return contracts is a separate
-//                      refactor, deliberately not done here.
+//                      refactor, deliberately not done here — filed as DRAFT
+//                      features/draft/20260903-1646-unify-task-walkers-in-feature-scripts.md.
 //   STATUS_BY_FOLDER — check-features.mjs as the map; new-feature.mjs as `Object.keys(STATUS_BY_FOLDER)`,
 //                      which is why no second array of the same seven names is exported beside it.
 //   readStdin        — tick-guard.mjs and tick-sync.mjs, the two hooks. Nothing else reads stdin.

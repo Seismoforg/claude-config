@@ -132,7 +132,8 @@ value and its todo moves on it. Then run the project's own build, typecheck and 
 **The gap this leaves, stated rather than assumed away:** a false claim about a file that no check
 reads survives to step 7. In a config repo that is most files, because most of them are prose. The
 failure mode is not hypothetical — it has been measured here twice, in
-`features/done/20260821-1723-worker-isolation-and-report-accuracy.md`: once as a false prose claim,
+`features/done/20260821-1723-worker-isolation-and-report-accuracy.md` (a local feature record;
+`features/` is git-ignored, so this path resolves on the authoring machine only): once as a false prose claim,
 once as a fabricated commit SHA that git resolved by prefix. It is accepted knowingly, in exchange
 for not re-reading every changed file on every wave.
 
