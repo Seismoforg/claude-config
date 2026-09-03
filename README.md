@@ -106,15 +106,20 @@ you keep the prose rule and lose the enforcement: you tick the boxes yourself. D
 `feature` step 4 cuts a spec's tasks into waves: which can be written at the same time, which have to
 wait. Step 6 then builds one wave by rating every task in it against
 [rules/dispatch-tiers.md](rules/dispatch-tiers.md) and sending it to the matching agent in `agents/`,
-at most 8 at once. `inline` is a real rating and means the session model writes that task itself.
+at most 8 at once. Rating is an ordered gate procedure, not a table, and lands each task on `sonnet`,
+`opus` or `fable`. Dispatch is the presumption: building a task inline needs a reason, either the
+fixed list of files the dispatch itself runs under, or a judged exception written onto the spec's
+`# Waves` line. A wave that took no inline task says so in the literal phrase `no inline taken`.
 
 Each brief carries the worker's write paths as the only paths it may write. Several workers edit one
 working tree at once, and that boundary is the only thing keeping them off each other's files, so it
-is the dispatcher's job to name it. The method every agent reads before writing is
-[rules/agent-worker.md](rules/agent-worker.md) — one copy, so four agent files cannot drift apart.
+is the dispatcher's job to name it. Recon carries no such boundary, having nothing to write. The
+method every agent reads first is [rules/agent-worker.md](rules/agent-worker.md) — one copy, so four
+agent files cannot drift apart; it says at the top which of its rules a read-only worker skips.
 
-**Nothing outside a feature run is rated.** A quick fix, a question, a bug hunt: no step rates those
-and none is dispatched. That gap is deliberate; ADR 0012 records it.
+**A quick fix, a question, a bug hunt outside a feature run is still not rated** — ADR 0012 records
+that gap. `haiku-agent` is the one exception: it holds no `Write` or `Edit`, is not rated by the
+procedure at all, and the main loop fires it for a read-only lookup, inside or outside a feature run.
 
 ## GitHub Copilot export
 Copilot reads the same `SKILL.md` format this repo writes, so a skill translates one for one. The
@@ -159,12 +164,14 @@ Hard-to-reverse choices live in [docs/adr/](docs/adr/), superseded rather than e
 - [0010](docs/adr/0010-a-build-step-enters-a-dependency-free-repo.md) — superseded by 0012
 - [0011](docs/adr/0011-waves-replace-milestones-and-feature-fans-out.md) — a spec's tasks are cut into waves, and a wave dispatches one agent per task
 - [0012](docs/adr/0012-remove-the-doorman-waves-dispatch-directly.md) — the doorman is removed; the wave build dispatches the tier agents directly
+- [0013](docs/adr/0013-dispatch-presumption-inverts-and-haiku-becomes-recon.md) — dispatch becomes the presumption, inline an earned exception, and `haiku-agent` becomes read-only recon
 
 ## Wiring on this machine (Windows)
 - `~/.claude/skills` → **junction** to `skills/` here.
 - `~/.claude/rules`  → **junction** to `rules/` here.
 - `~/.claude/agents` → **junction** to `agents/` here. Without it Claude Code finds no `haiku-agent`,
-  `sonnet-agent`, `opus-agent` or `fable-agent`, and a `feature` wave has nothing to dispatch to.
+  `sonnet-agent`, `opus-agent` or `fable-agent`: a `feature` wave has nothing to dispatch to, and the
+  main loop has no recon worker for a read-only lookup.
 - `~/.claude/CLAUDE.md` → 1-line `@import` pointer to `CLAUDE.md` here.
 - `~/.claude/settings.json` → holds the `Stop` registration for `tick-guard.mjs` and the `PostToolUse`
   one for `tick-sync.mjs`. A real file, NOT a symlink into this repo: a file symlink needs elevation

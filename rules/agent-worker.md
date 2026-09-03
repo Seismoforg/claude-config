@@ -6,6 +6,12 @@ they have in common lives here, once, so four copies cannot drift apart.
 
 Read this before you write anything. Your agent file names the tier; this file names the method.
 
+**If you are `haiku-agent`, most of this file is not about you.** You hold no `Write` and no `Edit`;
+you read, search and report. Write paths, sibling isolation, verification, debt and the `HEAD:` /
+`CHANGED:` fields all belong to a worker that changes files. Read WHO HANDS YOU WORK and the rules on
+loading rule files, then skip to RECON WORKERS at the end and use the report format there. Everything
+between is written for someone else, and following it produces a report about work you did not do.
+
 # WHO HANDS YOU WORK
 The main loop, building one wave of a feature. It rated your task against `dispatch-tiers.md` and
 picked your tier. You did not pick it and do not need to know why it picked you. Build what you were
@@ -23,12 +29,6 @@ scope is a defect, not initiative.
 A brief missing any of these is the dispatcher's miss, not yours. Say so in `FRICTION:` and work
 with what you have rather than inventing the rest.
 
-- **The slice.** The task or tasks that are yours, and nothing else.
-- **Absolute paths for anything you must READ outside the repo** — a feature spec above all.
-  `features/` is git-ignored, so a repo-relative path to one resolves to nothing.
-- **The rule files your task's surface requires**, by absolute path. See RULES below.
-
-# RULES — read before writing, never after
 - **Your label** — `<Tier> Agent <N>`, e.g. `Opus Agent 1`. It is how the user tells you apart from
   the siblings running beside you. **Prefix every `Bash` call's `description` with it**:
   `Opus Agent 1: list repo root`. Do it on every call, including throwaway reads — a label that
@@ -36,6 +36,12 @@ with what you have rather than inventing the rest.
   `Edit` and `Write` take no description and cannot carry it; that gap is the harness's, not yours,
   so do not fake it by routing those through `Bash`. No label in your brief → use your tier alone
   (`Opus Agent`) and note the miss in `FRICTION:`.
+- **The slice.** The task or tasks that are yours, and nothing else.
+- **Absolute paths for anything you must READ outside the repo** — a feature spec above all.
+  `features/` is git-ignored, so a repo-relative path to one resolves to nothing.
+- **The rule files your task's surface requires**, by absolute path. See RULES below.
+
+# RULES — read before writing, never after
 `CLAUDE.md`'s routing table decides which rule file a change needs. You do not hold that table, and
 skills are not auto-discovered inside a subagent, so the dispatcher names the paths.
 
@@ -94,3 +100,35 @@ Two traps in `HEAD:`, both measured, both of which make a merge land nothing whi
 
 `DEBT:` is expected, not a confession. A knowingly weaker implementation than planned is debt and is
 reported. Work you never delivered is not debt — that is `BLOCKED:`.
+
+# RECON WORKERS
+For a worker with no `Write` and no `Edit` — today that is `haiku-agent` alone. You were dispatched to
+find something out, not to change anything.
+
+**What still binds you:** your label on every `Bash` description, the rule that you cannot ask
+anything, and the rule that a gap in your brief goes in `FRICTION:` rather than being invented.
+
+**What does not:** write paths, sibling isolation, the project toolchain verification, `DEBT:`, and
+the whole `HEAD:` / `CHANGED:` half of the report. You committed nothing and changed nothing, so
+reporting a SHA or a changed file is a fabrication, not a formality.
+
+**Answer the question you were asked, not the one you found interesting.** A brief asking where a
+symbol is referenced is answered with the references. Widening it into a review of what you read is
+the recon form of scope creep, and it buries the answer.
+
+Report in this order:
+
+```
+FOUND: <the answer, stated plainly. "nothing matched" is an answer and is stated as one>
+SOURCES: <one line per piece of evidence: path:line — what is there>
+COVERED: <where you looked and how, so the caller can judge what the search could not have seen>
+FRICTION: <every path you could not resolve, rule you could not load, anything the brief left out.
+           "none" if none>
+BLOCKED: <every part of the question you could not answer, and why. "none" if none>
+```
+
+`COVERED:` is the field that makes an empty `FOUND:` usable. "No hits" from a search of one directory
+and "no hits" from a search of the tree are different claims, and only this line tells them apart.
+
+**Never report a guess as a finding.** Read it, or say in `BLOCKED:` that you could not. A plausible
+answer with no `path:line` behind it is worse than no answer, because the caller cannot tell.

@@ -48,6 +48,9 @@ inside the skill would not.
 - **Work outside a feature run gets no tier rating at all.** A quick fix, a question, a bug hunt: all
   of it runs in the session model, as it did before the doorman. Chosen deliberately over adding a
   line to `CLAUDE.md`, on the ground that such a line would be the same notice board, minus the log.
+  **Amended by 0013:** true only of write work. Read-only recon (`haiku-agent`) fires outside a
+  feature run by design — it holds no `Write` and no `Edit`, so it cannot collide with anything the
+  wave boundary exists to protect.
 - **Nothing records which agent ran any more.** The `SubagentStart` log is gone with no replacement.
 - **The machine-level registrations depend on a manual VS Code uninstall this repo cannot perform or
   verify.** The installed extension rewrites the launcher and all three registrations on every

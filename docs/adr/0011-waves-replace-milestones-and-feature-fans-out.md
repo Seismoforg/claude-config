@@ -32,6 +32,9 @@ Step 6 builds waves in order. Each task in a wave is rated against `rules/doorma
 dispatched to the matching tier agent, at most 8 at a time; `inline` remains a legitimate outcome.
 The wave's brief adds one clause to what `doorman-tiers.md` already requires: the task's write paths,
 as the only paths that worker may write.
+**Amended by 0013:** dispatch is now the presumption and `inline` is an exception that must be
+earned — gate 0 (mandatory, closed list) or a judged exception recorded on the spec's `# Waves` line.
+What this bullet says about step 6 rating and dispatching each task still stands unchanged.
 
 **Workers share the working tree. There are no worktrees and no merge step.** Write-disjointness is
 the only isolation, and the rule says so rather than implying more.
