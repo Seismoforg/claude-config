@@ -29,6 +29,13 @@ with what you have rather than inventing the rest.
 - **The rule files your task's surface requires**, by absolute path. See RULES below.
 
 # RULES — read before writing, never after
+- **Your label** — `<Tier> Agent <N>`, e.g. `Opus Agent 1`. It is how the user tells you apart from
+  the siblings running beside you. **Prefix every `Bash` call's `description` with it**:
+  `Opus Agent 1: list repo root`. Do it on every call, including throwaway reads — a label that
+  appears on half your calls tells the reader nothing about the other half. `Read`, `Grep`, `Glob`,
+  `Edit` and `Write` take no description and cannot carry it; that gap is the harness's, not yours,
+  so do not fake it by routing those through `Bash`. No label in your brief → use your tier alone
+  (`Opus Agent`) and note the miss in `FRICTION:`.
 `CLAUDE.md`'s routing table decides which rule file a change needs. You do not hold that table, and
 skills are not auto-discovered inside a subagent, so the dispatcher names the paths.
 

@@ -310,7 +310,8 @@ and 4, and none is optional:
 
 **STOP. Ask via `AskUserQuestion`.** Offer at least:
 - **Approve & implement** → APPROVED, then the implementation gate, then implement, without asking
-  again.
+  again. Step 6's wave-boundary gate is not covered by that: it still runs, and its
+  "run every remaining wave" option is what silences it.
 - **Approve, don't implement yet** → APPROVED, then stop.
 - **Change spec** — stay in NEEDS_APPROVAL, refine in place. Then re-enter the gates the revision
   invalidated, from `pending/`: step 2 if it opened a new question, step 3 if it newly crosses that
@@ -377,6 +378,13 @@ Then build:
   Said here so nobody later reads it as a bug and serialises the wave to fix it.
 - The LIST itself changes too. A task added mid-build is added silently; a task REMOVED or REWORDED
   carries a one-line reason. A task "removed" after being delivered by a knowingly weaker means is
+- **A wave that leaves another one behind it ends at a gate. STOP. Ask via `AskUserQuestion`.** Ask
+  AFTER the `# Waves` line is written, so the question carries what the wave actually did and what
+  the next one would dispatch. Offer at least: run the next wave now · run every remaining wave
+  back-to-back without asking again · stop here and report. The LAST wave has no next one — go to
+  step 7 rather than ask. Two things override the answer: a FAILED check stops the next wave whatever
+  was chosen, and an invalidated premise re-opens its own gate. Either one also SPENDS a
+  "run everything" answer — it covers the waves that run uninterrupted, never the whole build.
   DEBT, not a removal. One never delivered stays an unfinished task.
 - **Knowingly leaving a shortcut is DEBT, and debt becomes its own feature.** Note it under
   `# Debt Found` the MOMENT you take it; step 7 files it. Three things look like debt and are not:
