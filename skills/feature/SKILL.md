@@ -431,7 +431,9 @@ Then build:
 `rules/core.md` and `rules/documentation.md`; then the stack files the change touches, and
 `rules/security.md` when it touches auth, sessions, input handling or external payloads. Read them
 BEFORE writing, not after. **Dispatching → both always-paths go in every brief**, per
-`~/.claude/rules/agent-worker.md`; a worker cannot pull what it was not handed.
+`~/.claude/rules/agent-worker.md`. The worker reads those two itself as well and can look a missing
+row up in the `CLAUDE.md` it inherits; that is a second channel under this one, never a licence to
+write a thinner brief.
 
 **When the work is in, run the shell-bound checks over the FINISHED result** — `preflight.mjs` on a
 design surface, `check-adr.mjs` when an ADR changed. Commit what that pass makes you fix.

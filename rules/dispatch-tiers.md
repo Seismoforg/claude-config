@@ -131,10 +131,13 @@ It cannot ask you anything. Anything missing here is missing for good.
 - Its slice, and nothing else.
 - Absolute paths for anything outside the repo it must read. A spec under `features/` above all:
   that directory is git-ignored, so a repo-relative path to one resolves to nothing.
-- The rule files its surface needs, by absolute path. `CLAUDE.md`'s routing table decides which;
-  the worker does not hold that table. **Its always row is TWO files, `core.md` and
-  `documentation.md`**, and both go in every brief. A rule that "always applies" is the one most
-  easily left out of a brief, and a worker cannot pull what it was not handed.
+- The rule files its surface needs, by absolute path. `CLAUDE.md`'s routing table decides which.
+  **Its always row is TWO files, `core.md` and `documentation.md`**, and both go in every brief — a
+  rule that "always applies" is the one most easily left out of one.
+  **The worker reads those two itself as well**, per `agent-worker.md`, and it can look a missing row
+  up in the table it inherits. That is a NET, not a reason to write a thinner brief: the worker's
+  copy of the table is a session-start snapshot that goes stale, and only the brief knows which
+  surface this slice actually touches. Both channels, every dispatch.
 - Authorization for any run that spends the machine. Not in the brief means not permitted.
 - Its write paths, as the only paths it may write. That boundary is the only thing keeping two
   workers in one wave from losing each other's edits, and the worker is the only actor who can

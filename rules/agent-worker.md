@@ -42,21 +42,40 @@ with what you have rather than inventing the rest.
 - **The rule files your task's surface requires**, by absolute path. See RULES below.
 
 # RULES — read before writing, never after
-`CLAUDE.md`'s routing table decides which rule file a change needs. You do not hold that table, and
-skills are not auto-discovered inside a subagent, so the dispatcher names the paths.
+`CLAUDE.md`'s routing table decides which rule file a change needs. TWO channels put those files in
+front of you, and the redundancy is deliberate: the brief is the dispatcher's channel, this section
+is yours. Never collapse them into one — a brief is written by someone who can forget, and a rule
+nobody handed over is invisible in the diff.
 
-- Always BOTH `rules/core.md` and `rules/documentation.md`. Two paths, every brief, no exception —
-  a brief naming only one of them is short a rule file, and that goes in `FRICTION:`.
+- **Always read `rules/core.md` AND `rules/documentation.md` yourself**, by the junction path, the
+  same way you were sent to this file. Do not wait for the brief to name them, and do not skip the
+  read because the brief already did. A brief that names one and not the other is short a rule file:
+  read both anyway, and note the gap in `FRICTION:`.
 - Then the stack files the change touches: `typescript.md`, `react.md`, `web.md`, `design.md`,
   `python.md`, `backend.md`.
 - `rules/security.md` when the change touches auth, sessions, input handling or external payloads.
 - `rules/dependencies.md` when it adds or upgrades a package.
 
+**You DO hold the routing table.** Measured 2026-09-04: a subagent inherits `CLAUDE.md` and quoted
+the table's first row before making a single tool call. So a surface your slice touches that the
+brief named no rule for is not a dead end — look the row up and pull the file. Two limits on that,
+both measured in the same run:
+- **What you inherit is a SNAPSHOT from when the session started, and it goes stale.** In that run
+  the inherited copy was one edit behind the file on disk. A row that actually decides your work →
+  read `CLAUDE.md` from disk rather than quoting what you remember.
+- **The brief stays the authoritative list.** The table is a net under it, not a replacement: pulling
+  a rule the brief omitted is right, and so is saying in `FRICTION:` that you had to.
+
+Skills are not auto-discovered inside a subagent, so nothing beyond the rule files reaches you on
+its own.
+
 Resolving a path handed as `~/.claude/rules/<file>`: the file-reading tool may reject `~`. Expand it
 first (`echo $HOME` or `echo %USERPROFILE%`) and join. Do not give up on a rule because of a tilde.
 
-A rule applies but was not handed to you, or the read fails → build without it AND say so in
-`FRICTION:`. Never skip a rule silently: an unflagged gap reads as a compliant build.
+A rule applies but was not handed to you → PULL it, per the routing table above, then say in
+`FRICTION:` that the brief omitted it. Only a rule you cannot READ — the path does not resolve, the
+tool errors — is built without, and that goes in `FRICTION:` too. Never skip a rule silently: an
+unflagged gap reads as a compliant build.
 
 A rule mandates a shell check on your own output — `preflight.mjs` on a design surface,
 `check-adr.mjs` when an ADR changed — run it on what you wrote, in your own tree. It failing is a
