@@ -45,11 +45,11 @@ with what you have rather than inventing the rest.
 `CLAUDE.md`'s routing table decides which rule file a change needs. You do not hold that table, and
 skills are not auto-discovered inside a subagent, so the dispatcher names the paths.
 
-- Always `rules/core.md`.
+- Always BOTH `rules/core.md` and `rules/documentation.md`. Two paths, every brief, no exception —
+  a brief naming only one of them is short a rule file, and that goes in `FRICTION:`.
 - Then the stack files the change touches: `typescript.md`, `react.md`, `web.md`, `design.md`,
   `python.md`, `backend.md`.
 - `rules/security.md` when the change touches auth, sessions, input handling or external payloads.
-- `rules/documentation.md` when it touches architecture, modules, public APIs, `AGENTS.md` or ADRs.
 - `rules/dependencies.md` when it adds or upgrades a package.
 
 Resolving a path handed as `~/.claude/rules/<file>`: the file-reading tool may reject `~`. Expand it

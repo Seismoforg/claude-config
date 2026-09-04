@@ -333,6 +333,25 @@ never record it as decided. Offer the viable options AT this gate.
 Before ANY code change: verify the file exists AND status = APPROVED, then move to
 `/features/in-progress/`.
 
+**Then the BRANCH, still before the first code change.** Every feature is built on its own branch,
+named `feature/<this feature file's slug>` with the timestamp dropped. Slug already starting with
+`feature-` is kept whole — `feature/feature-x` — and never double-prefixed. `git-commit` STEP 4 owns
+that scheme; this step only applies it earlier. Four cases, decided off `git branch --show-current`:
+- Already on that branch → nothing to do.
+- The branch exists but you are elsewhere → `git switch feature/<slug>`.
+- Anywhere else → `git switch -c feature/<slug>`. Uncommitted work comes along, which is what you
+  want: the spec file's own move is usually sitting in the tree right now.
+- On a DIFFERENT `feature/*` branch → **STOP. Ask via `AskUserQuestion`** whether to cut from here or
+  from the default branch. Cutting from another feature's branch silently inherits its unlanded
+  commits, and that only shows up at step 8 when the merge carries work nobody approved.
+
+The switch fails (conflicting local changes, a name already taken by a worktree) → STOP and report.
+Never build the feature on the branch you happened to be standing on. **No git repo at all → say so
+once and build without a branch;** the rule needs a repo, not a workaround.
+
+This is also what makes step 8's landing question always applicable — a feature never sits on the
+default branch by the time it gets there.
+
 **A spec can be APPROVED and still have nothing to build.** A write-only record ships with
 `# Solution` and `# Technical Plan` as placeholders. Read both here. Placeholder → write the plan
 into the spec and put the APPROACH to the user via `AskUserQuestion` before any code. That plan has
@@ -408,16 +427,17 @@ Then build:
 - A COUNT the spec asserts (files, sites, instances) goes stale between planning and building →
   re-run it before you build from it, and say what you got.
 
-**Rules to read while building** — CLAUDE.md's routing table owns the full mapping. Always
-`rules/core.md`; then the stack files the change touches, `rules/security.md` when it touches auth,
-sessions, input handling or external payloads, and `rules/documentation.md` when it touches
-architecture, modules, public APIs, `AGENTS.md` or ADRs. Read them BEFORE writing, not after.
+**Rules to read while building** — CLAUDE.md's routing table owns the full mapping. Always BOTH
+`rules/core.md` and `rules/documentation.md`; then the stack files the change touches, and
+`rules/security.md` when it touches auth, sessions, input handling or external payloads. Read them
+BEFORE writing, not after. **Dispatching → both always-paths go in every brief**, per
+`~/.claude/rules/agent-worker.md`; a worker cannot pull what it was not handed.
 
 **When the work is in, run the shell-bound checks over the FINISHED result** — `preflight.mjs` on a
 design surface, `check-adr.mjs` when an ADR changed. Commit what that pass makes you fix.
 
-Intermediate commits during implementation are fine, but NEVER on the default branch: branch first
-as `feature/<this feature file's slug>`, timestamp dropped. The FINAL deliverable commit waits until
+Intermediate commits during implementation are fine, and land on the branch this step created at its
+start. Never on the default branch. The FINAL deliverable commit waits until
 after the user moves the feature to DONE, and only if they opt in there. This binds every commit the
 workflow makes — a commit carrying only feature FILES is still a commit.
 
@@ -498,6 +518,8 @@ After a resting point — DONE, or the user leaves it in READY_FOR_DONE, or disc
 Non-obvious, high-severity only. The state machine and workflow above are not repeated here.
 - **Only `/features` files define state; chat doesn't.**
 - **No implementation before status = APPROVED and the file sits in `in-progress/`.**
+- **No implementation before the feature is ON its own `feature/<slug>` branch** — step 6 creates it
+  before the first code change, not at the first commit.
 - **No skipping states; folder and status ALWAYS match**, including the documented fast path.
 - **DONE requires explicit user confirmation — never automatic.** READY_FOR_DONE requires recorded,
   passing validation.

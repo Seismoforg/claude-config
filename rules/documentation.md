@@ -1,7 +1,12 @@
 # DOCUMENTATION
 
-Load when architecture, modules, responsibilities, public APIs, `AGENTS.md` files or ADRs are
-created or changed.
+Load on EVERY code change, alongside `core.md`. Both sit in the routing table's always row, because
+every change writes comments and docstrings and those rules are here.
+
+Loaded is not the same as owed. Most of this file fires only when architecture, modules,
+responsibilities, public APIs, `AGENTS.md` files or ADRs are created or changed. WHEN DOCS ARE
+REQUIRED, immediately below, is the section that decides which half of the file applies to the
+change in front of you — read it first.
 
 **Bias: under-document the trivial, never under-document architecture.**
 
@@ -25,7 +30,8 @@ prose-y for human onboarding.
 
 # CODE COMMENTS AND DOCSTRINGS
 - **English**, always, in every language and file type: docstrings, inline comments, TODO/FIXME.
-- **Terse and plain.** Say what and why in the fewest words. Never restate the code.
+- **How LONG a comment may be is `core.md` # COMMENTS**, which is loaded on every code change. It is
+  not restated here; two copies of a length rule drift.
 - **Edit scope:** translate or tighten only the comments you touch. Never mass-rewrite untouched
   comments.
 

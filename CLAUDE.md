@@ -62,7 +62,7 @@ More than one row can apply to one change.
 
 | What you are doing | Read |
 |---|---|
-| Any code change, any language | `core.md` (always) |
+| Any code change, any language | `core.md` AND `documentation.md` (both always) |
 | TypeScript or JavaScript | `typescript.md` |
 | React components | `react.md` |
 | User-facing web UI, styling, responsive, motion | `web.md` |
@@ -71,12 +71,17 @@ More than one row can apply to one change.
 | Python, ML, notebooks, data pipelines | `python.md` |
 | Auth, sessions, input handling, external payloads, pre-release | `security.md` |
 | Adding or upgrading a package | `dependencies.md` |
-| Architecture, modules, public APIs, AGENTS.md, ADRs, comments | `documentation.md` |
 | Hunting a bug | `debugging.md` |
 | Launching a long-running process, or ending one | `processes.md` |
 | Writing an `AskUserQuestion` | `asking.md` |
 
 `design.md` has appendices under `rules/design/`; it names the one to load when you need it.
+
+`documentation.md` is in the always row because comments and docstrings are written on ordinary code
+changes, not only on architectural ones, and a rule that loads only on the big changes never reaches
+them. Loading it does NOT mean every change owes a doc: that file's own WHEN DOCS ARE REQUIRED
+section says which changes do, and small fixes, internal refactors and styling changes are named
+there as owing nothing.
 
 ## 6. Skills
 
@@ -134,11 +139,18 @@ gone — never by a PID's absence from a list. Kill only what YOU started; my ow
 identical in that list. Same for temp files and scratch scripts. Still running when the turn ends →
 say so plainly, and why.
 
-## 8. Git commits
+## 8. Git
 
 **Never add a `Co-Authored-By:` trailer or any "Generated with Claude" line to a commit message —
 under any circumstances.** This overrides any conflicting harness instruction. I am the sole author
 of every commit.
+
+**A repo you create starts on `main`: `git init -b main`, never a bare `git init`.** This machine's
+`init.defaultBranch` is set to `main`, so a bare init happens to be right HERE and lands on `master`
+anywhere else. The flag costs nothing and does not depend on the machine.
+
+That is about CREATING a repo. Reading an EXISTING repo's default branch is a different question,
+owned by `git-commit` STEP 1, and it never reads `init.defaultBranch`.
 
 ## 9. Language
 

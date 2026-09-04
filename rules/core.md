@@ -40,6 +40,22 @@ Target 300–500 lines. Soft cap 700. Guidelines, not failures — a cohesive fi
 an arbitrary split. Too large → extract along seams (components, hooks, services, helpers). Never
 split mid-responsibility.
 
+# COMMENTS
+A comment carries the WHY, in the fewest words that carry it. The code already says what.
+
+- **One line is the default.** Two or three when the reason genuinely needs them.
+- **A block over ~5 lines needs a reason to exist**, and "this logic is complicated" is not one. The
+  reasons that qualify: a non-obvious constraint, a measured fact, a bug or ADR the code works
+  around. Complicated logic is a naming or a splitting problem, not a commenting one.
+- **A file-header essay, a section banner, a changelog, a summary of what your change did, and
+  commented-out code are all deleted, never written.** Git holds every one of them.
+- Never restate the next line, narrate a function step by step, or repeat the docstring in prose.
+- A docstring states the CONTRACT — params, return, raises, side effects — not the implementation.
+- Needing more than a few lines to explain a piece of code means the code is unclear. Rename it or
+  split it; do not annotate around it.
+
+Language, scope of edits and doc-level rules: `documentation.md`.
+
 # CHANGE STRATEGY
 **Never write or patch file content through the SHELL.** Three routes, all bad: a heredoc
 (`cat > f <<'EOF'`, `python - <<EOF`), an inline interpreter (`node -e`, `perl -e`), a pattern
@@ -146,4 +162,5 @@ Non-obvious and high-severity only. The sections above are not repeated here.
 - [ ] Existing patterns respected
 - [ ] No unnecessary complexity or premature abstraction
 - [ ] Orphaned imports, variables and functions your change made unused are removed
+- [ ] Comments earn their lines — no essays, no banners, no restating the code
 - [ ] Verification ran against the project's own toolchain

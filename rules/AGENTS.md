@@ -11,7 +11,8 @@ rule is pulled. So a rule may be long — it costs nothing on a task that never 
 - Stay self-contained: a rule file names only other rule files, never a skill's internals
 
 # File Structure
-- `core.md`            — every code change, any language. The other stack files add to it
+- `core.md`            — every code change, any language. The other stack files add to it. One of the
+                         two files in the routing table's always row
 - `backend.md`         — layering, API conventions, scheduled work
 - `typescript.md`      — TS/JS: arrow-const style, types, style-prop units
 - `react.md`           — Atomic Design layout, components, hooks, state
@@ -20,7 +21,9 @@ rule is pulled. So a rule may be long — it costs nothing on a task that never 
 - `python.md`          — Python and ML work
 - `security.md`        — auth, input validation, secrets, pre-release checks
 - `dependencies.md`    — adding and upgrading packages
-- `documentation.md`   — AGENTS.md, ADRs, comments, docstrings
+- `documentation.md`   — AGENTS.md, ADRs, comments, docstrings. The always row's second file: every
+                         code change writes comments, and a rule pulled only on architectural work
+                         never reaches them
 - `debugging.md`       — reproduce, isolate, root cause, verify
 - `processes.md`       — Windows/PowerShell/bash mechanics for launching and ending a process
 - `asking.md`          — what an `AskUserQuestion` owes its reader
