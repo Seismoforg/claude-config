@@ -74,6 +74,22 @@ A worker reports a knowingly weaker solution than planned → write it as a new 
 5. Gaps → add them as new tasks, move the plan back to `progress/`, go to Build.
    Second failed verify in a row → stop and ask the user (fix / block / accept).
 
+### Playwright check — only after a verify with no gaps
+1. Detect: the diff against `main` (tracked + untracked) touches `.html .css .scss .js .jsx .ts .tsx
+   .vue .svelte` outside test folders, AND `package.json` has a `dev` or `start` script.
+   Otherwise go to Close.
+2. `AskUserQuestion` in the user's language, e.g. "Möchtest du per Playwright testen?". The option
+   names the exact command it will run (e.g. `npm run dev`). This yes approves that run. No → Close.
+3. Start the dev server in the background. Read its output for the local URL; wait until it answers.
+4. Spawn `e2e` with the plan path, the URL and the changed frontend files.
+5. Move `.playwright-mcp/` from the project root to the scratchpad (the MCP server writes only
+   inside the project). Write the report under `## Playwright` with the moved screenshot paths.
+6. Always afterwards: kill the dev server's process tree, check the port is free.
+7. GAPS → add them as new tasks, move the plan back to `progress/`, go to Build. This counts toward
+   the "second failed verify in a row" rule. No gaps → Close.
+8. Server does not start, or the `mcp__playwright__*` tools are missing → report to the user and
+   ask (fix / skip to Close).
+
 ## 6. Close
 1. Invoke the `commit` skill for branch `feature/<slug>`.
 2. Merged to `main` → move the plan to `done/`, add a `## Log` line (note if not pushed).
