@@ -22,5 +22,8 @@ Branch: feature/<slug>
 ## Verification
 <Filled by the verify agent: per task, per criterion, commands run and their result.>
 
+## Playwright
+<Filled by the e2e agent: web projects only.>
+
 ## Log
 - YYYY-MM-DD <what happened>
